@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
@@ -24,10 +25,10 @@ import edu.wpi.first.wpilibj2.command.Command;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class WheelOfFortune implements Subsystem {
+public class WheelOfFortune extends SubsystemBase {
 
   public WheelOfFortune() {
-    register();
+
 
   }
 

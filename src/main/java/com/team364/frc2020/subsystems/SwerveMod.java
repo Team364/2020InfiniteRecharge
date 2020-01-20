@@ -14,10 +14,12 @@ import com.team1323.loops.Loop;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team364.frc2020.misc.math.Vector2;
 
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class SwerveMod implements Subsystem {
-    private double lastTargetAngle = 0;
     public final int moduleNumber;
 
     public final int mZeroOffset;
@@ -27,13 +29,11 @@ public class SwerveMod implements Subsystem {
     private Vector2 modulePosition;
     private boolean driveInverted = false;
 
-    public double targetAngle;
-    public double targetSpeed;
     public double smartAngle;
     public Vector2 velocity;
     public double currentAngle;
 
-    private PeriodicIO periodicIO = new PeriodicIO();
+    protected PeriodicIO periodicIO = new PeriodicIO();
 
     public SupplyCurrentLimitConfiguration swerveSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
 
@@ -45,32 +45,30 @@ public class SwerveMod implements Subsystem {
         mAngleMotor = angleMotor;
         mDriveMotor = driveMotor;
         mZeroOffset = zeroOffset;
-        targetAngle = 0;
-        targetSpeed = 0;
         currentAngle = 0;
 
         // Configure Angle Motor
-        angleMotor.configFactoryDefault();
-        angleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
-        angleMotor.selectProfileSlot(SLOTIDX, SWERVETIMEOUT);
-        angleMotor.setSensorPhase(invertSensorPhase);
-        angleMotor.config_kP(SLOTIDX, ANGLEP, SWERVETIMEOUT);
-        angleMotor.config_kI(SLOTIDX, ANGLEI, SWERVETIMEOUT);
-        angleMotor.config_kD(SLOTIDX, ANGLED, SWERVETIMEOUT);
-        angleMotor.setNeutralMode(NeutralMode.Brake);
-        angleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
-        angleMotor.configMotionAcceleration((int) (kSwerveRotationMaxSpeed * 12.5), 10);
-        angleMotor.configMotionCruiseVelocity((int) (kSwerveRotationMaxSpeed), 10);
-        angleMotor.set(ControlMode.Position, angleMotor.getSelectedSensorPosition(0));
+        mAngleMotor.configFactoryDefault();
+        mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
+        mAngleMotor.selectProfileSlot(SLOTIDX, SWERVETIMEOUT);
+        mAngleMotor.setSensorPhase(invertSensorPhase);
+        mAngleMotor.config_kP(SLOTIDX, ANGLEP, SWERVETIMEOUT);
+        mAngleMotor.config_kI(SLOTIDX, ANGLEI, SWERVETIMEOUT);
+        mAngleMotor.config_kD(SLOTIDX, ANGLED, SWERVETIMEOUT);
+        mAngleMotor.setNeutralMode(NeutralMode.Brake);
+        mAngleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
+        mAngleMotor.configMotionAcceleration((int) (kSwerveRotationMaxSpeed * 12.5), 10);
+        mAngleMotor.configMotionCruiseVelocity((int) (kSwerveRotationMaxSpeed), 10);
+        mAngleMotor.set(ControlMode.Position, angleMotor.getSelectedSensorPosition(0));
 
         // Configure Drive Motor
-        driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(invertDrive);
+        mDriveMotor.setNeutralMode(NeutralMode.Brake);
+        mDriveMotor.setInverted(invertDrive);
 
 
         // Setup Current Limiting
-        angleMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
-        driveMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
+        mAngleMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
+        mDriveMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
 
     }
 
@@ -135,5 +133,11 @@ public class SwerveMod implements Subsystem {
             this.speedDemand = speedDemand;
         }
     }
+
+
+    public SwerveModuleState getState(){
+        return new SwerveModuleState(mDriveMotor.getSelectedSensorPosition(), new Rotation2d(mAngleMotor.getSelectedSensorPosition()));
+    }
+    
 
 }

@@ -7,13 +7,15 @@
 
 package com.team364.frc2020;
 
+import java.util.HashMap;
+
+import com.team364.frc2020.commands.OpenSwerve;
 import com.team364.frc2020.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,12 +24,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  //private Shooter s_Shooter;
-  private static WheelOfFortune s_Wof;
-  private static Turret s_Turret;
-  public static Joystick controller;
-  public static Swerve s_Swerve;
+  //private final Shooter s_Shooter = new Shooter();
+  private final Hang s_Hang = new Hang();
+  private final WheelOfFortune s_Wof = new WheelOfFortune();
+  private final Turret s_Turret = new Turret();
+  private final Joystick controller = new Joystick(0);
+  private final Swerve s_Swerve = new Swerve();
 
 
   /**
@@ -35,14 +37,8 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
-    //s_Shooter = new Shooter();
-    s_Swerve = Swerve.getInstance();
-    //s_Wof = new WheelOfFortune();
-    //s_Turret = new Turret.getInstansce();
-
-
-    controller = new Joystick(0);
-
+    // Assign default commands
+    s_Swerve.setDefaultCommand(new OpenSwerve(SwerveConfig(), s_Swerve));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -55,6 +51,15 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+  }
+
+
+  private HashMap<String, Double> SwerveConfig(){
+    HashMap<String, Double> SwerveControls = new HashMap<>();
+    SwerveControls.put("forward", -controller.getRawAxis(1));
+    SwerveControls.put("strafe", controller.getRawAxis(0));
+    SwerveControls.put("rotation", controller.getRawAxis(4));
+    return SwerveControls;
   }
 
   /*

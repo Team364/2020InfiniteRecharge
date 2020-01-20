@@ -9,6 +9,11 @@ import java.util.List;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team1323.lib.util.Util;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.team364.frc2020.misc.math.Vector2;
@@ -24,42 +29,50 @@ public class Swerve extends SubsystemBase {
 	 */
     private SwerveMod[] mSwerveModules;
     private List<SwerveMod> modules;
+    public SwerveDriveOdometry m_odometry;
+    public SwerveDriveKinematics m_kinematics;
 
     public Swerve() {
 
-            mSwerveModules = new SwerveMod[] {
-                    new SwerveMod(0,
-                            new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
-                            new TalonFX(FRANGLE),
-                            new TalonFX(FRDRIVE),
-                            MOD0DRIVEINVERT, 
-                            false,
-                            MOD0OFFSET),
-                    new SwerveMod(1,
-                            new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
-                            new TalonFX(FLANGLE),
-                            new TalonFX(FLDRIVE),
-                            MOD1DRIVEINVERT,
-                            false,
-                            MOD1OFFSET),
-                    new SwerveMod(2,
-                            new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
-                            new TalonFX(BLANGLE),
-                            new TalonFX(BLDRIVE),
-                            MOD2DRIVEINVERT,
-                            false,
-                            MOD2OFFSET),
-                    new SwerveMod(3,
-                            new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
-                            new TalonFX(BRANGLE),
-                            new TalonFX(BRDRIVE),
-                            MOD3DRIVEINVERT,
-                            false,
-                            MOD3OFFSET)
-            };
-         
-            modules = Arrays.asList(mSwerveModules[0], mSwerveModules[1], mSwerveModules[2], mSwerveModules[3]);
+        mSwerveModules = new SwerveMod[] {
+            new SwerveMod(0,
+                new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
+                new TalonFX(FLANGLE),
+                new TalonFX(FLDRIVE),
+                MOD0DRIVEINVERT,
+                false,
+                MOD0OFFSET),
+            new SwerveMod(1,
+                new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
+                new TalonFX(FRANGLE),
+                new TalonFX(FRDRIVE),
+                MOD1DRIVEINVERT, 
+                false,
+                MOD1OFFSET),
+            new SwerveMod(2,
+                new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
+                new TalonFX(BLANGLE),
+                new TalonFX(BLDRIVE),
+                MOD2DRIVEINVERT,
+                false,
+                MOD2OFFSET),
+            new SwerveMod(3,
+                new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
+                new TalonFX(BRANGLE),
+                new TalonFX(BRDRIVE),
+                MOD3DRIVEINVERT,
+                false,
+                MOD3OFFSET)
+        };
+        
+        modules = Arrays.asList(mSwerveModules[0], mSwerveModules[1], mSwerveModules[2], mSwerveModules[3]);
 
+        m_kinematics = new SwerveDriveKinematics(
+            new Translation2d(TRACKWIDTH / 2.0, WHEELBASE / 2.0), 
+            new Translation2d(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
+            new Translation2d(TRACKWIDTH / 2.0, -WHEELBASE / 2.0), 
+            new Translation2d(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0) );
+        m_odometry = new SwerveDriveOdometry(m_kinematics, getAngle());
     } 
 
     public synchronized static Swerve getInstance() {
@@ -89,16 +102,34 @@ public class Swerve extends SubsystemBase {
     }
     public void updateKinematics(){
         for (SwerveMod mod : getSwerveModules()){
-            if(Util.shouldReverse(mod.targetAngle, mod.getModuleAngle())){
-                mod.setAngle(mod.targetAngle += 180);
-                mod.setSpeed(mod.targetSpeed * -1);
+            if(Util.shouldReverse(mod.periodicIO.velocityPosition, mod.getModuleAngle())){
+                mod.setAngle(mod.periodicIO.velocityPosition += 180);
+                mod.setSpeed(mod.periodicIO.velocitySpeed * -1);
             }else{
-                mod.setAngle(mod.targetAngle);
-                mod.setSpeed(mod.targetSpeed);
+                mod.setAngle(mod.periodicIO.velocityPosition);
+                mod.setSpeed(mod.periodicIO.velocitySpeed);
             }
         }
         openLoopOutputs();
     }
+    
+    @Override
+    public void periodic(){
 
+    }
+    public Rotation2d getAngle(){
+        //TODO: *CB* get gyro in here
+        return new Rotation2d(2);
+    }
+    public void updateOdometry() {
+        
+        m_odometry.update(
+            getAngle(),
+            mSwerveModules[0].getState(),
+            mSwerveModules[1].getState(),
+            mSwerveModules[2].getState(),
+            mSwerveModules[3].getState()
+        );
+    }
     
 }

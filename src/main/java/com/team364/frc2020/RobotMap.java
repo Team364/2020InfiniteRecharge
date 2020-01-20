@@ -23,20 +23,20 @@ public class RobotMap {
     public static final int PIGEON = 13;
 
     //Offsets 
-    /**Front Right */
-    public static final int MOD0OFFSET = 53;
     /**Front Left */
-    public static final int MOD1OFFSET = 82;
+    public static final int MOD0OFFSET = 82;
+    /**Front Right */
+    public static final int MOD1OFFSET = 53;
     /**Back Left */
     public static final int MOD2OFFSET = 195;
     /**Back Right */
     public static final int MOD3OFFSET = 124;
 
     //DRIVE INVERT
-    /**Front Right */
-    public static final boolean MOD0DRIVEINVERT = false;
     /**Front Left */
-    public static final boolean MOD1DRIVEINVERT = true;
+    public static final boolean MOD0DRIVEINVERT = true;
+    /**Front Right */
+    public static final boolean MOD1DRIVEINVERT = false;
     /**Back Left */
     public static final boolean MOD2DRIVEINVERT = false;
     /**Back Right */
