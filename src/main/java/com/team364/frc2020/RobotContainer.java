@@ -9,28 +9,30 @@ package com.team364.frc2020;
 
 import java.util.HashMap;
 
-import com.team364.frc2020.commands.OpenSwerve;
+import com.team364.frc2020.commands.*;
 import com.team364.frc2020.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a "declarative" paradigm, very little robot logic should
+ * actually be handled in the {@link Robot} periodic methods (other than the
+ * scheduler calls). Instead, the structure of the robot (including subsystems,
+ * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  //private final Shooter s_Shooter = new Shooter();
+  // private final Shooter s_Shooter = new Shooter();
   private final Hang s_Hang = new Hang();
   private final WheelOfFortune s_Wof = new WheelOfFortune();
   private final Turret s_Turret = new Turret();
   private final Joystick controller = new Joystick(0);
   private final Swerve s_Swerve = new Swerve();
-
+  private final Hopper s_Hopper = new Hopper();
+  private final JoystickButton hopperbutto = new JoystickButton(controller, 0);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -51,8 +53,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoysticButton hopperbutto = newJoysticButton(controller.(1));
-    hopperbutto.whenpressed(new runHopper(s_Hopper));
+    
+    hopperbutto.whenPressed(new RunHopper(s_Hopper));
   }
 
 
