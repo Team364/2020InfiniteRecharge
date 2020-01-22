@@ -51,6 +51,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    JoysticButton hopperbutto = newJoysticButton(controller.(1));
+    hopperbutto.whenpressed(new runHopper(s_Hopper));
   }
 
 
