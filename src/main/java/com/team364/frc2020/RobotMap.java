@@ -1,6 +1,5 @@
 package com.team364.frc2020;
 
-
 public class RobotMap {
 
     // Hardware
@@ -47,6 +46,10 @@ public class RobotMap {
     public static final double STICKDEADBAND = 0.2;
     public static final double ENCODERTICKS = 1024.0;
     public static final double OFFSETTOSTRAIGHT = 180;
+
+    //constants for shooter
+    public static final double SHOOTERSPEED = 0;
+    public static final double FERRYSPEED = 0;
     //public static final double ANGLE_TICKS_PER_RADIAN = ENCODERTICKS / (2.0 * Math.PI);
 
     // PID constants
@@ -75,4 +78,25 @@ public class RobotMap {
 
     public static final int TURRET = 1;
 
+
+    //PID constants for shooter
+    public static final double SHOOTING_P = 0;
+    public static final double SHOOTING_I = 0;
+    public static final double SHOOTING_D = 0;
+    public static final double[] SHOOTING_PID = { SHOOTING_P, SHOOTING_I, SHOOTING_D };
+
+    public static final double FERRY_P = 0;
+    public static final double FERRY_I = 0;
+    public static final double FERRY_D = 0;
+    public static final double[] FERRY_PID = { FERRY_P, FERRY_I, FERRY_D };
+
+    public static final double RAMP_UP_P = 0;
+    public static final double RAMP_UP_I = 0;
+    public static final double RAMP_UP_D = 0;
+    public static final double[] RAMP_UP_PID = { RAMP_UP_P, RAMP_UP_I, RAMP_UP_D };
+
+    public static final double RAMP_DOWN_P = 0;
+    public static final double RAMP_DOWN_I = 0;
+    public static final double RAMP_DOWN_D = 0;
+    public static final double[] RAMP_DOWN_PID = { RAMP_DOWN_P, RAMP_DOWN_I, RAMP_DOWN_D };
 }

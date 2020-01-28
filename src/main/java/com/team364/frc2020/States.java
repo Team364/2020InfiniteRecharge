@@ -12,6 +12,9 @@ public class States {
         GYRO, VISION, NO_TRACK
     }
 
+    public static enum ShooterStates {
+        SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
+    }
 
     /**
      * This is essentially intended to be used for tracking whether or not vision is
@@ -25,5 +28,6 @@ public class States {
 
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
+    public static ShooterStates shooterState = ShooterStates.FERRY;
 
 }

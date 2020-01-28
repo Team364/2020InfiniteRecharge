@@ -11,11 +11,12 @@ import java.util.HashMap;
 
 import com.team364.frc2020.commands.*;
 import com.team364.frc2020.subsystems.*;
-
+import static com.team364.frc2020.States.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import static com.team364.frc2020.RobotMap.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // private final Shooter s_Shooter = new Shooter();
+  private final Shooter s_Shooter = new Shooter();
   private final Hang s_Hang = new Hang();
   private final WheelOfFortune s_Wof = new WheelOfFortune();
   private final Turret s_Turret = new Turret();
@@ -33,6 +34,7 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final Hopper s_Hopper = new Hopper();
   private final JoystickButton hopperbutto = new JoystickButton(controller, 0);
+  private final JoystickButton shooterSwitch = new JoystickButton(controller, 1);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -53,7 +55,17 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    
+    if (shooterSwitch.get()) {
+      shooterState = ShooterStates.RAMP_UP;
+      if (s_Shooter.getFlyWheelVel() == SHOOTERSPEED) {
+        shooterState = ShooterStates.SHOOTING;
+      }
+    } else if (!shooterSwitch.get() && shooterState == ShooterStates.SHOOTING) {
+      shooterState = ShooterStates.RAMP_DOWN;
+    } else if (shooterState == ShooterStates.RAMP_DOWN && s_Shooter.getFlyWheelVel() == FERRYSPEED) {
+      shooterState = ShooterStates.FERRY;
+    }
+
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
   }
 
