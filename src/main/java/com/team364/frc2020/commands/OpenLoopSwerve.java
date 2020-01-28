@@ -9,7 +9,7 @@ import static com.team364.frc2020.RobotMap.*;
 
 import java.util.HashMap;
 
-public class OpenSwerve extends CommandBase {
+public class OpenLoopSwerve extends CommandBase {
 
     public int cycles;
     private double forward;
@@ -25,7 +25,7 @@ public class OpenSwerve extends CommandBase {
     /**
      * Driver control
      */
-    public OpenSwerve(HashMap<String, Double> controls, Swerve swerve) {
+    public OpenLoopSwerve(HashMap<String, Double> controls, Swerve swerve) {
         this.forward = controls.get("forward");
         this.strafe = controls.get("strafe");
         this.rotation = controls.get("rotation");

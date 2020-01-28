@@ -1,5 +1,8 @@
 package com.team364.frc2020;
 
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+
+import edu.wpi.first.wpilibj.CAN;
 
 public class RobotMap {
 
@@ -10,37 +13,44 @@ public class RobotMap {
     public static final int TRACKWIDTH = 21;
     public static final int WHEELBASE = 26;
     public static final int WHEELDIAMETER = 3;
-    
-    public static final int FLANGLE = 16;//FL 2-> BR 8/////////////16
-    public static final int FLDRIVE = 36;//FL 1-> BR 7/////////////36
-    public static final int FRANGLE = 32;//FR 6-> BL 12////////////32
-    public static final int FRDRIVE = 12;//FR 5-> BL 3/////////////12
-    public static final int BRANGLE = 33;//BR 8-> FL 2
-    public static final int BRDRIVE = 15;//BR 7-> FL 1
-    public static final int BLANGLE = 37;//was 4 //BL 12-> FR
-    public static final int BLDRIVE = 39;//BL 3-> FR
+
+    public static final int FLDRIVE = 1;    
+    public static final int FLANGLE = 2;
+    public static final int FRDRIVE = 3;
+    public static final int FRANGLE = 4;
+    public static final int BRDRIVE = 5;
+    public static final int BRANGLE = 6;
+    public static final int BLDRIVE = 7;
+    public static final int BLANGLE = 8;
+
+    //CANCoder Swerve Angle
+    public static final int FLCAN = 1;
+    public static final int FRCAN = 2;
+    public static final int BLCAN = 3;
+    public static final int BRCAN = 4;
+
 
     public static final int PIGEON = 13;
 
-    //Offsets 
+    //CANCoder Config
     /**Front Left */
-    public static final int MOD0OFFSET = 82;
+    public static final CANCoderConfiguration CAN1CONFIG = new CANCoderConfiguration();
     /**Front Right */
-    public static final int MOD1OFFSET = 53;
+    public static final CANCoderConfiguration CAN2CONFIG = new CANCoderConfiguration();
     /**Back Left */
-    public static final int MOD2OFFSET = 195;
+    public static final CANCoderConfiguration CAN3CONFIG = new CANCoderConfiguration();
     /**Back Right */
-    public static final int MOD3OFFSET = 124;
+    public static final CANCoderConfiguration CAN4CONFIG = new CANCoderConfiguration();
 
     //DRIVE INVERT
     /**Front Left */
-    public static final boolean MOD0DRIVEINVERT = true;
+    public static final boolean MOD1DRIVEINVERT = true;
     /**Front Right */
-    public static final boolean MOD1DRIVEINVERT = false;
-    /**Back Left */
     public static final boolean MOD2DRIVEINVERT = false;
-    /**Back Right */
+    /**Back Left */
     public static final boolean MOD3DRIVEINVERT = false;
+    /**Back Right */
+    public static final boolean MOD4DRIVEINVERT = false;
 
 
     //constants

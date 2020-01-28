@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.team1323.lib.util.Util;
 import com.team1323.loops.Loop;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,8 +24,7 @@ import edu.wpi.first.wpilibj.Encoder;
 public class SwerveMod implements Subsystem {
     public final int moduleNumber;
 
-    public final int mZeroOffset;
-
+    private final CANCoder localTurn;
     private final TalonFX mAngleMotor;
     private final TalonFX mDriveMotor;
     private Vector2 modulePosition;
@@ -38,14 +39,17 @@ public class SwerveMod implements Subsystem {
     public SupplyCurrentLimitConfiguration swerveSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
 
 
-    public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, TalonFX driveMotor,
-            boolean invertDrive, boolean invertSensorPhase, int zeroOffset) {
+    public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, CANCoder turnEncoder, TalonFX driveMotor,
+            boolean invertDrive, boolean invertSensorPhase, CANCoderConfiguration turnEncoderConfig) {
         this.moduleNumber = moduleNumber;
         this.modulePosition = modulePosition;
         mAngleMotor = angleMotor;
         mDriveMotor = driveMotor;
-        mZeroOffset = zeroOffset;
         currentAngle = 0;
+        localTurn = turnEncoder;
+
+        //Configure CANCoder
+        localTurn.configAllSettings(turnEncoderConfig);
 
         // Configure Angle Motor
         mAngleMotor.configFactoryDefault();
@@ -69,7 +73,6 @@ public class SwerveMod implements Subsystem {
         // Setup Current Limiting
         mAngleMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
         mDriveMotor.configSupplyCurrentLimit(swerveSupplyLimit, 20);
-
     }
 
     public void openLoopOutput(){
@@ -86,20 +89,10 @@ public class SwerveMod implements Subsystem {
             periodicIO.setVelocitySpeed(0);
         }
     }
-
-    public Vector2 getModulePosition() {
-        return modulePosition;
-    }
-    public double getModuleAngle() {
-        return getRawAngle() - mZeroOffset;
-    }
-    public double getRawAngle(){
-        return mAngleMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
-    }
-
+    
     public synchronized void setAngle(double fTargetAngle) {
-        //TODO: *CB* check the offset feature, add it or substract it, see getModuleAngle
-        double newAngle = Util.placeInAppropriate0To360Scope(getRawAngle(), fTargetAngle + mZeroOffset);
+        //TODO: *CB* check the offset feature, add it or substract it, see getModuleAngle, also check for CANCoder angle
+        double newAngle = Util.placeInAppropriate0To360Scope(getCANCoderAngle(), fTargetAngle);
         double setpoint = toCounts(newAngle);
         periodicIO.setDemandPosition(setpoint);
     }
@@ -139,5 +132,13 @@ public class SwerveMod implements Subsystem {
         return new SwerveModuleState(mDriveMotor.getSelectedSensorPosition(), new Rotation2d(mAngleMotor.getSelectedSensorPosition()));
     }
     
+    public Vector2 getModulePosition() {
+        return modulePosition;
+    }
+
+    public double getCANCoderAngle(){
+        return localTurn.getPosition();
+    }
+
 
 }
