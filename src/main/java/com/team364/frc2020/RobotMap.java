@@ -1,5 +1,6 @@
 package com.team364.frc2020;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
@@ -9,7 +10,7 @@ public class RobotMap {
 
     // Hardware
     public static final int primaryPCM = 0;
-    public static final PigeonIMU pigeon = new PigeonIMU(0);
+    public static final PigeonIMU pigeon = new PigeonIMU(new TalonSRX(10));
 
 
     //hardware

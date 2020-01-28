@@ -71,7 +71,7 @@ public class Swerve extends SubsystemBase {
                 MOD4OFFSET)
         };
         
-        modules = Arrays.asList(mSwerveModules[1], mSwerveModules[2], mSwerveModules[3], mSwerveModules[4]);
+        modules = Arrays.asList(mSwerveModules[0], mSwerveModules[1], mSwerveModules[2], mSwerveModules[3]);
 
         m_kinematics = new SwerveDriveKinematics(
             new Translation2d(TRACKWIDTH / 2.0, WHEELBASE / 2.0), 
@@ -137,10 +137,10 @@ public class Swerve extends SubsystemBase {
         
         m_odometry.update(
             getAngle(),
+            mSwerveModules[0].getState(),
             mSwerveModules[1].getState(),
             mSwerveModules[2].getState(),
-            mSwerveModules[3].getState(),
-            mSwerveModules[4].getState()
+            mSwerveModules[3].getState()
         );
     }
     

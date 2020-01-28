@@ -31,7 +31,7 @@ public class SwerveMod implements Subsystem {
     private final TalonFX mAngleMotor;
     private final TalonFX mDriveMotor;
     private Vector2 modulePosition;
-    private CANCoderConfiguration localCANConfig;
+    private CANCoderConfiguration localCANConfig = new CANCoderConfiguration();
 
     public double smartAngle;
     public Vector2 velocity;
@@ -50,7 +50,7 @@ public class SwerveMod implements Subsystem {
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
-        localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        //localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         localCANConfig.magnetOffsetDegrees = offset;
 
         //Configure CANCoder
