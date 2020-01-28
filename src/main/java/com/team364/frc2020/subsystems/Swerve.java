@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.team364.frc2020.misc.math.Rotation2;
 import com.team364.frc2020.misc.math.Vector2;
 
 public class Swerve extends SubsystemBase {
@@ -99,7 +100,7 @@ public class Swerve extends SubsystemBase {
         Vector2 velocity;
         for(SwerveMod mod : getSwerveModules()){
             Vector2 newTranslation = null;
-            //newTranslation = translation.rotateBy(Rotation2.fromDegrees(getGyro()));
+            newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
             newTranslation = translation;
             velocity = mod.getModulePosition().normal().scale(deadband(rotation)).add(newTranslation);
             mod.setVectorVelocity(velocity, speed, rotation);
@@ -123,9 +124,15 @@ public class Swerve extends SubsystemBase {
 
     }
     public Rotation2d getAngle(){
-        //TODO: *CB* get gyro in here
-        return new Rotation2d(2);
+        return new Rotation2d(getYaw());
     }
+
+    double[] holder;
+    public double getYaw(){
+        pigeon.getYawPitchRoll(holder);
+        return holder[0];
+    }
+
     public void updateOdometry() {
         
         m_odometry.update(
