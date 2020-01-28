@@ -36,7 +36,7 @@ public class Swerve extends SubsystemBase {
     public Swerve() {
 
         mSwerveModules = new SwerveMod[] {
-            new SwerveMod(0,
+            new SwerveMod(1,
                 new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FLANGLE),
                 new CANCoder(FLCAN),
@@ -44,7 +44,7 @@ public class Swerve extends SubsystemBase {
                 MOD1DRIVEINVERT,
                 false,
                 CAN1CONFIG),
-            new SwerveMod(1,
+            new SwerveMod(2,
                 new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FRANGLE),
                 new CANCoder(FRCAN),
@@ -52,7 +52,7 @@ public class Swerve extends SubsystemBase {
                 MOD2DRIVEINVERT, 
                 false,
                 CAN2CONFIG),
-            new SwerveMod(2,
+            new SwerveMod(3,
                 new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BLANGLE),
                 new CANCoder(BLCAN),
@@ -60,12 +60,12 @@ public class Swerve extends SubsystemBase {
                 MOD3DRIVEINVERT,
                 false,
                 CAN3CONFIG),
-            new SwerveMod(3,
+            new SwerveMod(4,
                 new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BRANGLE),
                 new CANCoder(BRCAN),
                 new TalonFX(BRDRIVE),
-                MOD3DRIVEINVERT,
+                MOD4DRIVEINVERT,
                 false,
                 CAN4CONFIG)
         };
