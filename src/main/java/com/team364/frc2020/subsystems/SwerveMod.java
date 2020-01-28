@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.team1323.lib.util.Util;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Talon;
 
 public class SwerveMod implements Subsystem {
     public final int moduleNumber;
@@ -28,7 +31,7 @@ public class SwerveMod implements Subsystem {
     private final TalonFX mAngleMotor;
     private final TalonFX mDriveMotor;
     private Vector2 modulePosition;
-    private boolean driveInverted = false;
+    private CANCoderConfiguration localCANConfig;
 
     public double smartAngle;
     public Vector2 velocity;
@@ -40,16 +43,18 @@ public class SwerveMod implements Subsystem {
 
 
     public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, CANCoder turnEncoder, TalonFX driveMotor,
-            boolean invertDrive, boolean invertSensorPhase, CANCoderConfiguration turnEncoderConfig) {
+            boolean invertDrive, boolean invertSensorPhase, double offset) {
         this.moduleNumber = moduleNumber;
         this.modulePosition = modulePosition;
         mAngleMotor = angleMotor;
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
+        localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        localCANConfig.magnetOffsetDegrees = offset;
 
         //Configure CANCoder
-        localTurn.configAllSettings(turnEncoderConfig);
+        localTurn.configAllSettings(localCANConfig);
 
         // Configure Angle Motor
         mAngleMotor.configFactoryDefault();
@@ -129,7 +134,7 @@ public class SwerveMod implements Subsystem {
 
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(mDriveMotor.getSelectedSensorPosition(), new Rotation2d(mAngleMotor.getSelectedSensorPosition()));
+        return new SwerveModuleState(mDriveMotor.getSelectedSensorPosition(), new Rotation2d(localTurn.getPosition()));
     }
     
     public Vector2 getModulePosition() {

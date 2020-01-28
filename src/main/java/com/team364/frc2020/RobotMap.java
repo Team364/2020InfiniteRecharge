@@ -31,16 +31,26 @@ public class RobotMap {
 
 
     public static final int PIGEON = 13;
+    
+    //DRIVE INVERT
+    /**Front Left */
+    public static final double MOD1OFFSET = 0;
+    /**Front Right */
+    public static final double MOD2OFFSET = 0;
+    /**Back Left */
+    public static final double MOD3OFFSET = 0;
+    /**Back Right */
+    public static final double MOD4OFFSET = 0;
 
     //CANCoder Config
     /**Front Left */
-    public static final CANCoderConfiguration CAN1CONFIG = new CANCoderConfiguration();
+    public static CANCoderConfiguration CAN1CONFIG = new CANCoderConfiguration();
     /**Front Right */
-    public static final CANCoderConfiguration CAN2CONFIG = new CANCoderConfiguration();
+    public static CANCoderConfiguration CAN2CONFIG = new CANCoderConfiguration();
     /**Back Left */
-    public static final CANCoderConfiguration CAN3CONFIG = new CANCoderConfiguration();
+    public static CANCoderConfiguration CAN3CONFIG = new CANCoderConfiguration();
     /**Back Right */
-    public static final CANCoderConfiguration CAN4CONFIG = new CANCoderConfiguration();
+    public static CANCoderConfiguration CAN4CONFIG = new CANCoderConfiguration();
 
     //DRIVE INVERT
     /**Front Left */

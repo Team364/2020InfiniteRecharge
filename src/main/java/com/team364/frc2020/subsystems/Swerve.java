@@ -43,7 +43,7 @@ public class Swerve extends SubsystemBase {
                 new TalonFX(FLDRIVE),
                 MOD1DRIVEINVERT,
                 false,
-                CAN1CONFIG),
+                MOD1OFFSET),
             new SwerveMod(2,
                 new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FRANGLE),
@@ -51,7 +51,7 @@ public class Swerve extends SubsystemBase {
                 new TalonFX(FRDRIVE),
                 MOD2DRIVEINVERT, 
                 false,
-                CAN2CONFIG),
+                MOD2OFFSET),
             new SwerveMod(3,
                 new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BLANGLE),
@@ -59,7 +59,7 @@ public class Swerve extends SubsystemBase {
                 new TalonFX(BLDRIVE),
                 MOD3DRIVEINVERT,
                 false,
-                CAN3CONFIG),
+                MOD3OFFSET),
             new SwerveMod(4,
                 new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BRANGLE),
@@ -67,7 +67,7 @@ public class Swerve extends SubsystemBase {
                 new TalonFX(BRDRIVE),
                 MOD4DRIVEINVERT,
                 false,
-                CAN4CONFIG)
+                MOD4OFFSET)
         };
         
         modules = Arrays.asList(mSwerveModules[1], mSwerveModules[2], mSwerveModules[3], mSwerveModules[4]);
