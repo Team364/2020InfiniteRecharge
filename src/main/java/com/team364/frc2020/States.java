@@ -21,9 +21,12 @@ public class States {
         OPEN_LOOP, VISION, AUTO
     }
 
-
+    public static enum ShooterStates {
+        SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
+    }
 
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
+    public static ShooterStates shooterState = ShooterStates.FERRY;
 
 }
