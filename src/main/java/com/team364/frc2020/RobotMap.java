@@ -1,6 +1,7 @@
 package com.team364.frc2020;
 
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.CAN;
 
@@ -8,6 +9,8 @@ public class RobotMap {
 
     // Hardware
     public static final int primaryPCM = 0;
+    public static final PigeonIMU pigeon = new PigeonIMU(0);
+
 
     //hardware
     public static final int TRACKWIDTH = 21;
