@@ -40,7 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Assign default commands
-    s_Swerve.setDefaultCommand(new OpenSwerve(SwerveConfig(), s_Swerve));
+    s_Swerve.setDefaultCommand(new OpenLoopSwerve(SwerveConfig(), s_Swerve));
 
     // Configure the button bindings
     configureButtonBindings();

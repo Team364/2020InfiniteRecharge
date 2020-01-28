@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.team1323.lib.util.Util;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -38,34 +39,38 @@ public class Swerve extends SubsystemBase {
             new SwerveMod(0,
                 new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FLANGLE),
+                new CANCoder(FLCAN),
                 new TalonFX(FLDRIVE),
-                MOD0DRIVEINVERT,
+                MOD1DRIVEINVERT,
                 false,
-                MOD0OFFSET),
+                CAN1CONFIG),
             new SwerveMod(1,
                 new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FRANGLE),
+                new CANCoder(FRCAN),
                 new TalonFX(FRDRIVE),
-                MOD1DRIVEINVERT, 
+                MOD2DRIVEINVERT, 
                 false,
-                MOD1OFFSET),
+                CAN2CONFIG),
             new SwerveMod(2,
                 new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BLANGLE),
+                new CANCoder(BLCAN),
                 new TalonFX(BLDRIVE),
-                MOD2DRIVEINVERT,
+                MOD3DRIVEINVERT,
                 false,
-                MOD2OFFSET),
+                CAN3CONFIG),
             new SwerveMod(3,
                 new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new TalonFX(BRANGLE),
+                new CANCoder(BRCAN),
                 new TalonFX(BRDRIVE),
                 MOD3DRIVEINVERT,
                 false,
-                MOD3OFFSET)
+                CAN4CONFIG)
         };
         
-        modules = Arrays.asList(mSwerveModules[0], mSwerveModules[1], mSwerveModules[2], mSwerveModules[3]);
+        modules = Arrays.asList(mSwerveModules[1], mSwerveModules[2], mSwerveModules[3], mSwerveModules[4]);
 
         m_kinematics = new SwerveDriveKinematics(
             new Translation2d(TRACKWIDTH / 2.0, WHEELBASE / 2.0), 
@@ -102,7 +107,7 @@ public class Swerve extends SubsystemBase {
     }
     public void updateKinematics(){
         for (SwerveMod mod : getSwerveModules()){
-            if(Util.shouldReverse(mod.periodicIO.velocityPosition, mod.getModuleAngle())){
+            if(Util.shouldReverse(mod.periodicIO.velocityPosition, mod.getCANCoderAngle())){
                 mod.setAngle(mod.periodicIO.velocityPosition += 180);
                 mod.setSpeed(mod.periodicIO.velocitySpeed * -1);
             }else{
@@ -125,10 +130,10 @@ public class Swerve extends SubsystemBase {
         
         m_odometry.update(
             getAngle(),
-            mSwerveModules[0].getState(),
             mSwerveModules[1].getState(),
             mSwerveModules[2].getState(),
-            mSwerveModules[3].getState()
+            mSwerveModules[3].getState(),
+            mSwerveModules[4].getState()
         );
     }
     
