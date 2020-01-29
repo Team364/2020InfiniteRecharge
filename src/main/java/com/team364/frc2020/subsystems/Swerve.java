@@ -3,11 +3,14 @@ package com.team364.frc2020.subsystems;
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team1323.lib.util.Util;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -23,19 +26,21 @@ import com.team364.frc2020.misc.math.Vector2;
 public class Swerve extends SubsystemBase {
 
     private static Swerve Instance = null;
+    public PigeonIMU pigeon;
+
 	/*
-	 * 0 is Front Right
+	 * 0 is Front Right     
 	 * 1 is Front Left
 	 * 2 is Back Left
 	 * 3 is Back Right
 	 */
     private SwerveMod[] mSwerveModules;
-    private List<SwerveMod> modules;
+    public List<SwerveMod> modules;
     public SwerveDriveOdometry m_odometry;
     public SwerveDriveKinematics m_kinematics;
 
     public Swerve() {
-
+        pigeon = new PigeonIMU(new TalonSRX(10));
         mSwerveModules = new SwerveMod[] {
             new SwerveMod(1,
                 new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
@@ -43,7 +48,7 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(FLCAN),
                 new TalonFX(FLDRIVE),
                 MOD1DRIVEINVERT,
-                false,
+                true,
                 MOD1OFFSET),
             new SwerveMod(2,
                 new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
@@ -51,7 +56,7 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(FRCAN),
                 new TalonFX(FRDRIVE),
                 MOD2DRIVEINVERT, 
-                false,
+                true,
                 MOD2OFFSET),
             new SwerveMod(3,
                 new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
@@ -59,7 +64,7 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(BLCAN),
                 new TalonFX(BLDRIVE),
                 MOD3DRIVEINVERT,
-                false,
+                true,
                 MOD3OFFSET),
             new SwerveMod(4,
                 new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
@@ -67,7 +72,7 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(BRCAN),
                 new TalonFX(BRDRIVE),
                 MOD4DRIVEINVERT,
-                false,
+                true,
                 MOD4OFFSET)
         };
         
@@ -103,9 +108,10 @@ public class Swerve extends SubsystemBase {
             newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
             newTranslation = translation;
             velocity = mod.getModulePosition().normal().scale(deadband(rotation)).add(newTranslation);
-            mod.setVectorVelocity(velocity, speed, rotation);
+            mod.setVectorVelocity(velocity, speed);
         }        
     }
+
     public void updateKinematics(){
         for (SwerveMod mod : getSwerveModules()){
             if(Util.shouldReverse(mod.periodicIO.velocityPosition, mod.getCANCoderAngle())){
@@ -127,10 +133,11 @@ public class Swerve extends SubsystemBase {
         return new Rotation2d(getYaw());
     }
 
-    double[] holder;
+
     public double getYaw(){
-        pigeon.getYawPitchRoll(holder);
-        return holder[0];
+        double[] ypr = new double[3];
+        pigeon.getYawPitchRoll(ypr);
+        return ypr[0];
     }
 
     public void updateOdometry() {

@@ -10,8 +10,6 @@ public class RobotMap {
 
     // Hardware
     public static final int primaryPCM = 0;
-    public static final PigeonIMU pigeon = new PigeonIMU(new TalonSRX(10));
-
 
     //hardware
     public static final int TRACKWIDTH = 21;
@@ -22,10 +20,10 @@ public class RobotMap {
     public static final int FLANGLE = 2;
     public static final int FRDRIVE = 3;
     public static final int FRANGLE = 4;
-    public static final int BRDRIVE = 5;
-    public static final int BRANGLE = 6;
-    public static final int BLDRIVE = 7;
-    public static final int BLANGLE = 8;
+    public static final int BLDRIVE = 5;
+    public static final int BLANGLE = 6;
+    public static final int BRDRIVE = 7;
+    public static final int BRANGLE = 8;
 
     //CANCoder Swerve Angle
     public static final int FLCAN = 1;
@@ -38,13 +36,13 @@ public class RobotMap {
     
     //DRIVE INVERT
     /**Front Left */
-    public static final double MOD1OFFSET = 0;
+    public static final double MOD1OFFSET = -89.121;
     /**Front Right */
-    public static final double MOD2OFFSET = 0;
+    public static final double MOD2OFFSET = -263.320;
     /**Back Left */
-    public static final double MOD3OFFSET = 0;
+    public static final double MOD3OFFSET = -325.195;
     /**Back Right */
-    public static final double MOD4OFFSET = 0;
+    public static final double MOD4OFFSET = -68.818;
 
     //CANCoder Config
     /**Front Left */
@@ -58,7 +56,7 @@ public class RobotMap {
 
     //DRIVE INVERT
     /**Front Left */
-    public static final boolean MOD1DRIVEINVERT = true;
+    public static final boolean MOD1DRIVEINVERT = false;
     /**Front Right */
     public static final boolean MOD2DRIVEINVERT = false;
     /**Back Left */
@@ -69,7 +67,7 @@ public class RobotMap {
 
     //constants
     public static final double STICKDEADBAND = 0.2;
-    public static final double ENCODERTICKS = 1024.0;
+    public static final double ENCODERTICKS = 4096.0;
     public static final double OFFSETTOSTRAIGHT = 180;
     //public static final double ANGLE_TICKS_PER_RADIAN = ENCODERTICKS / (2.0 * Math.PI);
 
@@ -82,9 +80,9 @@ public class RobotMap {
     public static final int SLOTIDX = 0;
     public static final int SWERVETIMEOUT = 20;
 
-    public static final double ANGLEP = 7.5;//20
+    public static final double ANGLEP = 1;//20
     public static final double ANGLEI = 0.0;//0.001
-    public static final double ANGLED = 100;//130 //200
+    public static final double ANGLED = 0;//130 //200
 
     public static final int ANGLECONTINUOUSCURRENTLIMIT = 30;
     public static final int ANGLEPEAKCURRENT = 30;
@@ -97,7 +95,7 @@ public class RobotMap {
     public static final int DRIVEPEAKCURRENTDURATION = 100;
     public static final boolean DRIVEENABLECURRENTLIMIT = true;
 
-    public static final int TURRET = 1;
+    public static final int TURRET = 11;
 
     //PID constants for shooter
     public static final double SHOOTING_P = 0;

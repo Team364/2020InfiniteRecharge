@@ -33,8 +33,8 @@ public class RobotContainer {
   private final Hang s_Hang = new Hang();
   private final WheelOfFortune s_Wof = new WheelOfFortune();
   private final Turret s_Turret = new Turret();
-  private final Joystick controller = new Joystick(0);
-  private final Swerve s_Swerve = new Swerve();
+  public final static Joystick controller = new Joystick(0);
+  public static final Swerve s_Swerve = new Swerve();
   private final Hopper s_Hopper = new Hopper();
   private final JoystickButton hopperbutto = new JoystickButton(controller, 0);
   private final JoystickButton shooterSwitch = new JoystickButton(controller, 1);
@@ -44,12 +44,12 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
+    
     // Assign default commands
-    s_Swerve.setDefaultCommand(new OpenLoopSwerve(SwerveConfig(), s_Swerve));
+    s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
 
     // Configure the button bindings
-    configureButtonBindings();
+    //configureButtonBindings();
   }
 
   /**
@@ -75,11 +75,12 @@ public class RobotContainer {
   }
 
 
-  private HashMap<String, Double> SwerveConfig(){
+  public static HashMap<String, Double> SwerveConfig(){
     HashMap<String, Double> SwerveControls = new HashMap<>();
     SwerveControls.put("forward", -controller.getRawAxis(1));
     SwerveControls.put("strafe", controller.getRawAxis(0));
     SwerveControls.put("rotation", controller.getRawAxis(4));
+
     return SwerveControls;
   }
 

@@ -1,5 +1,6 @@
 package com.team364.frc2020.commands;
 
+import com.team364.frc2020.Robot;
 import com.team364.frc2020.RobotContainer;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
@@ -25,10 +26,11 @@ public class OpenLoopSwerve extends CommandBase {
     /**
      * Driver control
      */
-    public OpenLoopSwerve(HashMap<String, Double> controls, Swerve swerve) {
-        this.forward = controls.get("forward");
-        this.strafe = controls.get("strafe");
-        this.rotation = controls.get("rotation");
+    public OpenLoopSwerve(double forward, double strafe, double rotation, Swerve swerve) {
+        this.forward = forward;
+        this.strafe = strafe;
+        this.rotation = rotation;
+
         s_Swerve = swerve;
         addRequirements(s_Swerve);
     }
@@ -41,6 +43,11 @@ public class OpenLoopSwerve extends CommandBase {
 
     @Override
     public void execute() {
+        forward = RobotContainer.SwerveConfig().get("forward");
+        strafe = RobotContainer.SwerveConfig().get("strafe");
+        rotation = RobotContainer.SwerveConfig().get("rotation");
+        System.out.println(forward);
+
         boolean zeroPoint = false;
         if(zeroPoint){
             translation = new Vector2(-1, 0);

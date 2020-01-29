@@ -40,7 +40,7 @@ public class Turret implements Subsystem {
         // Configure turret Motor
         turretFx.configFactoryDefault();
         turretFx.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 20);
-        turretFx.selectProfileSlot(0, 20);
+        turretFx.selectProfileSlot(0, 0);
         // turretFx.setSensorPhase(invertSensorPhase);
         turretFx.config_kF(0, 0);
         turretFx.config_kP(0, 3);

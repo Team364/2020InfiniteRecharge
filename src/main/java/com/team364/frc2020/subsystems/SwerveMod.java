@@ -13,9 +13,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.team1323.lib.util.Util;
 import com.team1323.loops.Loop;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team364.frc2020.misc.math.Vector2;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -50,27 +51,30 @@ public class SwerveMod implements Subsystem {
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
-        //localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        localCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         localCANConfig.magnetOffsetDegrees = offset;
 
         //Configure CANCoder
-        localTurn.configAllSettings(localCANConfig);
+        localTurn.configAllSettings(localCANConfig, 30);
 
         // Configure Angle Motor
         mAngleMotor.configFactoryDefault();
-        mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
-        mAngleMotor.selectProfileSlot(SLOTIDX, SWERVETIMEOUT);
+        mAngleMotor.configRemoteFeedbackFilter(localTurn, 0, SWERVETIMEOUT);
+        mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, SLOTIDX, SWERVETIMEOUT);
+        mAngleMotor.selectProfileSlot(SLOTIDX, PIDLoopIdx);
         mAngleMotor.setSensorPhase(invertSensorPhase);
         mAngleMotor.config_kP(SLOTIDX, ANGLEP, SWERVETIMEOUT);
         mAngleMotor.config_kI(SLOTIDX, ANGLEI, SWERVETIMEOUT);
         mAngleMotor.config_kD(SLOTIDX, ANGLED, SWERVETIMEOUT);
-        mAngleMotor.setNeutralMode(NeutralMode.Brake);
+        mAngleMotor.setNeutralMode(NeutralMode.Coast);
         mAngleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
         mAngleMotor.configMotionAcceleration((int) (kSwerveRotationMaxSpeed * 12.5), 10);
         mAngleMotor.configMotionCruiseVelocity((int) (kSwerveRotationMaxSpeed), 10);
-        mAngleMotor.set(ControlMode.Position, angleMotor.getSelectedSensorPosition(0));
+        //mAngleMotor.set(ControlMode.Position, angleMotor.getSelectedSensorPosition(0));
 
         // Configure Drive Motor
+        mDriveMotor.configFactoryDefault();
         mDriveMotor.setNeutralMode(NeutralMode.Brake);
         mDriveMotor.setInverted(invertDrive);
 
@@ -81,11 +85,13 @@ public class SwerveMod implements Subsystem {
     }
 
     public void openLoopOutput(){
+
         mDriveMotor.set(ControlMode.PercentOutput, periodicIO.speedDemand);
         mAngleMotor.set(ControlMode.MotionMagic, periodicIO.positionDemand);
+
     }
 
-    public void setVectorVelocity(Vector2 velocity, boolean speed, double rotation) {
+    public void setVectorVelocity(Vector2 velocity, boolean speed) {
         this.velocity = velocity;
         periodicIO.setVelocityPosition(velocity.getAngle().toDegrees());
         if (speed) {
@@ -142,7 +148,9 @@ public class SwerveMod implements Subsystem {
     }
 
     public double getCANCoderAngle(){
-        return localTurn.getPosition();
+        double convert = modulate360(toDegrees(mAngleMotor.getSelectedSensorPosition()));
+        if(convert < 0) convert += 360;
+        return convert;
     }
 
 
