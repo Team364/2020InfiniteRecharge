@@ -11,7 +11,7 @@ public class Shooter extends SubsystemBase {
     public double motorPower;
     public TalonFX mFlyWheelMotor;
     public Shooter() {
-        mFlyWheelMotor = new TalonFX(2);
+        mFlyWheelMotor = new TalonFX(12);
     }
 
     public void setFlyWheelVel() {

@@ -58,11 +58,32 @@ public class RobotMap {
     /**Front Left */
     public static final boolean MOD1DRIVEINVERT = false;
     /**Front Right */
-    public static final boolean MOD2DRIVEINVERT = false;
+    public static final boolean MOD2DRIVEINVERT = true;
     /**Back Left */
     public static final boolean MOD3DRIVEINVERT = false;
     /**Back Right */
-    public static final boolean MOD4DRIVEINVERT = false;
+    public static final boolean MOD4DRIVEINVERT = true;
+    
+    //ANGLE INVERT
+    /**Front Left */
+    public static final boolean MOD1ANGLEINVERT = false;
+    /**Front Right */
+    public static final boolean MOD2ANGLEINVERT = false;
+    /**Back Left */
+    public static final boolean MOD3ANGLEINVERT = false;
+    /**Back Right */
+    public static final boolean MOD4ANGLEINVERT = false;
+      
+    //ANGLE PHASE
+    /**Front Left */
+    public static final boolean MOD1ANGLEPHASE = true;
+    /**Front Right */
+    public static final boolean MOD2ANGLEPHASE = true;
+    /**Back Left */
+    public static final boolean MOD3ANGLEPHASE = true;
+    /**Back Right */
+    public static final boolean MOD4ANGLEPHASE = true;
+    
 
 
     //constants
@@ -72,27 +93,26 @@ public class RobotMap {
     //public static final double ANGLE_TICKS_PER_RADIAN = ENCODERTICKS / (2.0 * Math.PI);
 
     // PID constants
-    public static final int SlotIdx = 0;
     public static final int PIDLoopIdx = 0;
     public static final int TimeoutMs = 20;
-
-
     public static final int SLOTIDX = 0;
+
+    
     public static final int SWERVETIMEOUT = 20;
 
-    public static final double ANGLEP = 1;//20
+    public static final double ANGLEP = 2.5;//20
     public static final double ANGLEI = 0.0;//0.001
-    public static final double ANGLED = 0;//130 //200
+    public static final double ANGLED = 200;//130 //200
 
-    public static final int ANGLECONTINUOUSCURRENTLIMIT = 30;
+    public static final int ANGLECONTINUOUSCURRENTLIMIT = 25;
     public static final int ANGLEPEAKCURRENT = 30;
-    public static final int ANGLEPEAKCURRENTDURATION = 100;
+    public static final double ANGLEPEAKCURRENTDURATION = 0.1;
     public static final boolean ANGLEENABLECURRENTLIMIT = true;
-    public static final double kSwerveRotationMaxSpeed = 1250.0 * 0.8;
 
-    public static final int DRIVECONTINUOUSCURRENTLIMIT = 30;
-    public static final int DRIVEPEAKCURRENT = 30;
-    public static final int DRIVEPEAKCURRENTDURATION = 100;
+
+    public static final int DRIVECONTINUOUSCURRENTLIMIT = 35;
+    public static final int DRIVEPEAKCURRENT = 40;
+    public static final double DRIVEPEAKCURRENTDURATION = 0.1;
     public static final boolean DRIVEENABLECURRENTLIMIT = true;
 
     public static final int TURRET = 11;

@@ -46,7 +46,6 @@ public class OpenLoopSwerve extends CommandBase {
         forward = RobotContainer.SwerveConfig().get("forward");
         strafe = RobotContainer.SwerveConfig().get("strafe");
         rotation = RobotContainer.SwerveConfig().get("rotation");
-        System.out.println(forward);
 
         boolean zeroPoint = false;
         if(zeroPoint){

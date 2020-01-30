@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -48,15 +49,17 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(FLCAN),
                 new TalonFX(FLDRIVE),
                 MOD1DRIVEINVERT,
-                true,
+                MOD1ANGLEINVERT,
+                MOD1ANGLEPHASE,
                 MOD1OFFSET),
             new SwerveMod(2,
                 new Vector2(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
                 new TalonFX(FRANGLE),
                 new CANCoder(FRCAN),
                 new TalonFX(FRDRIVE),
-                MOD2DRIVEINVERT, 
-                true,
+                MOD2DRIVEINVERT,
+                MOD1ANGLEINVERT,
+                MOD1ANGLEPHASE,
                 MOD2OFFSET),
             new SwerveMod(3,
                 new Vector2(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
@@ -64,7 +67,8 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(BLCAN),
                 new TalonFX(BLDRIVE),
                 MOD3DRIVEINVERT,
-                true,
+                MOD1ANGLEINVERT,
+                MOD1ANGLEPHASE,
                 MOD3OFFSET),
             new SwerveMod(4,
                 new Vector2(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
@@ -72,12 +76,12 @@ public class Swerve extends SubsystemBase {
                 new CANCoder(BRCAN),
                 new TalonFX(BRDRIVE),
                 MOD4DRIVEINVERT,
-                true,
+                MOD1ANGLEINVERT,
+                MOD1ANGLEPHASE,
                 MOD4OFFSET)
         };
         
         modules = Arrays.asList(mSwerveModules[0], mSwerveModules[1], mSwerveModules[2], mSwerveModules[3]);
-
         m_kinematics = new SwerveDriveKinematics(
             new Translation2d(TRACKWIDTH / 2.0, WHEELBASE / 2.0), 
             new Translation2d(-TRACKWIDTH / 2.0, WHEELBASE / 2.0),
@@ -114,13 +118,8 @@ public class Swerve extends SubsystemBase {
 
     public void updateKinematics(){
         for (SwerveMod mod : getSwerveModules()){
-            if(Util.shouldReverse(mod.periodicIO.velocityPosition, mod.getCANCoderAngle())){
-                mod.setAngle(mod.periodicIO.velocityPosition += 180);
-                mod.setSpeed(mod.periodicIO.velocitySpeed * -1);
-            }else{
-                mod.setAngle(mod.periodicIO.velocityPosition);
-                mod.setSpeed(mod.periodicIO.velocitySpeed);
-            }
+            mod.setAngle(mod.periodicIO.velocityPosition);
+            mod.setSpeed(mod.periodicIO.velocitySpeed);
         }
         openLoopOutputs();
     }
