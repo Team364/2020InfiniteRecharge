@@ -42,6 +42,7 @@ public class Swerve extends SubsystemBase {
 
     public Swerve() {
         pigeon = new PigeonIMU(new TalonSRX(10));
+        zeroGyro();
         mSwerveModules = new SwerveMod[] {
             new SwerveMod(1,
                 new Vector2(TRACKWIDTH / 2.0, WHEELBASE / 2.0),
@@ -110,7 +111,7 @@ public class Swerve extends SubsystemBase {
         for(SwerveMod mod : getSwerveModules()){
             Vector2 newTranslation = null;
             newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
-            newTranslation = translation;
+            //newTranslation = translation;
             velocity = mod.getModulePosition().normal().scale(deadband(rotation)).add(newTranslation);
             mod.setVectorVelocity(velocity, speed);
         }        
@@ -126,8 +127,8 @@ public class Swerve extends SubsystemBase {
     
     @Override
     public void periodic(){
-
     }
+
     public Rotation2d getAngle(){
         return new Rotation2d(getYaw());
     }
@@ -137,6 +138,10 @@ public class Swerve extends SubsystemBase {
         double[] ypr = new double[3];
         pigeon.getYawPitchRoll(ypr);
         return ypr[0];
+    }
+    
+    public void zeroGyro(){
+        pigeon.setYaw(0);
     }
 
     public void updateOdometry() {

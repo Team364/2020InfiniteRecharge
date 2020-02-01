@@ -16,6 +16,7 @@ import com.team364.frc2020.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static com.team364.frc2020.RobotMap.*;
 import static com.team364.frc2020.States.*;
@@ -34,10 +35,14 @@ public class RobotContainer {
   private final WheelOfFortune s_Wof = new WheelOfFortune();
   private final Turret s_Turret = new Turret();
   public final static Joystick controller = new Joystick(0);
+  public final static Joystick operator = new Joystick(1);
   public static final Swerve s_Swerve = new Swerve();
   private final Hopper s_Hopper = new Hopper();
-  private final JoystickButton hopperbutto = new JoystickButton(controller, 0);
-  private final JoystickButton shooterSwitch = new JoystickButton(controller, 1);
+  private final JoystickButton hopperbutto = new JoystickButton(operator, 0);
+  private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
+  private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
+  public static boolean THE_SWITCH = false;
+  public static HashMap<String, Double> TARGET = new HashMap<String, Double>();
 
 
   /**
@@ -47,6 +52,7 @@ public class RobotContainer {
     
     // Assign default commands
     s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
+    zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
 
     // Configure the button bindings
     //configureButtonBindings();
@@ -59,19 +65,17 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    if (shooterSwitch.get()) {
-      shooterState = ShooterStates.RAMP_UP;
-      if (s_Shooter.getFlyWheelVel() == SHOOTERSPEED) {
-        shooterState = ShooterStates.SHOOTING;
-      }
-    } else if (!shooterSwitch.get() && shooterState == ShooterStates.SHOOTING) {
-      shooterState = ShooterStates.RAMP_DOWN;
-    } else if (shooterState == ShooterStates.RAMP_DOWN && s_Shooter.getFlyWheelVel() == FERRYSPEED) {
-      shooterState = ShooterStates.FERRY;
-    }
-
+    aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
+    aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
+    ShooterStates();
+  }
+
+  private void activate_THE_SWITCH(){
+    THE_SWITCH = true;
+  }
+  private void deactivate_THE_SWITCH(){
+    THE_SWITCH = false;
   }
 
 
@@ -82,6 +86,15 @@ public class RobotContainer {
     SwerveControls.put("rotation", controller.getRawAxis(4));
 
     return SwerveControls;
+  }
+  private void ShooterStates(){
+    if (THE_SWITCH) {
+      if (s_Shooter.getFlyWheelVel() >= s_Shooter.ShooterTarget && shooterState != ShooterStates.SHOOTING) shooterState = ShooterStates.SHOOTING;
+      if(shooterState == ShooterStates.FERRY ) shooterState = ShooterStates.RAMP_UP;
+    } else if (!THE_SWITCH ) {
+      if(shooterState == ShooterStates.SHOOTING) shooterState = ShooterStates.RAMP_DOWN;
+      if(shooterState == ShooterStates.RAMP_DOWN && s_Shooter.getFlyWheelVel() <= FERRYSPEED) shooterState = ShooterStates.FERRY;
+    }
   }
 
   /*

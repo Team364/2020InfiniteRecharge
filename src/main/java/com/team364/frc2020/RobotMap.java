@@ -1,5 +1,7 @@
 package com.team364.frc2020;
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -7,7 +9,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.CAN;
 
 public class RobotMap {
-
+    
     // Hardware
     public static final int primaryPCM = 0;
 
@@ -42,7 +44,7 @@ public class RobotMap {
     /**Back Left */
     public static final double MOD3OFFSET = -325.195;
     /**Back Right */
-    public static final double MOD4OFFSET = -68.818;
+    public static final double MOD4OFFSET = -58.818;
 
     //CANCoder Config
     /**Front Left */
