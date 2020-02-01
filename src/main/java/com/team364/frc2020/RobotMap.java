@@ -123,4 +123,8 @@ public class RobotMap {
     public static final double SHOOTERSPEED = 0;
     public static final double FERRYSPEED = 0;
     
+    //constants for hood
+    public static final int SERVOHOOD1 = 0;
+    public static final int SERVOHOODSLAVE = 0;
+
 }
