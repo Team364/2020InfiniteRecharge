@@ -34,6 +34,8 @@ public class RobotContainer {
   private final Hang s_Hang = new Hang();
   private final WheelOfFortune s_Wof = new WheelOfFortune();
   private final Turret s_Turret = new Turret();
+  private final Vision s_Vision = new Vision();
+
   public final static Joystick controller = new Joystick(0);
   public final static Joystick operator = new Joystick(1);
   public static final Swerve s_Swerve = new Swerve();
@@ -42,7 +44,6 @@ public class RobotContainer {
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   public static boolean THE_SWITCH = false;
-  public static HashMap<String, Double> TARGET = new HashMap<String, Double>();
 
 
   /**
@@ -51,8 +52,8 @@ public class RobotContainer {
   public RobotContainer() {
     
     // Assign default commands
-    s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
-    zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
+    //s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
+    //zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
 
     // Configure the button bindings
     //configureButtonBindings();

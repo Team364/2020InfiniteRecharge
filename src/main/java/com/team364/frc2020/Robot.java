@@ -8,7 +8,7 @@
 package com.team364.frc2020;
 
 import com.team364.frc2020.subsystems.SwerveMod;
-
+import static com.team364.frc2020.subsystems.Vision.TARGET;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
     for(SwerveMod mod : RobotContainer.s_Swerve.modules){
       SmartDashboard.putNumber("CANCoder" + mod.moduleNumber, mod.getCANCoderAngle());
     }

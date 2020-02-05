@@ -2,6 +2,7 @@ package com.team364.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import static com.team364.frc2020.subsystems.Vision.TARGET;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static com.team364.frc2020.RobotMap.*;
@@ -11,8 +12,11 @@ import static com.team364.frc2020.RobotContainer.*;
 public class Shooter extends SubsystemBase {
     public double ShooterTarget;
     public TalonFX mFlyWheelMotor;
+    public TalonFX mImmaSlave;
     public Shooter() {
+        mImmaSlave = new TalonFX(1);
         mFlyWheelMotor = new TalonFX(12);
+        mImmaSlave.follow(mFlyWheelMotor);
         ShooterTarget = 0;
     }
 
