@@ -1,15 +1,19 @@
 package com.team364.frc2020;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import org.json.JSONObject;
+
 import edu.wpi.first.wpilibj.CAN;
 
 public class RobotMap {
     
+    public static final double HEIGHTDEADBAND = 1.0;
     // Hardware
     public static final int primaryPCM = 0;
 

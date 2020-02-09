@@ -14,8 +14,6 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.team1323.lib.util.Util;
-import com.team1323.loops.Loop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team364.frc2020.misc.math.Vector2;
 

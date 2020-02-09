@@ -8,15 +8,13 @@
 package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.RobotContainer.THE_SWITCH;
+import static com.team364.frc2020.RobotMap.*;
 
-import java.io.FileWriter;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.json.JSONObject;
-import org.json.*;
-import org.json.simple.parser.JSONParser;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -24,6 +22,13 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import org.json.simple.JSONObject;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -35,55 +40,35 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * project.
  */
 public class Vision implements Subsystem {
-    public HashMap<Double, String> visionHeights = new HashMap();
     public double[] closestTarget = new double[2];
     public static HashMap<String, Double> TARGET = new HashMap<String, Double>();
-    public static StringBuilder reCalibrate = new StringBuilder();
-
-
-    private JSONObject targetFile;
-    private Map<String, Double> file = Map.of("name", 1.0, "extra", 2.0);
-
+    public int cycles;
+    private double lastHeight = 0;
+    private ShuffleboardTab tab = Shuffleboard.getTab("Config");
+    private Map<Double, Double[]> targetMap;
+    
     public Vision() {
         register();
-        targetFile = new JSONObject(file);
-
-        // fill in other heights
-        visionHeights.put(1.0, "height1");
-
+        closestTarget[0] = 0;
+        closestTarget[1] = 0;
+        cycles = 0;
     }
 
-    public void printJson() {
-        System.out.println(targetFile.toString());
-    }
-
-    public void putJson(String string, Object value) {
-        try {
-            targetFile.put(string, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public double visionTrack() {
-        double height = 0;
-        return height;
-    }
-
-    public void setTarget() {
-        findClosestTargets(visionTrack());
-        TARGET = calculateTarget();
-    }
-
-    public void findClosestTargets(double height) {
-        visionHeights.forEach((target, name) -> {
-            double holder = Math.abs(height - target);
-            if (holder < closestTarget[0] || holder < closestTarget[1]) {
-                if (Math.abs(holder - closestTarget[0]) < Math.abs(holder - closestTarget[1])) {
-                    closestTarget[1] = height;
-                } else {
-                    closestTarget[0] = height;
+    public void findClosestTargets(double height, int whichSystem) {
+        targetMap.keySet().forEach((key) -> {
+            try {
+                double value = targetMap.get(key)[whichSystem];
+                double mathHold = Math.abs(height - value);
+                // logic
+                if (mathHold < Math.abs(closestTarget[0] - value) || mathHold < Math.abs(closestTarget[1] - value)) {
+                    if (Math.abs(mathHold - closestTarget[0]) < Math.abs(mathHold - closestTarget[1])) {
+                        closestTarget[1] = value;
+                    } else {
+                        closestTarget[0] = value;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -94,62 +79,25 @@ public class Vision implements Subsystem {
         finalTarget.put("Shooter", linearHolder[0]);
         finalTarget.put("Hood", linearHolder[0]);
         return finalTarget;
+    public double linearInterpolate(double first, double second, int whichSystem, double actual) {
+        double holdOne = targetMap.get(first)[whichSystem];
+        double holdTwo = targetMap.get(second)[whichSystem];
+        double slope = (holdOne - holdTwo) / (first - second);
+        double intercept = holdOne - (slope * holdOne);
+        return (actual * slope) + intercept;
     }
 
-    public double[] linearInterpolation() {
-        double[] JSONplots = new double[10];
+    public double limeX() {
+        return 1.0;
+    }
 
-        try {
-            JSONplots[0] = (double) targetFile.get("name");
-            JSONplots[1] = (double) targetFile.get("extra");
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-            // targetFile.get(visionHeights.get(closestTarget[0]));
-            // targetFile.get(visionHeights.get(closestTarget[0]));
-
-
-
-       return JSONplots;
-   }
-
-
-
-
-   public double limeX(){
-       return 1.0;
-   }
-   public double limeY(){
-       return 1.0;
-   }
-
-   public void reCalMap(){
-    Iterator<String> keys = targetFile.keys();
-    try{
-        reCalibrate.append("{");
-        for(int i = 0; i < targetFile.length(); i++){
-            if(keys.hasNext()){
-                String hold = keys.next();
-                //TODO: check to the next line thing
-                reCalibrate.append("\n\"" + hold + "\"" + ", " + (double)targetFile.get(hold));
-            }   
-        }
-        reCalibrate.append("}");
-    }catch(Exception e){}
-   }
-
-   @Override
-   public void periodic(){
-       if(THE_SWITCH){
-
-       }   
-      
-       setTarget();
-       reCalMap();
-       System.out.println(reCalibrate);
-   }
+    public double limeY() {
+        return 1.0;
+    }
+    @Override
+    public void periodic(){
+        
+    }
 
 
 }
-

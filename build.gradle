@@ -57,8 +57,7 @@ dependencies {
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
-    compile fileTree(dir: 'libs', include: ['java-json.jar'])
-    compile fileTree(dir: 'libs', include: ['json-simple-1.1.1.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 
 }
 
