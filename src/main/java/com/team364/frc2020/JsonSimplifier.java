@@ -1,20 +1,11 @@
-package com.team364.frc2020.subsystems;
+package com.team364.frc2020;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -32,21 +23,36 @@ public class JsonSimplifier<K, V> {
    */
 
   JSONObject json;
+  String name;
   Map<K, V> map;
   JSONParser parser;
   Class<K> genericKey;
   Class<V> genericValue;
   Class<Map<K, V>> generic;
 
-  public JsonSimplifier(JSONObject json){
-    this.json = json;
+  public JsonSimplifier(String name){
+    this.name = name;
     try{
+      this.json = new JSONObject(name);
       map = toMap();
     } catch(Exception e){e.printStackTrace();}
   }
 
-  public void writeElement(String key, V value) throws JSONException {
-    json.put(key, value);
+  public String getName() {
+    return null;
+  }
+
+  public void writeElement(String key, V value){
+    try{
+      json.put(key, value);
+    }catch(JSONException e){e.printStackTrace();}
+  }
+
+  public void replaceElement(String key, V value){
+    try{
+      json.remove(key);
+      json.put(key, value);
+    }catch(JSONException e){e.printStackTrace();}
   }
 
   public int length() {
@@ -60,7 +66,7 @@ public class JsonSimplifier<K, V> {
   public Map<K, V> getMap(){
     return map;
   }
-  public Map<K, V> toMap() throws ParseException {
+  private Map<K, V> toMap() throws ParseException {
     return generic.cast(parser.parse(json.toString()));
   }
 
@@ -75,4 +81,6 @@ public class JsonSimplifier<K, V> {
       e.printStackTrace();
     }
   }
+
+
 }

@@ -2,27 +2,26 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.Configuration.SwerveJson;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.team1323.lib.util.Util;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.team364.frc2020.misc.math.Rotation2;
 import com.team364.frc2020.misc.math.Vector2;
+import com.team364.frc2020.SwerveMod;
 
 public class Swerve extends SubsystemBase {
 
@@ -39,8 +38,10 @@ public class Swerve extends SubsystemBase {
     public List<SwerveMod> modules;
     public SwerveDriveOdometry m_odometry;
     public SwerveDriveKinematics m_kinematics;
+    private Map<Integer, Double> offsetsMap = SwerveJson.getMap();
 
     public Swerve() {
+        configOffsets();
         pigeon = new PigeonIMU(new TalonSRX(10));
         zeroGyro();
         mSwerveModules = new SwerveMod[] {
@@ -96,7 +97,14 @@ public class Swerve extends SubsystemBase {
           Instance = new Swerve();
         }
         return Instance;
-      }
+    }
+
+    public void configOffsets(){
+            MOD1OFFSET = offsetsMap.get(1);
+            MOD2OFFSET = offsetsMap.get(2);
+            MOD3OFFSET = offsetsMap.get(3);
+            MOD4OFFSET = offsetsMap.get(4);
+    }
 
     public SwerveMod[] getSwerveModules() {
         return mSwerveModules;
@@ -127,6 +135,9 @@ public class Swerve extends SubsystemBase {
     
     @Override
     public void periodic(){
+        for(SwerveMod mod : modules){
+            SmartDashboard.putNumber("CANCoder Mod " + mod.moduleNumber + " ", mod.getCANCoderAngle());
+        }
     }
 
     public Rotation2d getAngle(){

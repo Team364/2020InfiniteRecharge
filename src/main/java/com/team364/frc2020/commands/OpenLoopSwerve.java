@@ -1,14 +1,11 @@
 package com.team364.frc2020.commands;
 
-import com.team364.frc2020.Robot;
 import com.team364.frc2020.RobotContainer;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static com.team364.frc2020.RobotMap.*;
-
-import java.util.HashMap;
 
 public class OpenLoopSwerve extends CommandBase {
 

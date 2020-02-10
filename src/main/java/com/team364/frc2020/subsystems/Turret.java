@@ -15,7 +15,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import static com.team364.frc2020.subsystems.Vision.TARGET;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**

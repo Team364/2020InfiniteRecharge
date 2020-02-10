@@ -9,7 +9,6 @@ package com.team364.frc2020;
 
 import java.util.HashMap;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team364.frc2020.commands.*;
 import com.team364.frc2020.subsystems.*;
 
@@ -18,8 +17,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import static com.team364.frc2020.RobotMap.*;
-import static com.team364.frc2020.States.*;
+
 
 
 /**
@@ -30,15 +28,14 @@ import static com.team364.frc2020.States.*;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private Configuration configuring;
   private final Shooter s_Shooter = new Shooter();
-  private final Hang s_Hang = new Hang();
-  private final WheelOfFortune s_Wof = new WheelOfFortune();
-  private final Turret s_Turret = new Turret();
   private final Vision s_Vision = new Vision();
+  private final Swerve s_Swerve = new Swerve();
+
 
   public final static Joystick controller = new Joystick(0);
   public final static Joystick operator = new Joystick(1);
-  public static final Swerve s_Swerve = new Swerve();
   private final Hopper s_Hopper = new Hopper();
   private final JoystickButton hopperbutto = new JoystickButton(operator, 0);
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
@@ -50,13 +47,15 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    
     // Assign default commands
-    //s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
-    //zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
+    s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
+    s_Shooter.setDefaultCommand(new ShooterControl(s_Shooter, s_Vision, configuring));
+    zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
 
     // Configure the button bindings
-    //configureButtonBindings();
+    configureButtonBindings();
+    configuring = new Configuration(s_Vision, s_Swerve);
+
   }
 
   /**
@@ -69,7 +68,6 @@ public class RobotContainer {
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
-    ShooterStates();
   }
 
   private void activate_THE_SWITCH(){
@@ -88,16 +86,14 @@ public class RobotContainer {
 
     return SwerveControls;
   }
-  private void ShooterStates(){
-    if (THE_SWITCH) {
-      if (s_Shooter.getFlyWheelVel() >= s_Shooter.ShooterTarget && shooterState != ShooterStates.SHOOTING) shooterState = ShooterStates.SHOOTING;
-      if(shooterState == ShooterStates.FERRY ) shooterState = ShooterStates.RAMP_UP;
-    } else if (!THE_SWITCH ) {
-      if(shooterState == ShooterStates.SHOOTING) shooterState = ShooterStates.RAMP_DOWN;
-      if(shooterState == ShooterStates.RAMP_DOWN && s_Shooter.getFlyWheelVel() <= FERRYSPEED) shooterState = ShooterStates.FERRY;
-    }
-  }
+  /**
+   * Literally nothing...
+   * Rohit doesn't like the yellow that visual studio 
+   * puts on a class instance when it isn't used, lol imagine.
+   */
+  public void nothing(){
 
+  }
   /*
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

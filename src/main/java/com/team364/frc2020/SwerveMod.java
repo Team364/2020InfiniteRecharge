@@ -1,4 +1,4 @@
-package com.team364.frc2020.subsystems;
+package com.team364.frc2020;
 
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
@@ -9,19 +9,15 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.team364.frc2020.misc.math.Vector2;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Talon;
 
 public class SwerveMod implements Subsystem {
     public final int moduleNumber;
@@ -37,7 +33,7 @@ public class SwerveMod implements Subsystem {
     public double currentAngle;
     private boolean driveInvert = false;
 
-    protected PeriodicIO periodicIO = new PeriodicIO();
+    public PeriodicIO periodicIO = new PeriodicIO();
 
     public SupplyCurrentLimitConfiguration swerveAngleSupplyLimit = new SupplyCurrentLimitConfiguration(ANGLEENABLECURRENTLIMIT, ANGLECONTINUOUSCURRENTLIMIT, ANGLEPEAKCURRENT, ANGLEPEAKCURRENTDURATION);
     public SupplyCurrentLimitConfiguration swerveDriveSupplyLimit = new SupplyCurrentLimitConfiguration(DRIVEENABLECURRENTLIMIT, DRIVECONTINUOUSCURRENTLIMIT, DRIVEPEAKCURRENT, DRIVEPEAKCURRENTDURATION);
