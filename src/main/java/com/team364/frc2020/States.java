@@ -1,7 +1,13 @@
 package com.team364.frc2020;
 
 public class States {
+    /**
+     * States for the color sensor
+     */
 
+     public static enum ColorStates {
+         RED, GREEN, BLUE, YELLO
+     }
 
     /**
      * Target states of turret:
@@ -25,6 +31,7 @@ public class States {
         SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
     }
 
+    public static ColorStates colorState = ColorStates.BLUE;
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
     public static ShooterStates shooterState = ShooterStates.FERRY;

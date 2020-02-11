@@ -67,6 +67,12 @@ public class Robot extends TimedRobot {
     int proximity = m_colorSensor.getProximity();
 
     SmartDashboard.putNumber("Proximity", proximity);
+
+    makeColor(8, 8, 8);
+  }
+
+  private void makeColor(int r, int g, int b) {
+    
   }
 
   /**
