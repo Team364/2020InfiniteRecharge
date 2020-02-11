@@ -32,10 +32,11 @@ public class JsonSimplifier<K, V> {
 
   public JsonSimplifier(String name){
     this.name = name;
+
     try{
-      this.json = new JSONObject(name);
+      this.json = new JSONObject();
       map = toMap();
-    } catch(Exception e){e.printStackTrace();}
+    } catch(Exception e){}
   }
 
   public String getName() {
@@ -71,12 +72,11 @@ public class JsonSimplifier<K, V> {
   }
 
 
-  public void writeJson(String fileName) {
+  public void writeJson() {
     try {
-      FileWriter fileWriter = new FileWriter(fileName, true);
+      FileWriter fileWriter = new FileWriter(name, true);
       fileWriter.write(json.toString());
       fileWriter.flush();
-      fileWriter.close();
     } catch (Exception e) {
       e.printStackTrace();
     }

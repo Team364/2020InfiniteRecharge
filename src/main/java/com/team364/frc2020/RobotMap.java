@@ -3,8 +3,8 @@ package com.team364.frc2020;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 public class RobotMap {
-    public static final String TARGETJSON = null;
-    public static final String SWERVEJSON = null;
+    public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
+    public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
     public static final double HEIGHTDEADBAND = 1.0;
     // Hardware

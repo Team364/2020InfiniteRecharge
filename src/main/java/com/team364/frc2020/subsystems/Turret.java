@@ -10,11 +10,15 @@ package com.team364.frc2020.subsystems;
 import static com.team364.frc2020.RobotContainer.THE_SWITCH;
 import static com.team364.frc2020.RobotMap.TURRET;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.*;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -26,16 +30,24 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class Turret implements Subsystem {
     public TalonFX turretFx;
+    private CANCoderConfiguration turretCANConfig = new CANCoderConfiguration();
+    private CANCoder turretCAN = new CANCoder(11);
 
     public SupplyCurrentLimitConfiguration turretSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
 
     public Turret() {
         register();
         turretFx = new TalonFX(TURRET);
+        turretCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        turretCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+
+        // Configure CANCoder
+        turretCAN.configAllSettings(turretCANConfig, 30);
 
         // Configure turret Motor
         turretFx.configFactoryDefault();
-        turretFx.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 20);
+        turretFx.configRemoteFeedbackFilter(turretCAN, 0, 20);
+        turretFx.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, 0, 20);
         turretFx.selectProfileSlot(0, 0);
         // turretFx.setSensorPhase(invertSensorPhase);
         turretFx.config_kF(0, 0);
@@ -50,13 +62,17 @@ public class Turret implements Subsystem {
 
     }
 
+    public void setPosition(double pos){
+        turretFx.set(ControlMode.Position, pos);
+    }
+    public double getPosition(){
+        return turretFx.getSelectedSensorPosition();
+    }
+
     @Override
     public void periodic() {
 
-        if(THE_SWITCH){
-            //setTarget();
-        }
-  }
+    }
 
 
 

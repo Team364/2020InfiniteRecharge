@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private Configuration configuring;
+  public Configuration configuring;
   private final Shooter s_Shooter = new Shooter();
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
