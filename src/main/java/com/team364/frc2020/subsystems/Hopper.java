@@ -9,7 +9,7 @@ public class Hopper extends SubsystemBase {
 	public TalonFX mHopperMotor;
 
 	public Hopper(){
-		mHopperMotor = new TalonFX(1);
+		mHopperMotor = new TalonFX(13);
 }
 	public void MoveHopper(double motorPower){
 		mHopperMotor.set(ControlMode.PercentOutput, motorPower);
