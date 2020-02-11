@@ -7,14 +7,22 @@
 
 package com.team364.frc2020;
 
-
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,9 +34,10 @@ import com.revrobotics.ColorSensorV3;
 public class Robot extends TimedRobot {
   private I2C.Port i2cPort = I2C.Port.kOnboard;
   private Command m_autonomousCommand;
-
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+  private int cycles  = 0;
   private RobotContainer m_robotContainer;
+
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -36,8 +45,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
     m_robotContainer = new RobotContainer();
+    m_robotContainer.nothing();
+
   }
 
   /**
@@ -53,6 +63,8 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    m_robotContainer.configuring.doTheConfigurationShuffle();
     CommandScheduler.getInstance().run();
 
     Color detectedColor = m_colorSensor.getColor();

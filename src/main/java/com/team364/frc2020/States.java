@@ -17,6 +17,9 @@ public class States {
     public static enum TargetStates {
         GYRO, VISION, NO_TRACK
     }
+    public static enum ConfigStates {
+        TARGET, SWERVE, MATCH
+    }
 
 
     /**
@@ -32,6 +35,7 @@ public class States {
     }
 
     public static ColorStates colorState = ColorStates.BLUE;
+    public static ConfigStates configState = ConfigStates.MATCH;
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
     public static ShooterStates shooterState = ShooterStates.FERRY;

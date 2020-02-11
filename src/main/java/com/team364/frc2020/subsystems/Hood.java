@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.PWM;
 
 public class Hood extends SubsystemBase {
     public double desiredHoodAngle;    
-    private PWM servoHood;
-    private PWM servoHoodSlave;
+    private PWM hoodServo;
+    private PWM slaveHoodServo;
     
     public Hood() {
-        servoHood = new PWM(SERVOHOOD1);
-        servoHoodSlave = new PWM(SERVOHOODSLAVE);
-
+        hoodServo = new PWM(15);
+        slaveHoodServo = new PWM(16);
+        slaveHoodServo.follow(hoodServo);
     }
     public void changeHoodAngle(double poistion) {
         servoHood.setPosition(poistion);

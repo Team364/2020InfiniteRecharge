@@ -3,9 +3,6 @@ package com.team1323.subsystems.requests;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.team364.frc2020.Robot;
-import com.team364.frc2020.subsystems.*;
-
 public abstract class Request {
 
 	public boolean subSingle() {

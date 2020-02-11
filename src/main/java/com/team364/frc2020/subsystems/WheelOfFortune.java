@@ -7,14 +7,6 @@
 
 package com.team364.frc2020.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,8 +14,6 @@ import static com.team364.frc2020.States.*;
 import static com.team364.frc2020.commands.ColorSensor.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
-
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
