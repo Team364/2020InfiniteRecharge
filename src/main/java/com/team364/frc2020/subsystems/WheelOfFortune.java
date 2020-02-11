@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import static com.team364.frc2020.States.*;
 import static com.team364.frc2020.commands.ColorSensor.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 
 
@@ -33,9 +35,10 @@ public class WheelOfFortune extends SubsystemBase {
   private int min;
   private int max;
   private int rgb;
+  private TalonSRX mWheelOfFortune;
   
   public WheelOfFortune() {
-
+    mWheelOfFortune = new TalonSRX(20);
   }
   public void function(){
     if(getDetectedColor(230, 270, 0) && getDetectedColor(0, 25, 1) && getDetectedColor(0, 25, 3)) {
@@ -50,14 +53,19 @@ public class WheelOfFortune extends SubsystemBase {
     colorState = ColorStates.RED;
     switch (colorState) {
         case RED:
+          mWheelOfFortune.set(ControlMode.Position, 20);
         break;
         case BLUE:
+          mWheelOfFortune.set(ControlMode.Position, 30);
         break;
         case GREEN:
+          mWheelOfFortune.set(ControlMode.Position, -10);
         break;
         case YELLO:
+          mWheelOfFortune.set(ControlMode.Position, -20);
         break;
         default: 
+          SmartDashboard.
         break;
 
     }   
