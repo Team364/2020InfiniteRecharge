@@ -32,10 +32,10 @@ public class HoodControl extends CommandBase {
     public void execute() {
         if (THE_SWITCH) {
             // "1" means the system is hood
-            //s_Hood(s_Vision.targetLogic(1));
+            s_Hood.setAngle(s_Vision.targetLogic(1));
         }
         if (configState == ConfigStates.TARGET) {
-           //s_Shooter.setFlyWheelVel(Config.getShooterVel());
+           s_Hood.setAngle(Config.HoodAngle);
         }
 
     }

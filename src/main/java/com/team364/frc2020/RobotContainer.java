@@ -15,6 +15,7 @@ import com.team364.frc2020.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -32,6 +33,7 @@ public class RobotContainer {
   private final Shooter s_Shooter = new Shooter();
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
+  private final Hood s_Hood = new Hood();
 
 
   public final static Joystick controller = new Joystick(0);
@@ -50,11 +52,14 @@ public class RobotContainer {
     // Assign default commands
     s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
     s_Shooter.setDefaultCommand(new ShooterControl(s_Shooter, s_Vision, configuring));
+    s_Hood.setDefaultCommand(new HoodControl(s_Hood, s_Vision, configuring));
+
     zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
 
     // Configure the button bindings
     configureButtonBindings();
     configuring = new Configuration(s_Vision, s_Swerve);
+
 
   }
 

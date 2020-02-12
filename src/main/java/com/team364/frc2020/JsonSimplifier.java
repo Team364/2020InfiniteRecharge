@@ -9,10 +9,13 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * @param <K> K refers to Key
  * @param <V> V refers to Value
- * Write, Store, Read json files *simply*
+ * 
+ * Write, Store, Read json files *simply* *
  */
 public class JsonSimplifier<K, V> {
   /**
@@ -23,6 +26,7 @@ public class JsonSimplifier<K, V> {
    */
 
   JSONObject json;
+  JSONObject toMapJson;
   String name;
   Map<K, V> map;
   JSONParser parser;
@@ -35,6 +39,7 @@ public class JsonSimplifier<K, V> {
 
     try{
       this.json = new JSONObject();
+      this.toMapJson = new JSONObject(name);
       map = toMap();
     } catch(Exception e){}
   }
@@ -68,13 +73,13 @@ public class JsonSimplifier<K, V> {
     return map;
   }
   private Map<K, V> toMap() throws ParseException {
-    return generic.cast(parser.parse(json.toString()));
+    return generic.cast(parser.parse(toMapJson.toString()));
   }
 
 
-  public void writeJson() {
+  public void writeJson(boolean rewrite) {
     try {
-      FileWriter fileWriter = new FileWriter(name, true);
+      FileWriter fileWriter = new FileWriter(name, rewrite);
       fileWriter.write(json.toString());
       fileWriter.flush();
     } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.team364.frc2020.commands;
 import com.team364.frc2020.Configuration;
 import com.team364.frc2020.subsystems.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.RobotContainer.THE_SWITCH;
@@ -31,12 +32,14 @@ public class ShooterControl extends CommandBase {
     @Override
     public void execute() {
         if (THE_SWITCH) {
-            // "0" means the system is shooter
-            s_Shooter.setFlyWheelVel(s_Vision.targetLogic(0));
+
         }
         if (configState == ConfigStates.TARGET) {
-           s_Shooter.setFlyWheelVel(Config.getShooterVel());
+            s_Shooter.setFlyWheelVel(Config.ShooterVelocity);
         }
+                    // "0" means the system is shooter
+                    s_Shooter.setFlyWheelVel(s_Vision.targetLogic(0));
+                    SmartDashboard.putNumber("json velocity", s_Vision.targetLogic(0));
 
     }
 

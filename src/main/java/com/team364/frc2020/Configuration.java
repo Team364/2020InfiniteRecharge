@@ -40,7 +40,8 @@ public class Configuration {
     public static JsonSimplifier<Double, Double[]> TargetJson = new JsonSimplifier<>(TARGETJSON);
     public static JsonSimplifier<Integer, Double> SwerveJson = new JsonSimplifier<>(SWERVEJSON);
 
-    public static double ShooterVelocity;
+    public static double ShooterVelocity = 0;
+    public static double HoodAngle = 0;
 
     public Configuration(Vision s_Vision, Swerve s_Swerve){
         this.s_Vision = s_Vision;
@@ -71,15 +72,16 @@ public class Configuration {
 
     private void configTargetJson(){
         if(configState == ConfigStates.TARGET){
-            TargetJson.writeJson();
+            TargetJson.writeJson(true);
         }
     }
 
-    public double getShooterVel(){
-        return Shooter_Velocity.getDouble(0.0);
+    public void setShooterVel(){
+        ShooterVelocity = Shooter_Velocity.getDouble(0);
     }
-    public double getHoodAng(){
-        return Hood_Angle.getDouble(0.0);
+    public void setHoodAng(){
+        HoodAngle = Hood_Angle.getDouble(0);
+
     }
 
     private void configSwerve(){
@@ -87,7 +89,7 @@ public class Configuration {
             for(SwerveMod mod : s_Swerve.modules){
                 SwerveJson.replaceElement(String.valueOf(mod.moduleNumber), mod.getCANCoderAngle());
             }
-            SwerveJson.writeJson();
+            SwerveJson.writeJson(false);
         }
     }
     public void changeState(ConfigStates state){
@@ -95,6 +97,8 @@ public class Configuration {
     }
 
     public void doTheConfigurationShuffle(){
+        setShooterVel();
+        setHoodAng();
         if(match.getBoolean(false)){
             target.setValue(false);
             swerve.setValue(false);
@@ -113,10 +117,14 @@ public class Configuration {
         //actual calibration buttons--------------------------------
         if(addPoint.getBoolean(false)){
             addPoint.setValue(false);
-            configTarget(getShooterVel(), getHoodAng());
+            configTarget(ShooterVelocity, HoodAngle);
         }else if(calibrateTarget.getBoolean(false)){
             calibrateTarget.setValue(false);
             configTargetJson();
+        }
+        if(calibrateSwerve.getBoolean(false)){
+            calibrateSwerve.setValue(false);
+            configSwerve();
         }
     }
 }

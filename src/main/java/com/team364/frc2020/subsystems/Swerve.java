@@ -41,7 +41,7 @@ public class Swerve extends SubsystemBase {
     private Map<Integer, Double> offsetsMap = SwerveJson.getMap();
 
     public Swerve() {
-        //configOffsets();
+        configOffsets();
         pigeon = new PigeonIMU(new TalonSRX(10));
         zeroGyro();
         mSwerveModules = new SwerveMod[] {
@@ -100,10 +100,12 @@ public class Swerve extends SubsystemBase {
     }
 
     public void configOffsets(){
+        try{
             MOD1OFFSET = offsetsMap.get(1);
             MOD2OFFSET = offsetsMap.get(2);
             MOD3OFFSET = offsetsMap.get(3);
             MOD4OFFSET = offsetsMap.get(4);
+        } catch(NullPointerException e){e.printStackTrace();}
     }
 
     public SwerveMod[] getSwerveModules() {
