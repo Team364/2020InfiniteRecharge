@@ -29,11 +29,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  public Configuration configuring;
   private final Shooter s_Shooter = new Shooter();
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
   private final Hood s_Hood = new Hood();
+  public Configuration configuring = new Configuration(s_Vision, s_Swerve);
+
 
 
   public final static Joystick controller = new Joystick(0);
@@ -58,7 +59,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    configuring = new Configuration(s_Vision, s_Swerve);
 
 
   }

@@ -6,10 +6,17 @@ import static com.team364.frc2020.States.configState;
 
 import java.io.FileWriter;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.DoubleArraySerializer;
 import com.team364.frc2020.States.ConfigStates;
 import com.team364.frc2020.subsystems.*;
+
+import org.json.JSONObject;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -37,17 +44,19 @@ public class Configuration {
     private NetworkTableEntry calibrateTarget;
     private NetworkTableEntry calibrateSwerve;
 
-    public static JsonSimplifier<Double, Double[]> TargetJson = new JsonSimplifier<>(TARGETJSON);
+    public static JsonSimplifier<Double, List<Double>> TargetJson = new JsonSimplifier<>(TARGETJSON);
     public static JsonSimplifier<Integer, Double> SwerveJson = new JsonSimplifier<>(SWERVEJSON);
 
     public static double ShooterVelocity = 0;
     public static double HoodAngle = 0;
 
+    Map<Integer, List<Double>> testing = new HashMap<>(); ;
+
     public Configuration(Vision s_Vision, Swerve s_Swerve){
         this.s_Vision = s_Vision;
         this.s_Swerve = s_Swerve;
 
-        Shuffleboard.selectTab("Configuration");
+        //Shuffleboard.selectTab("Configuration");
         target = config.add("Target State", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
         swerve = config.add("Swerve State", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
         match = config.add("Match State", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
@@ -58,13 +67,15 @@ public class Configuration {
         calibrateTarget = Target.add("Target Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
         calibrateSwerve = Swerve.add("Swerve Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-
+        List<Double> value = new ArrayList<>(Arrays.asList(1.0, 2.0));
+        testing.put(1, value);
+        SmartDashboard.putString("cheeeeck me out", testing.toString());
     }
 
     private void configTarget(double shooterVel, double hoodAng){
         if(configState == ConfigStates.TARGET){
-            Double[] value = {shooterVel, hoodAng};
-            TargetJson.writeElement("0", value);
+            List<Double> value = new ArrayList<>(Arrays.asList(shooterVel, hoodAng));
+            TargetJson.writeElement(0.0, value);
         }
         SmartDashboard.putNumber("Cycle test", cycles);
         cycles++;
@@ -72,7 +83,7 @@ public class Configuration {
 
     private void configTargetJson(){
         if(configState == ConfigStates.TARGET){
-            TargetJson.writeJson(true);
+            TargetJson.writeJson(false);
         }
     }
 
@@ -86,8 +97,9 @@ public class Configuration {
 
     private void configSwerve(){
         if(configState == ConfigStates.SWERVE){
+            SwerveJson.resetJson();
             for(SwerveMod mod : s_Swerve.modules){
-                SwerveJson.replaceElement(String.valueOf(mod.moduleNumber), mod.getCANCoderAngle());
+                SwerveJson.writeElement(mod.moduleNumber, mod.getCANCoderAngle());
             }
             SwerveJson.writeJson(false);
         }
@@ -97,28 +109,32 @@ public class Configuration {
     }
 
     public void doTheConfigurationShuffle(){
-        setShooterVel();
-        setHoodAng();
         if(match.getBoolean(false)){
             target.setValue(false);
             swerve.setValue(false);
             changeState(ConfigStates.MATCH);
         }
-        else if(target.getBoolean(false)){
-            match.setValue(false);
-            swerve.setValue(false);
+        if(target.getBoolean(false)){
+            if(configState != ConfigStates.TARGET){
+                match.setValue(false);
+                swerve.setValue(false);
+            }
             changeState(ConfigStates.TARGET);
         }
-        else if(swerve.getBoolean(false)){
-            match.setValue(false);
-            target.setValue(false);
+        if(swerve.getBoolean(false)){
+            if(configState != ConfigStates.SWERVE){
+                target.setValue(false);
+                match.setValue(false);
+            }
             changeState(ConfigStates.SWERVE);
         }
+
         //actual calibration buttons--------------------------------
         if(addPoint.getBoolean(false)){
             addPoint.setValue(false);
             configTarget(ShooterVelocity, HoodAngle);
-        }else if(calibrateTarget.getBoolean(false)){
+        }
+        if(calibrateTarget.getBoolean(false)){
             calibrateTarget.setValue(false);
             configTargetJson();
         }
@@ -126,5 +142,9 @@ public class Configuration {
             calibrateSwerve.setValue(false);
             configSwerve();
         }
+        setShooterVel();
+        setHoodAng();
+        SmartDashboard.putNumber("check me out", new Double[] {1.0, 2.0}[0]);
+
     }
 }

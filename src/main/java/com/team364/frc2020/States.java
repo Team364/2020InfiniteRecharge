@@ -12,7 +12,7 @@ public class States {
         GYRO, VISION, NO_TRACK
     }
     public static enum ConfigStates {
-        TARGET, SWERVE, MATCH
+        TARGET, SWERVE, MATCH, INIT
     }
 
 
@@ -28,7 +28,7 @@ public class States {
         SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
     }
 
-    public static ConfigStates configState = ConfigStates.MATCH;
+    public static ConfigStates configState = ConfigStates.INIT;
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
     public static ShooterStates shooterState = ShooterStates.FERRY;

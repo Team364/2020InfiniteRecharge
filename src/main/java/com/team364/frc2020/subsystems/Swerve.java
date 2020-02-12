@@ -38,7 +38,6 @@ public class Swerve extends SubsystemBase {
     public List<SwerveMod> modules;
     public SwerveDriveOdometry m_odometry;
     public SwerveDriveKinematics m_kinematics;
-    private Map<Integer, Double> offsetsMap = SwerveJson.getMap();
 
     public Swerve() {
         configOffsets();
@@ -100,6 +99,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void configOffsets(){
+        Map<Integer, Double> offsetsMap = SwerveJson.getMap();
         try{
             MOD1OFFSET = offsetsMap.get(1);
             MOD2OFFSET = offsetsMap.get(2);

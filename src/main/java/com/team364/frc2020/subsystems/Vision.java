@@ -9,6 +9,7 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
 
+import java.lang.annotation.Target;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -23,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class Vision implements Subsystem {
     public double[] closestTarget = new double[2];
     public int cycles;
-    private Map<Double, Double[]> targetMap = TargetJson.getMap();
     
     public Vision() {
         register();
@@ -33,7 +33,7 @@ public class Vision implements Subsystem {
     }
 
     public void findClosestTargets(double height, int whichSystem) {
-        targetMap.keySet().forEach((key) -> {
+        TargetJson.getMap().keySet().forEach((key) -> {
             // difference between actual and the iteration
             double mathHold = Math.abs(height - key);
             // closest logic
@@ -48,8 +48,8 @@ public class Vision implements Subsystem {
     }
 
     public double linearInterpolate(double first, double second, int whichSystem, double actual) {
-        double holdOne = targetMap.get(first)[whichSystem];
-        double holdTwo = targetMap.get(second)[whichSystem];
+        double holdOne = TargetJson.getMap().get(first).get(whichSystem);
+        double holdTwo = TargetJson.getMap().get(second).get(whichSystem);
         double slope = (holdOne - holdTwo) / (first - second);
         double intercept = holdOne - (slope * holdOne);
         return (actual * slope) + intercept;
