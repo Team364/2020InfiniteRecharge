@@ -12,10 +12,10 @@ public class Hood extends SubsystemBase {
     public Hood() {
         hoodServo = new PWM(15);
         slaveHoodServo = new PWM(16);
-        slaveHoodServo.follow(hoodServo);
     }
     public void changeHoodAngle(double poistion) {
-        servoHood.setPosition(poistion);
+        hoodServo.setPosition(poistion);
+        slaveHoodServo.setPosition(poistion);
     }
 
 }

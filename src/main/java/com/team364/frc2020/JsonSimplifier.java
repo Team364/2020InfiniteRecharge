@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 /**
  * @param <K> K refers to Key
  * @param <V> V refers to Value
- * Write, Store, Read json files *simply*
+ * Write, Store, Read json files *simply* *
  */
 public class JsonSimplifier<K, V> {
   /**

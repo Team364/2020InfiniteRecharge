@@ -40,11 +40,6 @@ public class Shooter extends SubsystemBase {
         ShooterStates();
         pidShooterStates();
     }
-    private void stateChange(double[] pidControl) {
-        mFlyWheelMotor.config_kP(0, pidControl[0]);
-        mFlyWheelMotor.config_kI(0, pidControl[1]);
-        mFlyWheelMotor.config_kD(0, pidControl[2]);
-    }
     private void pidShooterStates(){
         switch(shooterState) {
             case SHOOTING:
@@ -52,7 +47,7 @@ public class Shooter extends SubsystemBase {
                 rampUpLoops = 0;
                 rampDownLoops = 0;
                 stateChange(SHOOTING_PID);
-                setFlyWheelVel();
+                setFlyWheelVel(ShooterInput);
                 shootingLoops = 1;
             break;
             case FERRY:
@@ -60,7 +55,7 @@ public class Shooter extends SubsystemBase {
                 rampUpLoops = 0;
                 rampDownLoops = 0;
                 stateChange(FERRY_PID);
-                setFlyWheelVel();
+                setFlyWheelVel(ShooterInput);
                 ferryLoops = 1;
             break;
             case RAMP_UP:
@@ -68,7 +63,7 @@ public class Shooter extends SubsystemBase {
                 ferryLoops = 0;
                 rampDownLoops = 0;
                 stateChange(RAMP_UP_PID);
-                setFlyWheelVel();
+                setFlyWheelVel(ShooterInput);
                 rampUpLoops = 1;
             break;
             case RAMP_DOWN:
@@ -76,7 +71,7 @@ public class Shooter extends SubsystemBase {
                 ferryLoops = 0;
                 rampUpLoops = 0;
                 stateChange(RAMP_DOWN_PID);
-                setFlyWheelVel();
+                setFlyWheelVel(ShooterInput);
                 rampDownLoops = 1;
             break;
         }

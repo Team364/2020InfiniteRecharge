@@ -32,6 +32,8 @@ public class RobotContainer {
   private final Shooter s_Shooter = new Shooter();
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
+  private final WheelOfFortune s_WoF = new WheelOfFortune();
+
 
 
   public final static Joystick controller = new Joystick(0);
@@ -40,6 +42,7 @@ public class RobotContainer {
   private final JoystickButton hopperbutto = new JoystickButton(operator, 0);
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
+  private final JoystickButton colorButto = new JoystickButton(controller, 2);
   public static boolean THE_SWITCH = false;
 
 
@@ -65,6 +68,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    colorButto.whenPressed(new RunCommand(() -> s_WoF.moveWoF(.5)));
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
