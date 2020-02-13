@@ -28,7 +28,7 @@ public class WheelOfFortune extends SubsystemBase {
   private int min;
   private int max;
   private int rgb;
-  private TalonSRX mWheelOfFortune;
+  private TalonSRX mWoF;
   private ByteBuffer buf = ByteBuffer.allocate(5);
   /**
    * 255, 0, 0 = red, 
@@ -40,7 +40,7 @@ public class WheelOfFortune extends SubsystemBase {
   I2C sensor;
   
   public WheelOfFortune() {
-    mWheelOfFortune = new TalonSRX(20);
+    mWoF = new TalonSRX(20);
     sensor = new I2C(I2C.Port.kOnboard, 0x39);
     sensor.write(0x00,192);
   }
@@ -63,39 +63,21 @@ public class WheelOfFortune extends SubsystemBase {
     return buf.get(0);
   }
   public void detectedColor(){
-    if(getDetectedColor(230, 270, 0) && getDetectedColor(0, 25, 1) && getDetectedColor(0, 25, 3)) {
+    if(getDetectedColor(230, 270, 0) && getDetectedColor(0, 25, 1) && getDetectedColor(0, 25, 2)) {
       colorState = ColorStates.RED;
-    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(230, 270, 3)) {
+    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(230, 270, 2)) {
       colorState = ColorStates.BLUE;
-    }else if(getDetectedColor(0, 1, 0) && getDetectedColor(0, 1, 1) && getDetectedColor(0, 1, 3)) {
+    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
       colorState = ColorStates.GREEN;
-    }else if(getDetectedColor(0, 1, 0) && getDetectedColor(0, 1, 1) && getDetectedColor(0, 1, 3)) {
+    }else if(getDetectedColor(230, 270, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
       colorState = ColorStates.YELLO;
     }
-    colorState = ColorStates.RED;
-    switch (colorState) {
-      case RED:
-        mWheelOfFortune.set(ControlMode.Position, 20);
-      break;
-      case BLUE:
-        mWheelOfFortune.set(ControlMode.Position, 30);
-      break;
-      case GREEN:
-        mWheelOfFortune.set(ControlMode.Position, -10);
-      break;
-      case YELLO:
-        mWheelOfFortune.set(ControlMode.Position, -20);
-      break;
-      default: 
-      break;
-
-    }   
   }
   /**
-   * @param min the minimum value for the rgb value you are retrieving
-   * @param max the maximum value for the rgb value you are retrieving
-   * @param rgb sets which rgb value you are retrieving, 0 gets the red, 1 gets the green, 2 gets the blue
-   * @return true or false: if the color is detected or not
+   * @param min the minimum value for the rgb value you are retrieving*
+   * @param max the maximum value for the rgb value you are retrieving*
+   * @param rgb sets which rgb value you are retrieving,  0 gets the red,  1 gets the green,  2 gets the blue*
+   * @return true or false: if the color is detected or not*
    */
   private boolean getDetectedColor(int min, int max, int rgb) {
     this.min = min;
@@ -109,6 +91,28 @@ public class WheelOfFortune extends SubsystemBase {
     }   
   }
   public void moveWoF(double motorPower) {
-    mWheelOfFortune.set(ControlMode.PercentOutput, motorPower);
+    switch (colorState) {
+      case RED:
+        mWoF.set(ControlMode.PercentOutput, motorPower);
+        SmartDashboard.putString("Color", "red");
+      break;
+      case BLUE:
+        mWoF.set(ControlMode.PercentOutput, motorPower);
+        SmartDashboard.putString("Color", "blue");
+      break;
+      case GREEN:
+        mWoF.set(ControlMode.PercentOutput, motorPower);
+        SmartDashboard.putString("Color", "green");
+      break;
+      case YELLO:
+        mWoF.set(ControlMode.PercentOutput, motorPower);
+        SmartDashboard.putString("Color", "yello");
+      break;
+      default: 
+        mWoF.set(ControlMode.PercentOutput, 0);
+        SmartDashboard.putString("Color", "no");
+      break;
+
+    }  
   }
 }
