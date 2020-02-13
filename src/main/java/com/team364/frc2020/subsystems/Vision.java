@@ -9,9 +9,10 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
 
-import java.lang.annotation.Target;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -22,42 +23,53 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * project.
  */
 public class Vision implements Subsystem {
-    public double[] closestTarget = new double[2];
+    public List<Double> closestTarget = new ArrayList<Double>();
     public int cycles;
-    
+
     public Vision() {
         register();
-        closestTarget[0] = 0;
-        closestTarget[1] = 0;
+        closestTarget.add(100000.0);
+        closestTarget.add(100000.0);
         cycles = 0;
     }
 
     public void findClosestTargets(double height, int whichSystem) {
-        TargetJson.getMap().keySet().forEach((key) -> {
-            // difference between actual and the iteration
-            double mathHold = Math.abs(height - key);
-            // closest logic
-            if (mathHold < Math.abs(closestTarget[0] - key) || mathHold < Math.abs(closestTarget[1] - key)) {
-                if (Math.abs(mathHold - closestTarget[0]) < Math.abs(mathHold - closestTarget[1])) {
-                    closestTarget[1] = key;
-                } else {
-                    closestTarget[0] = key;
+        try{
+            TargetJson.getMap().keySet().forEach((ObjectKey) -> {
+                double key = Double.valueOf(ObjectKey.toString());
+                // difference between actual and the iteration
+                double mathHold = Math.abs(height - key);
+                // closest target logic
+                if (mathHold < Math.abs(closestTarget.get(0) - height) || mathHold < Math.abs(closestTarget.get(1) - height)) {
+                    if (Math.abs(mathHold - closestTarget.get(0)) < Math.abs(mathHold - closestTarget.get(1))) {
+                        if(key != closestTarget.get(0)){
+                            closestTarget.set(1, key);
+                        }
+                    } else {
+                        if(key != closestTarget.get(1)){
+                            closestTarget.set(0, key);
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }catch(Exception e){SmartDashboard.putString("error", e.toString());}
     }
 
-    public double linearInterpolate(double first, double second, int whichSystem, double actual) {
-        double holdOne = TargetJson.getMap().get(first).get(whichSystem);
-        double holdTwo = TargetJson.getMap().get(second).get(whichSystem);
+    public double linearInterpolate(Double first, Double second, int whichSystem, double actual) {
+        double holdOne = TargetJson.getMap().get(first.toString()).get(whichSystem);
+        double holdTwo = TargetJson.getMap().get(second.toString()).get(whichSystem);
         double slope = (holdOne - holdTwo) / (first - second);
-        double intercept = holdOne - (slope * holdOne);
+        SmartDashboard.putNumber("slope", slope);
+        double intercept = holdOne - (slope * first);
+        SmartDashboard.putNumber("intercept", intercept);
         return (actual * slope) + intercept;
     }
 
     public double targetLogic(int whichSystem){
         findClosestTargets(limeY(), whichSystem);
-        return linearInterpolate(closestTarget[0], closestTarget[1], whichSystem, limeY());
+        double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, limeY());
+        SmartDashboard.putNumber("output", hold);
+        return hold;
     }
 
     public double limeX() {
@@ -65,7 +77,7 @@ public class Vision implements Subsystem {
     }
 
     public double limeY() {
-        return 1.0;
+        return 8.0;
     }
     @Override
     public void periodic(){

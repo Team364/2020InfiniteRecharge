@@ -4,19 +4,12 @@ import static com.team364.frc2020.RobotMap.SWERVEJSON;
 import static com.team364.frc2020.RobotMap.TARGETJSON;
 import static com.team364.frc2020.States.configState;
 
-import java.io.FileWriter;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.DoubleArraySerializer;
 import com.team364.frc2020.States.ConfigStates;
 import com.team364.frc2020.subsystems.*;
-
-import org.json.JSONObject;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -25,18 +18,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class Configuration {
-    private Vision s_Vision;
     private Swerve s_Swerve;
     private int cycles = 0;
-    private static ShuffleboardTab configTab = Shuffleboard.getTab("Configuration");
-        private static ShuffleboardLayout config = configTab.getLayout("NewStates", BuiltInLayouts.kList).withSize(3, 3).withPosition(0, 0);
-        private static ShuffleboardLayout Swerve = configTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 2).withPosition(4, 0);
-        private static ShuffleboardLayout Target = configTab.getLayout("Targets", BuiltInLayouts.kList).withSize(2, 3).withPosition(6, 0);
-            private static NetworkTableEntry Shooter_Velocity;
-            private static NetworkTableEntry Hood_Angle;
+    private ShuffleboardTab configTab = Shuffleboard.getTab("Configuration");
+        private ShuffleboardLayout config = configTab.getLayout("NewStates", BuiltInLayouts.kList).withSize(3, 3).withPosition(0, 0);
+        private ShuffleboardLayout Swerve = configTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 2).withPosition(4, 0);
+        private ShuffleboardLayout Target = configTab.getLayout("Targets", BuiltInLayouts.kList).withSize(2, 3).withPosition(6, 0);
+            private NetworkTableEntry Shooter_Velocity;
+            private NetworkTableEntry Hood_Angle;
     private NetworkTableEntry target;
     private NetworkTableEntry swerve;
     private NetworkTableEntry match;
@@ -44,16 +35,13 @@ public class Configuration {
     private NetworkTableEntry calibrateTarget;
     private NetworkTableEntry calibrateSwerve;
 
-    public static JsonSimplifier<Double, List<Double>> TargetJson = new JsonSimplifier<>(TARGETJSON);
-    public static JsonSimplifier<Integer, Double> SwerveJson = new JsonSimplifier<>(SWERVEJSON);
+    public static JsonSimplifier<Object, List<Double>> TargetJson = new JsonSimplifier<>(TARGETJSON);
+    public static JsonSimplifier<Object, Double> SwerveJson = new JsonSimplifier<>(SWERVEJSON);
 
-    public static double ShooterVelocity = 0;
-    public static double HoodAngle = 0;
-
-    Map<Integer, List<Double>> testing = new HashMap<>(); ;
+    public double ShooterVelocity = 0;
+    public double HoodAngle = 0;
 
     public Configuration(Vision s_Vision, Swerve s_Swerve){
-        this.s_Vision = s_Vision;
         this.s_Swerve = s_Swerve;
 
         //Shuffleboard.selectTab("Configuration");
@@ -67,9 +55,6 @@ public class Configuration {
         calibrateTarget = Target.add("Target Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
         calibrateSwerve = Swerve.add("Swerve Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-        List<Double> value = new ArrayList<>(Arrays.asList(1.0, 2.0));
-        testing.put(1, value);
-        SmartDashboard.putString("cheeeeck me out", testing.toString());
     }
 
     private void configTarget(double shooterVel, double hoodAng){
@@ -144,7 +129,6 @@ public class Configuration {
         }
         setShooterVel();
         setHoodAng();
-        SmartDashboard.putNumber("check me out", new Double[] {1.0, 2.0}[0]);
 
     }
 }

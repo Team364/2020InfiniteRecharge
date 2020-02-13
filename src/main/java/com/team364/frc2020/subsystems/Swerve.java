@@ -41,6 +41,7 @@ public class Swerve extends SubsystemBase {
 
     public Swerve() {
         configOffsets();
+        SmartDashboard.putNumber("da offset", MOD1OFFSET);
         pigeon = new PigeonIMU(new TalonSRX(10));
         zeroGyro();
         mSwerveModules = new SwerveMod[] {
@@ -99,13 +100,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public void configOffsets(){
-        Map<Integer, Double> offsetsMap = SwerveJson.getMap();
-        try{
-            MOD1OFFSET = offsetsMap.get(1);
-            MOD2OFFSET = offsetsMap.get(2);
-            MOD3OFFSET = offsetsMap.get(3);
-            MOD4OFFSET = offsetsMap.get(4);
-        } catch(NullPointerException e){e.printStackTrace();}
+        Map<Object, Double> offsetsMap = SwerveJson.getMap();
+            MOD1OFFSET = offsetsMap.get("1");
+            MOD2OFFSET = offsetsMap.get("2");
+            MOD3OFFSET = offsetsMap.get("3");
+            MOD4OFFSET = offsetsMap.get("4");
     }
 
     public SwerveMod[] getSwerveModules() {

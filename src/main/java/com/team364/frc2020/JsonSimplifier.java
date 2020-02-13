@@ -2,11 +2,8 @@ package com.team364.frc2020;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -14,16 +11,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * Write, Store, Read json files *simply* *
+ * 
  * @param <K> K refers to Key
  * @param <V> V refers to Value
- * 
- *            Write, Store, Read json files *simply* *
  */
 public class JsonSimplifier<K, V> {
   /**
@@ -42,19 +35,24 @@ public class JsonSimplifier<K, V> {
 
   public JsonSimplifier(String name) {
     this.name = name;
-    try {file = Files.readString(Paths.get(name));} catch (IOException e) {e.printStackTrace();}
-    map = new Gson().fromJson(file, new TypeToken<Map<K, V>>(){}.getType());
+    try {
+      file = Files.readString(Paths.get(name));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    map = new Gson().fromJson(file, new TypeToken<Map<K, V>>() {
+    }.getType());
   }
 
   public String getName() {
     return null;
   }
 
-  public void writeElement(K key, V value){
-      map.put(key, value);
+  public void writeElement(K key, V value) {
+    map.put(key, value);
   }
 
-  public void resetJson(){
+  public void resetJson() {
     map.clear();
   }
 
@@ -66,7 +64,7 @@ public class JsonSimplifier<K, V> {
     return genericValue.cast(map.get(key));
   }
 
-  public Map<K, V> getMap(){
+  public Map<K, V> getMap() {
     return map;
   }
 

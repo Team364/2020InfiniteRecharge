@@ -15,7 +15,6 @@ import com.team364.frc2020.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -91,14 +90,7 @@ public class RobotContainer {
 
     return SwerveControls;
   }
-  /**
-   * Literally nothing...
-   * Rohit doesn't like the yellow that visual studio 
-   * puts on a class instance when it isn't used, lol imagine.
-   */
-  public void nothing(){
 
-  }
   /*
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

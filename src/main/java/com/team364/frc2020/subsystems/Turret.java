@@ -7,7 +7,6 @@
 
 package com.team364.frc2020.subsystems;
 
-import static com.team364.frc2020.RobotContainer.THE_SWITCH;
 import static com.team364.frc2020.RobotMap.TURRET;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
