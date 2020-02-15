@@ -9,7 +9,6 @@ package com.team364.frc2020.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import static com.team364.frc2020.States.*;
 
 import java.nio.ByteBuffer;
@@ -31,10 +30,7 @@ public class WheelOfFortune extends SubsystemBase {
   private TalonSRX mWoF;
   private ByteBuffer buf = ByteBuffer.allocate(5);
   /**
-   * 255, 0, 0 = red, 
-   * 0, 255, 255 = blue,  
-   * 0, 255, 0 = green, 
-   * 255, 255, 0 = yello 
+   * 
   */
   public static int[] detectedColor;
   I2C sensor;
@@ -43,12 +39,6 @@ public class WheelOfFortune extends SubsystemBase {
     mWoF = new TalonSRX(20);
     sensor = new I2C(I2C.Port.kOnboard, 0x39);
     sensor.write(0x00,192);
-  }
-  public void setDetectedColor(){
-    detectedColor = getColorArray();
-  }
-  public int[] getColorArray(){
-    return new int[] {red(), green(), blue()};
   }
   public int red(){
     sensor.read(0x16, 3, buf);
@@ -62,22 +52,18 @@ public class WheelOfFortune extends SubsystemBase {
     sensor.read(0x1a, 2, buf);
     return buf.get(0);
   }
-  public void detectedColor(){
-    if(getDetectedColor(230, 270, 0) && getDetectedColor(0, 25, 1) && getDetectedColor(0, 25, 2)) {
-      colorState = ColorStates.RED;
-    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(230, 270, 2)) {
-      colorState = ColorStates.BLUE;
-    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
-      colorState = ColorStates.GREEN;
-    }else if(getDetectedColor(230, 270, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
-      colorState = ColorStates.YELLO;
-    }
+  public void setDetectedColor(){
+    detectedColor = getColorArray();
+  }
+  public int[] getColorArray(){
+    return new int[] {red(), green(), blue()};
   }
   /**
    * @param min the minimum value for the rgb value you are retrieving*
    * @param max the maximum value for the rgb value you are retrieving*
    * @param rgb sets which rgb value you are retrieving,  0 gets the red,  1 gets the green,  2 gets the blue*
-   * @return true or false: if the color is detected or not*
+   * @return true if the color is detected <li>false if the color is not detected</li>
+   * 
    */
   private boolean getDetectedColor(int min, int max, int rgb) {
     this.min = min;
@@ -89,6 +75,17 @@ public class WheelOfFortune extends SubsystemBase {
     } else {
       return false;
     }   
+  }
+  public void detectedColor(){
+    if(getDetectedColor(230, 270, 0) && getDetectedColor(0, 25, 1) && getDetectedColor(0, 25, 2)) {
+      colorState = ColorStates.RED;
+    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(230, 270, 2)) {
+      colorState = ColorStates.BLUE;
+    }else if(getDetectedColor(0, 25, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
+      colorState = ColorStates.GREEN;
+    }else if(getDetectedColor(230, 270, 0) && getDetectedColor(230, 270, 1) && getDetectedColor(0, 25, 2)) {
+      colorState = ColorStates.YELLO;
+    }
   }
   public void moveWoF(double motorPower) {
     switch (colorState) {
@@ -110,7 +107,7 @@ public class WheelOfFortune extends SubsystemBase {
       break;
       default: 
         mWoF.set(ControlMode.PercentOutput, 0);
-        SmartDashboard.putString("Color", "no");
+        SmartDashboard.putString("Color", "not a wheel of fortune color");
       break;
 
     }  
