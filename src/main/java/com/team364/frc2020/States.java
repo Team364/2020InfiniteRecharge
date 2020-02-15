@@ -6,7 +6,7 @@ public class States {
      */
 
      public static enum ColorStates {
-         RED, GREEN, BLUE, YELLO
+         RED, GREEN, BLUE, YELLO, NONE
      }
 
     /**
@@ -34,7 +34,7 @@ public class States {
         SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
     }
 
-    public static ColorStates colorState = ColorStates.BLUE;
+    public static ColorStates colorState = ColorStates.NONE;
     public static ConfigStates configState = ConfigStates.MATCH;
     public static TargetStates targetState = TargetStates.NO_TRACK;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;

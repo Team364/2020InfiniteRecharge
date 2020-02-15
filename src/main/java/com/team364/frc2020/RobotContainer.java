@@ -43,8 +43,8 @@ public class RobotContainer {
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   private final JoystickButton colorButto = new JoystickButton(controller, 2);
-  public static boolean THE_SWITCH = false;
 
+  public static boolean THE_SWITCH = false;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -68,7 +68,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    colorButto.whenPressed(new RunCommand(() -> s_WoF.moveWoF(.5)));
+    colorButto.whenPressed(new RunCommand(() -> s_WoF.detectedColor()));
+    colorButto.whenReleased(new RunCommand(() -> s_WoF.moveWoF(0.5)));
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
