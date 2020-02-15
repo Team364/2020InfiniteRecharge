@@ -68,8 +68,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    colorButto.whenPressed(new RunCommand(() -> s_WoF.detectedColor()));
-    colorButto.whenReleased(new RunCommand(() -> s_WoF.moveWoF(0.5)));
+    colorButto.whenPressed(new RunCommand(() -> s_WoF.colorSensor(0.5)));
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
