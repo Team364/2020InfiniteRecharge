@@ -15,8 +15,12 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.team364.frc2020.misc.math.Vector2;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class SwerveMod implements Subsystem {
@@ -38,6 +42,8 @@ public class SwerveMod implements Subsystem {
     public SupplyCurrentLimitConfiguration swerveAngleSupplyLimit = new SupplyCurrentLimitConfiguration(ANGLEENABLECURRENTLIMIT, ANGLECONTINUOUSCURRENTLIMIT, ANGLEPEAKCURRENT, ANGLEPEAKCURRENTDURATION);
     public SupplyCurrentLimitConfiguration swerveDriveSupplyLimit = new SupplyCurrentLimitConfiguration(DRIVEENABLECURRENTLIMIT, DRIVECONTINUOUSCURRENTLIMIT, DRIVEPEAKCURRENT, DRIVEPEAKCURRENTDURATION);
 
+    private final PIDController m_speedPIDController = new PIDController(1, 0, 0);
+    private final ProfiledPIDController m_anglePIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(SWERVEMAX_ANGLEVELOCITY, SWERVEMAX_ANGLEACCELERATION));
 
     public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, CANCoder turnEncoder, TalonFX driveMotor,
             boolean invertDrive, boolean invertAngle, boolean invertAnglePhase, double offset) {
@@ -72,6 +78,15 @@ public class SwerveMod implements Subsystem {
 
         // Configure Drive Motor
         mDriveMotor.configFactoryDefault();
+        mDriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
+        mDriveMotor.selectProfileSlot(SLOTIDX, PIDLoopIdx);
+                
+        mDriveMotor.config_kP(SLOTIDX, 1, SWERVETIMEOUT);
+        mDriveMotor.config_kI(SLOTIDX, 0, SWERVETIMEOUT);
+        mDriveMotor.config_kD(SLOTIDX, 0, SWERVETIMEOUT);
+       
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
+
         mDriveMotor.setNeutralMode(NeutralMode.Brake);
         mDriveMotor.setInverted(invertDrive);
 
@@ -81,10 +96,17 @@ public class SwerveMod implements Subsystem {
         mDriveMotor.configSupplyCurrentLimit(swerveDriveSupplyLimit, 20);
     }
 
-    public void openLoopOutput(){
+    public void openLoopOutput(boolean profiling){
+        if(!profiling){
+            mDriveMotor.set(ControlMode.PercentOutput, periodicIO.speedDemand);
+            mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
+        }else if(profiling){
+            SmartDashboard.putNumber("speed Demand", periodicIO.speedDemand);
+            SmartDashboard.putNumber("angle Demand", periodicIO.positionDemand);
 
-        mDriveMotor.set(ControlMode.PercentOutput, periodicIO.speedDemand);
-        mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);
+            //mDriveMotor.set(ControlMode.Velocity, periodicIO.speedDemand);
+            //mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
+        }
 
     }
 
@@ -137,6 +159,7 @@ public class SwerveMod implements Subsystem {
         if(driveInvert) fSpeed *= -1;
         periodicIO.setDemandSpeed(fSpeed);
     }
+
     public static class PeriodicIO {
 
         //Intermediates
@@ -166,7 +189,9 @@ public class SwerveMod implements Subsystem {
 
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(mDriveMotor.getSelectedSensorPosition(), new Rotation2d(localTurn.getPosition()));
+        double holdTurn = modulate360(localTurn.getPosition());
+        if(holdTurn < 0) holdTurn *= -1;
+        return new SwerveModuleState(mDriveMotor.getSelectedSensorVelocity(), new Rotation2d(holdTurn));
     }
     
     public Vector2 getModulePosition() {
@@ -178,9 +203,21 @@ public class SwerveMod implements Subsystem {
         if(convert < 0) convert += 360;
         return convert;
     }
+    
+    public double getDriveSpeed(){
+        return mDriveMotor.getSelectedSensorVelocity();
+    }
 
     public TalonFX getAngleMotor(){
         return mAngleMotor;
     }
+    public void toFusionSwerve(SwerveModuleState state){
+        final double speedOutput = m_speedPIDController.calculate(
+            getDriveSpeed(), state.speedMetersPerSecond
+        );
 
+        setAngle(state.angle.getDegrees());
+        setSpeed(state.speedMetersPerSecond);
+        openLoopOutput(true);
+    }
 }

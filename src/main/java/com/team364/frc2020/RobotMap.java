@@ -6,6 +6,11 @@ public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
+
+    public static final double SWERVEMAXSPEED = 22500;
+    public static final double SWERVEMAX_ANGLEVELOCITY = 26000;
+    public static final double SWERVEMAX_ANGLEACCELERATION = 15000;
+
     public static final double HEIGHTDEADBAND = 1.0;
     // Hardware
     public static final int primaryPCM = 0;

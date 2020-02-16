@@ -15,8 +15,11 @@ import com.team364.frc2020.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import static com.team364.frc2020.Conversions.toTrajectory;
 
 
 
@@ -33,13 +36,13 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final Hood s_Hood = new Hood();
   public Configuration configuring = new Configuration(s_Vision, s_Swerve);
-
+  private SwerveMotionProfiling m_autoCommand;
 
 
   public final static Joystick controller = new Joystick(0);
   public final static Joystick operator = new Joystick(1);
   private final Hopper s_Hopper = new Hopper();
-  private final JoystickButton hopperbutto = new JoystickButton(operator, 0);
+  private final JoystickButton hopperbutto = new JoystickButton(controller, 1);
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   public static boolean THE_SWITCH = false;
@@ -71,7 +74,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
-    hopperbutto.whenPressed(new RunHopper(s_Hopper));
+    hopperbutto.whenPressed(new SwerveMotionProfiling(toTrajectory()));
+    //hopperbutto.whenPressed(new RunHopper(s_Hopper));
+
   }
 
   private void activate_THE_SWITCH(){
@@ -80,7 +85,6 @@ public class RobotContainer {
   private void deactivate_THE_SWITCH(){
     THE_SWITCH = false;
   }
-
 
   public static HashMap<String, Double> SwerveConfig(){
     HashMap<String, Double> SwerveControls = new HashMap<>();
@@ -91,15 +95,17 @@ public class RobotContainer {
     return SwerveControls;
   }
 
-  /*
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   *
+   */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    //String autoString = "/home/lvuser/deploy/paths/ColtonFirstPath.path";
+    try{
+      m_autoCommand = new SwerveMotionProfiling(toTrajectory());
+    }catch(Exception e){SmartDashboard.putString("big error", e.toString());}
     return m_autoCommand;
   }
-  */
+  
 }

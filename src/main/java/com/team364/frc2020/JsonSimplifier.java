@@ -40,8 +40,7 @@ public class JsonSimplifier<K, V> {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    map = new Gson().fromJson(file, new TypeToken<Map<K, V>>() {
-    }.getType());
+    map = new Gson().fromJson(file, new TypeToken<Map<K, V>>() {}.getType());
   }
 
   public String getName() {
