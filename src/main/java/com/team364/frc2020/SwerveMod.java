@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.team364.frc2020.misc.math.Vector2;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -87,7 +88,6 @@ public class SwerveMod implements Subsystem {
         mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);
 
     }
-
     public void setVectorVelocity(Vector2 velocity, boolean speed) {
         this.velocity = velocity;
         periodicIO.setVelocityPosition(velocity.getAngle().toDegrees());

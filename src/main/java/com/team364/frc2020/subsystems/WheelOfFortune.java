@@ -12,9 +12,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 import static com.team364.frc2020.States.*;
+import static com.team364.frc2020.Robot.*;
+import static com.team364.frc2020.RobotMap.*;
 
 import java.nio.ByteBuffer;
 
+import edu.wpi.first.wpilibj.PWM;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -29,12 +32,13 @@ import edu.wpi.first.wpilibj.I2C;
 public class WheelOfFortune extends SubsystemBase {
   private I2C.Port i2cPort = I2C.Port.kOnboard;
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-  private double min;
-  private double max;
-  private int rgb;
-  private TalonSRX mWoF;
-  private ByteBuffer buf = ByteBuffer.allocate(5);
-
+  protected double min;
+  protected double max;
+  protected int rgb;
+  protected ByteBuffer buf = ByteBuffer.allocate(5);
+  public double motorColor;
+  private PWM woFServo;
+  protected boolean detectingColor;
   
   Color detectedColor = m_colorSensor.getColor();
   double IR = m_colorSensor.getIR();
@@ -45,61 +49,89 @@ public class WheelOfFortune extends SubsystemBase {
   */
   I2C sensor;
   public WheelOfFortune() {
-    mWoF = new TalonSRX(1);
     sensor = new I2C(I2C.Port.kOnboard, 0x39);
     sensor.write(0x00, 192);
-
+    woFServo = new PWM(0);
+    detectingColor = true;
   }
-  double[] colorArray = {detectedColor.red, detectedColor.green, detectedColor.blue};
-  /**
-   * @param min the minimum value for the rgb value you are retrieving*
-   * @param max the maximum value for the rgb value you are retrieving*
-   * @param rgb sets which rgb value you are retrieving,  0 gets the red,  1 gets the green,  2 gets the blue*
-   * @return true if the color is detected <li>false if the color is not detected</li>
-   * 
-   */
-  private boolean getDetectedColor(double min, double max, int rgb) {
-    this.min = min;
-    this.max = max;
-    this.rgb = rgb;
-
-    if(colorArray[rgb] < max && colorArray[rgb] > min) {
+  public boolean red() {
+    if((colorRed < 0.6 && colorRed > 0.4) && (colorGreen < 0.45 && colorGreen > 0.25) && (colorBlue < 0.2 && colorBlue > 0.05)) {
       return true;
     } else {
       return false;
-    }   
+    }
   }
-  public void colorSensor(double motorPower) {
-    SmartDashboard.putString("Color", "none");
-    if(getDetectedColor(0.4, 0.6, 0) && getDetectedColor(0.25, 0.45, 1) && getDetectedColor(0.05, 0.2, 2)) {
-      colorState = ColorStates.RED;
+  public boolean blue() {
+    if ((colorRed < 0.2 && colorRed > 0.05) && (colorGreen < 0.55 && colorGreen > 0.4) && (colorBlue < 0.5 && colorBlue > 0.3)) {
+      return true;
+    } else {
+      return false;
     }
-    if(getDetectedColor(0.05, 0.2, 0) && getDetectedColor(0.35, 0.5, 1) && getDetectedColor(0.3, 0.5, 2)) {
-      colorState = ColorStates.BLUE;
+  }
+  public boolean green() {
+    if ((colorRed < 0.2 && colorRed > 0.1) && (colorGreen < 0.65 && colorGreen > 0.5) && (colorBlue < 0.35 && colorBlue > 0.15)) {
+      return true;
+    } else {
+      return false;
     }
-    if(getDetectedColor(0.1, 0.2, 0) && getDetectedColor(0.5, 0.65, 1) && getDetectedColor(0.15, 0.35, 2)) {
-      colorState = ColorStates.GREEN;
+  }
+  public boolean yello() {
+    if ((colorRed < 0.45 && colorRed > 0.25) && (colorGreen < 0.65 && colorGreen > 0.45) && (colorBlue < 0.2 && colorBlue > 0.05)) {
+      return true;
+    } else {
+      return false;
     }
-    if(getDetectedColor(0.25, 0.45, 0) && getDetectedColor(0.45, 0.65, 1) && getDetectedColor(0.05, 0.2, 2)) {
-      colorState = ColorStates.YELLO;
-    } 
-    else {
-      colorState = ColorStates.NONE;
+  }
+  public void detectColor() {
+    if (detectingColor) {
+      if (red()) {
+        colorState = ColorStates.RED;
+      } else if (yello()) {
+        colorState = ColorStates.YELLO;
+      } else if (blue()) {
+        colorState = ColorStates.BLUE;
+      } else if (green()) {
+        colorState = ColorStates.GREEN;
+      } else {
+        colorState = ColorStates.NONE;
+      }
+      motorColor = MOTORCOLORNONE;
+      if(colorState == ColorStates.RED) {
+        motorColor = MOTORCOLORRED;
+        woFServo.setSpeed(motorColor);
+        SmartDashboard.putString("Read Color", "red");
+        SmartDashboard.putString("Actual Color", "blue");
+        SmartDashboard.putString("WoF Moving", "yes, speed: " + motorColor);
+      } else if(colorState == ColorStates.GREEN) {
+          motorColor = MOTORCOLORGREEN;
+          woFServo.setSpeed(motorColor);
+          SmartDashboard.putString("Read Color", "green");
+          SmartDashboard.putString("Actual Color", "yello");
+          SmartDashboard.putString("WoF Moving", "yes, speed: " + motorColor);
+      } else if(colorState == ColorStates.BLUE) {
+          motorColor = MOTORCOLORBLUE;
+          woFServo.setSpeed(motorColor);
+          SmartDashboard.putString("Read Color", "blue");
+          SmartDashboard.putString("Actual Color", "red");
+          SmartDashboard.putString("WoF Moving", "yes, speed: " + motorColor);
+      } else if(colorState == ColorStates.YELLO) {
+          motorColor = MOTORCOLORYELLO;
+          woFServo.setSpeed(motorColor);
+          SmartDashboard.putString("Read Color", "yello");
+          SmartDashboard.putString("Actual Color", "green");
+          SmartDashboard.putString("WoF Moving", "yes, speed: " + motorColor);
+      } else if(colorState == ColorStates.NONE) {
+          woFServo.setSpeed(MOTORCOLORNONE);
+          SmartDashboard.putString("Read Color", "none, speed: 0");
+          SmartDashboard.putString("Actual Color", "none");
+          SmartDashboard.putString("WoF Moving", "no");
+          motorColor = MOTORCOLORNONE;
+      }
     }
-    if(colorState == ColorStates.RED) {
-      mWoF.set(ControlMode.PercentOutput, motorPower);
-      SmartDashboard.putString("Color", "red");
-    } else if(colorState == ColorStates.GREEN) {
-      mWoF.set(ControlMode.PercentOutput, motorPower);
-      SmartDashboard.putString("Color", "green");
-    } else if(colorState == ColorStates.BLUE) {
-      mWoF.set(ControlMode.PercentOutput, motorPower);
-      SmartDashboard.putString("Color", "blue");
-    } else if(colorState == ColorStates.YELLO) {
-      mWoF.set(ControlMode.PercentOutput, motorPower);
-      SmartDashboard.putString("Color", "yello");
-    } else if(colorState == ColorStates.NONE) {
-      SmartDashboard.putString("Color", "not a wheel of fortune color");
-    }
+  }
+  public void stopColorDetecting() {
+    detectingColor = false;
+    woFServo.setSpeed(0);
+    detectingColor =true;
   }
 }

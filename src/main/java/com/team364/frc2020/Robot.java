@@ -36,6 +36,9 @@ public class Robot extends TimedRobot {
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
   private Command m_autonomousCommand;
   private int cycles  = 0;
+  public static double colorRed;
+  public static double colorGreen;
+  public static double colorBlue;
   private RobotContainer m_robotContainer;
 
 
@@ -71,6 +74,11 @@ public class Robot extends TimedRobot {
     double IR = m_colorSensor.getIR();
     int proximity = m_colorSensor.getProximity();
     
+    colorRed = detectedColor.red;
+    colorGreen = detectedColor.green;
+    colorBlue = detectedColor.blue;
+    
+
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);

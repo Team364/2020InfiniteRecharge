@@ -15,7 +15,7 @@ public class RobotMap {
     public static final int WHEELBASE = 26;
     public static final int WHEELDIAMETER = 3;
 
-    public static final int FLDRIVE = 20;    
+    public static final int FLDRIVE = 1;    
     public static final int FLANGLE = 2;
     public static final int FRDRIVE = 3;
     public static final int FRANGLE = 4;
@@ -25,7 +25,7 @@ public class RobotMap {
     public static final int BRANGLE = 8;
 
     //CANCoder Swerve Angle
-    public static final int FLCAN = 20;
+    public static final int FLCAN = 1;
     public static final int FRCAN = 2;
     public static final int BLCAN = 3;
     public static final int BRCAN = 4;
@@ -144,5 +144,12 @@ public class RobotMap {
     //constants for hood
     public static final int SERVOHOOD1 = 0;
     public static final int SERVOHOODSLAVE = 0;
+
+    //constats for WoF
+    public static final int MOTORCOLORNONE = 0;
+    public static final double MOTORCOLORRED = 0.5;
+    public static final double MOTORCOLORGREEN = 1;
+    public static final double MOTORCOLORBLUE = -1;
+    public static final double MOTORCOLORYELLO = -0.5;
 
 }
