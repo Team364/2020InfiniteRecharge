@@ -36,6 +36,7 @@ public class SwerveMod implements Subsystem {
     public Vector2 velocity;
     public double currentAngle;
     private boolean driveInvert = false;
+    public double offset;
 
     public PeriodicIO periodicIO = new PeriodicIO();
 
@@ -55,7 +56,8 @@ public class SwerveMod implements Subsystem {
         localTurn = turnEncoder;
         localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         localCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        localCANConfig.magnetOffsetDegrees = offset;
+        //localCANConfig.magnetOffsetDegrees = offset;
+        this.offset = offset;
 
         //Configure CANCoder
         localTurn.configAllSettings(localCANConfig, 30);
@@ -67,7 +69,7 @@ public class SwerveMod implements Subsystem {
         mAngleMotor.selectProfileSlot(SLOTIDX, PIDLoopIdx);
         mAngleMotor.setInverted(invertAngle);
         mAngleMotor.setSensorPhase(invertAnglePhase);
-        
+
         mAngleMotor.config_kP(SLOTIDX, ANGLEP, SWERVETIMEOUT);
         mAngleMotor.config_kI(SLOTIDX, ANGLEI, SWERVETIMEOUT);
         mAngleMotor.config_kD(SLOTIDX, ANGLED, SWERVETIMEOUT);
@@ -103,9 +105,8 @@ public class SwerveMod implements Subsystem {
         }else if(profiling){
             SmartDashboard.putNumber("speed Demand", periodicIO.speedDemand);
             SmartDashboard.putNumber("angle Demand", periodicIO.positionDemand);
-
-            //mDriveMotor.set(ControlMode.Velocity, periodicIO.speedDemand);
-            //mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
+            mDriveMotor.set(ControlMode.Velocity, periodicIO.speedDemand);
+            mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
         }
 
     }
@@ -122,9 +123,10 @@ public class SwerveMod implements Subsystem {
     
 
     public synchronized void setAngle(double targetAngle) {
+        SmartDashboard.putNumber("rawww", targetAngle);
         targetAngle = modulate360(-targetAngle);
         double currentAngle = toDegrees(mAngleMotor.getSelectedSensorPosition());
-        double currentAngleMod = modulate360(currentAngle);
+        double currentAngleMod = modulate360(currentAngle + offset);
         if (currentAngleMod < 0) currentAngleMod += 360;
 
         double delta = currentAngleMod - targetAngle;
@@ -220,4 +222,10 @@ public class SwerveMod implements Subsystem {
         setSpeed(state.speedMetersPerSecond);
         openLoopOutput(true);
     }
+
+	public void stop() {
+        mAngleMotor.set(ControlMode.Position, getCANCoderAngle());
+        mDriveMotor.set(ControlMode.Velocity, 0);
+
+	}
 }

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Configuration {
     private Swerve s_Swerve;
+    private Vision s_Vision;
     private int cycles = 0;
     private ShuffleboardTab configTab = Shuffleboard.getTab("Configuration");
         private ShuffleboardLayout config = configTab.getLayout("NewStates", BuiltInLayouts.kList).withSize(3, 3).withPosition(0, 0);
@@ -43,7 +44,7 @@ public class Configuration {
 
     public Configuration(Vision s_Vision, Swerve s_Swerve){
         this.s_Swerve = s_Swerve;
-
+        this.s_Vision = s_Vision;
         //Shuffleboard.selectTab("Configuration");
         target = config.add("Target State", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
         swerve = config.add("Swerve State", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
@@ -60,7 +61,8 @@ public class Configuration {
     private void configTarget(double shooterVel, double hoodAng){
         if(configState == ConfigStates.TARGET){
             List<Double> value = new ArrayList<>(Arrays.asList(shooterVel, hoodAng));
-            TargetJson.writeElement(0.0, value);
+            //TODO: check getDistance()
+            TargetJson.writeElement(s_Vision.getDistance(), value);
         }
         SmartDashboard.putNumber("Cycle test", cycles);
         cycles++;

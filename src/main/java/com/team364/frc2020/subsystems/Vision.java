@@ -8,10 +8,12 @@
 package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
+import static com.team364.frc2020.RobotMap.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -73,12 +75,21 @@ public class Vision implements Subsystem {
     }
 
     public double limeX() {
-        return 1.0;
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     }
 
     public double limeY() {
-        return 8.0;
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     }
+
+    public int hasTarget(){
+        return (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    }
+    public double getDistance(){
+        return TARGETHEIGHTDIFFERENCE / Math.tan(limeY() + LIMELIGHTANGLE);
+    }
+
+
     @Override
     public void periodic(){
         

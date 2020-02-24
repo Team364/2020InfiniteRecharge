@@ -109,10 +109,7 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        for (SwerveMod mod : modules) {
-            SmartDashboard.putNumber("CANCoder Mod " + mod.moduleNumber + " ", mod.getAngleMotor().getSelectedSensorVelocity());
-        }
-        
+
         updateOdometry();
         SmartDashboard.putString("state of mod", modules.get(1).getState().toString());
     }
@@ -139,10 +136,7 @@ public class Swerve extends SubsystemBase {
      * @return The pose.
      */
     public Pose2d getPose() {
-        Pose2d rawPose = m_odometry.getPoseMeters();
-
-        return new Pose2d(new Translation2d(-rawPose.getTranslation().getX(), rawPose.getTranslation().getY()), 
-                rawPose.getRotation());
+        return m_odometry.getPoseMeters();
     }
 
     public void updateOdometry() {
@@ -162,5 +156,11 @@ public class Swerve extends SubsystemBase {
             mod.toFusionSwerve(moduleStates[mod.moduleNumber - 1]);
         });
     }
+
+	public void stop() {
+        modules.forEach(mod -> {
+            mod.stop();
+        });
+	}
 
 }

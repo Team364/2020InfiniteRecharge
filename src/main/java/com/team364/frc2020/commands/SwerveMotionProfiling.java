@@ -1,5 +1,6 @@
 package com.team364.frc2020.commands;
 
+import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -7,6 +8,8 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -14,18 +17,35 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import static com.team364.frc2020.RobotMap.*;
 
+import java.util.List;
+
 public class SwerveMotionProfiling extends SwerveControllerCommand {
     
     private Timer timer;
     private Trajectory trajectory;
-        
+            // Create config for trajectory
+    public static TrajectoryConfig config =
+    new TrajectoryConfig(SWERVEMAXSPEED, SWERVEMAXSPEED / 100)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(Swerve.getInstance().getKinematics());
+
+
+    // An example trajectory to follow.  All units in meters.
+    public static Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(new Translation2d(20, 0)), // Pass through these two interior waypoints, making an 's' curve path
+            //List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(0, 0, new Rotation2d(45)), config);
     public SwerveMotionProfiling(Trajectory trajectory) {
-        super(trajectory,
+
+        super(exampleTrajectory,
             Swerve.getInstance()::getPose,
             Swerve.getInstance().getKinematics(), 
-            new PIDController(1, 0, 0), 
-            new PIDController(1, 0, 0), 
-            new ProfiledPIDController(1, 0, 0,
+            new PIDController(10, 0, 0), 
+            new PIDController(10, 0, 0), 
+            new ProfiledPIDController(10, 0, 0,
             new TrapezoidProfile.Constraints(SWERVEMAX_ANGLEVELOCITY, SWERVEMAX_ANGLEACCELERATION)),
             Swerve.getInstance()::setProfilingStates,
             Swerve.getInstance()
@@ -40,7 +60,7 @@ public class SwerveMotionProfiling extends SwerveControllerCommand {
         timer.start();
         Pose2d initialPose = trajectory.getInitialPose();
         Rotation2d currentRot = Rotation2d.fromDegrees(Swerve.getInstance().getYaw());
-        Swerve.getInstance().getOdometry().resetPosition(initialPose, currentRot);
+        //Swerve.getInstance().getOdometry().resetPosition(initialPose, currentRot);
     }   
     
     @Override
@@ -72,10 +92,11 @@ public class SwerveMotionProfiling extends SwerveControllerCommand {
     public void end(boolean interrupted) {
       timer.stop();
       timer.reset();
+      Swerve.getInstance().stop();
     }
   
     @Override
     public boolean isFinished() {
-      return false;
+      return super.isFinished();
     }
 }

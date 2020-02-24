@@ -7,7 +7,9 @@
 
 package com.team364.frc2020;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 
 import com.team364.frc2020.commands.*;
 import com.team364.frc2020.subsystems.*;
@@ -93,6 +95,10 @@ public class RobotContainer {
     SwerveControls.put("rotation", controller.getRawAxis(4));
 
     return SwerveControls;
+  }
+
+  public List<SwerveMod> swerveModules(){
+    return s_Swerve.modules;
   }
 
   /**

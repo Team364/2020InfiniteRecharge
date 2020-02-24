@@ -3,9 +3,7 @@ package com.team364.frc2020;
 import static com.team364.frc2020.RobotMap.*;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +14,14 @@ public class Conversions {
 
     public static double toCounts(double units) {
         return units * ENCODERTICKS / 360.0;
+    }
+    public static double to180Boundaries(double degrees){
+        if(degrees > 180){
+            degrees -= 360;
+        }else if(degrees < -180){
+            degrees += 360;
+        }
+        return degrees;
     }
 
     public static double toDegrees(double units) {

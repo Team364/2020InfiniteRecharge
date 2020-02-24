@@ -19,7 +19,7 @@ import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
-
+import static com.team364.frc2020.Conversions.*;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -71,6 +71,13 @@ public class Turret implements Subsystem {
     @Override
     public void periodic() {
 
+    }
+
+    public double getProperPosition(){
+        return to180Boundaries(getDegreePosition());
+    }
+    public double getDegreePosition(){
+        return toDegrees(getPosition());
     }
 
 

@@ -6,6 +6,8 @@ public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
+    public static final double TARGETHEIGHTDIFFERENCE = 0;
+    public static final double LIMELIGHTANGLE = 0;
 
     public static final double SWERVEMAXSPEED = 22500;
     public static final double SWERVEMAX_ANGLEVELOCITY = 26000;
@@ -40,13 +42,13 @@ public class RobotMap {
     
     //DRIVE INVERT
     /**Front Left */
-    public static double MOD1OFFSET = -89.121;
+    public static double MOD1OFFSET = 275.361;
     /**Front Right */
-    public static double MOD2OFFSET = -263.320;
+    public static double MOD2OFFSET = -13.447;
     /**Back Left */
-    public static double MOD3OFFSET = -325.195;
+    public static double MOD3OFFSET = -27.773;
     /**Back Right */
-    public static double MOD4OFFSET = -58.818;
+    public static double MOD4OFFSET = 63.897;
 
     //CANCoder Config
     /**Front Left */
