@@ -13,9 +13,10 @@ public class Shooter extends SubsystemBase {
     private double ShooterInput;
     public TalonFX mFlyWheelMotor;
     public TalonFX mImmaSlave;
+    public boolean needSwitch = true;
     public Shooter() {
-        mFlyWheelMotor = new TalonFX(12);
-        mImmaSlave = new TalonFX(1);
+        mFlyWheelMotor = new TalonFX(SHOOTER);
+        mImmaSlave = new TalonFX(SHOOTERSLAVE);
 
         mImmaSlave.follow(mFlyWheelMotor);
         ShooterInput = 0;
@@ -25,6 +26,7 @@ public class Shooter extends SubsystemBase {
         ShooterInput = velocity;
         mFlyWheelMotor.set(ControlMode.Velocity, velocity);
     }
+
     public double getFlyWheelVel() {
         return mFlyWheelMotor.getSelectedSensorVelocity();
     }
@@ -34,35 +36,46 @@ public class Shooter extends SubsystemBase {
         ShooterStates();
         pidShooterStates();
     }
+
     private void stateChange(double[] pidControl) {
         mFlyWheelMotor.config_kP(0, pidControl[0]);
         mFlyWheelMotor.config_kI(0, pidControl[1]);
         mFlyWheelMotor.config_kD(0, pidControl[2]);
+        needSwitch = false;
     }
+
     private void pidShooterStates(){
-        switch(shooterState) {
-            case SHOOTING:
-                stateChange(SHOOTING_PID);
-            break;
-            case FERRY:
-                stateChange(FERRY_PID);
-            break;
-            case RAMP_UP:
-                stateChange(RAMP_UP_PID);
-            break;
-            case RAMP_DOWN:
-                stateChange(RAMP_DOWN_PID);
-            break;
+        if(needSwitch){
+            switch(shooterState) {
+                case SHOOTING:
+                    stateChange(SHOOTING_PID);
+                break;
+                case FERRY:
+                    stateChange(FERRY_PID);
+                break;
+                case RAMP_UP:
+                    stateChange(RAMP_UP_PID);
+                break;
+                case RAMP_DOWN:
+                    stateChange(RAMP_DOWN_PID);
+                break;
+            }
         }
     }
-      
-  private void ShooterStates(){
-    if (THE_SWITCH) {
-      if (getFlyWheelVel() >= ShooterInput && shooterState != ShooterStates.SHOOTING) shooterState = ShooterStates.SHOOTING;
-      if(shooterState == ShooterStates.FERRY ) shooterState = ShooterStates.RAMP_UP;
-    } else if (!THE_SWITCH ) {
-      if(shooterState == ShooterStates.SHOOTING) shooterState = ShooterStates.RAMP_DOWN;
-      if(shooterState == ShooterStates.RAMP_DOWN && getFlyWheelVel() <= FERRYSPEED) shooterState = ShooterStates.FERRY;
+
+    private void pidSwitchControl(ShooterStates newState){
+        shooterState = newState;
+        needSwitch = true;
     }
-  }
+
+    private void ShooterStates(){
+        if (THE_SWITCH) {
+            if (getFlyWheelVel() >= ShooterInput && shooterState != ShooterStates.SHOOTING) pidSwitchControl(ShooterStates.SHOOTING);       
+            if(shooterState == ShooterStates.FERRY || shooterState == ShooterStates.RAMP_DOWN) pidSwitchControl(ShooterStates.RAMP_UP);
+        } else if (!THE_SWITCH ) {
+            if(shooterState == ShooterStates.SHOOTING) pidSwitchControl(ShooterStates.RAMP_DOWN);
+            if(shooterState == ShooterStates.RAMP_DOWN && getFlyWheelVel() <= FERRYSPEED) pidSwitchControl(ShooterStates.FERRY);
+        }
+    }
+
 } 

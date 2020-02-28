@@ -2,22 +2,42 @@ package com.team364.frc2020;
 
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+
 public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
-    public static final double TARGETHEIGHTDIFFERENCE = 0;
-    public static final double LIMELIGHTANGLE = 0;
+    public static final double TARGETHEIGHTDIFFERENCE = 73;//inches
+    public static final double LIMELIGHTANGLE = 29;//degrees
+
+    public static final double LEFTTURRETRANGE = 0;
+    public static final double RIGHTTURRETRANGE = 0;
+
+
+    public static final double SIMPLEVELOCITY = 5000;
+    public static final double SIMPLEANGLE = 50;
 
     public static final double SWERVEMAXSPEED = 22500;
     public static final double SWERVEMAX_ANGLEVELOCITY = 26000;
     public static final double SWERVEMAX_ANGLEACCELERATION = 15000;
 
     public static final double HEIGHTDEADBAND = 1.0;
-    // Hardware
+    //Robot
     public static final int primaryPCM = 0;
+    public static final int INTAKE = 20;
+    public static final int MAINROLLERS = 20;
+    public static final int LEFTROLLERS = 20;
+    public static final int RIGHTROLLERS = 20;
+    public static final int HOOD = 0;
+    public static final int HOODSLAVE = 1;
+    public static final int HOODENCODER = 1;
+    public static final int SHOOTER = 20;
+    public static final int SHOOTERSLAVE = 20;
+    public static final int TURRET = 11;
 
-    //hardware
+
+    //Swerve
     public static final int TRACKWIDTH = 21;
     public static final int WHEELBASE = 26;
     public static final int WHEELDIAMETER = 3;
@@ -37,7 +57,7 @@ public class RobotMap {
     public static final int BLCAN = 3;
     public static final int BRCAN = 4;
 
-
+    //pigeon
     public static final int PIGEON = 13;
     
     //DRIVE INVERT
@@ -120,8 +140,6 @@ public class RobotMap {
     public static final int DRIVEPEAKCURRENT = 40;
     public static final double DRIVEPEAKCURRENTDURATION = 0.1;
     public static final boolean DRIVEENABLECURRENTLIMIT = true;
-
-    public static final int TURRET = 11;
 
     //PID constants for shooter
     public static final double SHOOTING_P = 0;

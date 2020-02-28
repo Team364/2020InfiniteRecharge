@@ -17,9 +17,11 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.team364.frc2020.Robot;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static com.team364.frc2020.Conversions.*;
+import static com.team364.frc2020.Robot.*;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -70,16 +72,26 @@ public class Turret implements Subsystem {
 
     @Override
     public void periodic() {
-
+        if(!THE_TURRET_ZERO && auto_enabled || teleop_enabled){
+            zeroTurret();
+        }
     }
 
     public double getProperPosition(){
-        return to180Boundaries(getDegreePosition());
+        return to360Boundaries(getDegreePosition());
     }
     public double getDegreePosition(){
         return toDegrees(getPosition());
     }
 
+    public void zeroTurret(){
+        if(turretFx.getSupplyCurrent() < 20){
+            turretFx.set(ControlMode.PercentOutput, -0.1);
+        } else{
+            turretFx.setSelectedSensorPosition(0);
+            THE_TURRET_ZERO = true;
+        }
+    }
 
 
 

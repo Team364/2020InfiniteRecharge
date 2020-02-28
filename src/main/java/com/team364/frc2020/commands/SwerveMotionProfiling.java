@@ -1,6 +1,5 @@
 package com.team364.frc2020.commands;
 
-import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -54,12 +53,11 @@ public class SwerveMotionProfiling extends SwerveControllerCommand {
         timer = new Timer();
     }
 
-    @Override
     public void initialize() {
         super.initialize();
         timer.start();
-        Pose2d initialPose = trajectory.getInitialPose();
-        Rotation2d currentRot = Rotation2d.fromDegrees(Swerve.getInstance().getYaw());
+        //Pose2d initialPose = trajectory.getInitialPose();
+        //Rotation2d currentRot = Rotation2d.fromDegrees(Swerve.getInstance().getYaw());
         //Swerve.getInstance().getOdometry().resetPosition(initialPose, currentRot);
     }   
     

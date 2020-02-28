@@ -8,6 +8,7 @@
 package com.team364.frc2020.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static com.team364.frc2020.RobotMap.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

@@ -1,4 +1,4 @@
-package com.team1323.lib.util;
+package com.team254.lib.util;
 
 /**
  * Runnable class with reports all uncaught throws to CrashTracker

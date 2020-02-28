@@ -1,11 +1,12 @@
 package com.team364.frc2020.commands;
 
-import com.team364.frc2020.RobotContainer;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static com.team364.frc2020.RobotMap.*;
+
+import com.team364.frc2020.RobotContainer;
 
 public class OpenLoopSwerve extends CommandBase {
 
@@ -23,13 +24,10 @@ public class OpenLoopSwerve extends CommandBase {
     /**
      * Driver control
      */
-    public OpenLoopSwerve(double forward, double strafe, double rotation, Swerve swerve) {
-        this.forward = forward;
-        this.strafe = strafe;
-        this.rotation = rotation;
-
+    public OpenLoopSwerve(Swerve swerve) {
         s_Swerve = swerve;
         addRequirements(s_Swerve);
+        //withTimeout(0.01);
     }
 
     @Override
@@ -43,7 +41,7 @@ public class OpenLoopSwerve extends CommandBase {
         forward = RobotContainer.SwerveConfig().get("forward");
         strafe = RobotContainer.SwerveConfig().get("strafe");
         rotation = RobotContainer.SwerveConfig().get("rotation");
-
+        
         boolean zeroPoint = false;
         if(zeroPoint){
             translation = new Vector2(-1, 0);
@@ -65,10 +63,5 @@ public class OpenLoopSwerve extends CommandBase {
         if(cycles != 0){
             s_Swerve.updateKinematics();
         }
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 }

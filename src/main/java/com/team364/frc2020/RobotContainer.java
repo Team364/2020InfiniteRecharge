@@ -7,7 +7,6 @@
 
 package com.team364.frc2020;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,11 +18,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static com.team364.frc2020.Conversions.toTrajectory;
-
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -37,16 +36,25 @@ public class RobotContainer {
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
   private final Hood s_Hood = new Hood();
+  private final Turret s_Turret = new Turret();
+  private final Intake s_Intake = new Intake();
   public Configuration configuring = new Configuration(s_Vision, s_Swerve);
   private SwerveMotionProfiling m_autoCommand;
 
 
-  public final static Joystick controller = new Joystick(0);
-  public final static Joystick operator = new Joystick(1);
+  private final static Joystick controller = new Joystick(0);
+  private final static Joystick operator = new Joystick(1);
   private final Hopper s_Hopper = new Hopper();
-  private final JoystickButton hopperbutto = new JoystickButton(controller, 1);
+  private final JoystickButton hopperButton = new JoystickButton(controller, 1);
+  private final JoystickButton indexButton = new JoystickButton(controller, 2);
+  private final JoystickButton intakeButton = new JoystickButton(controller, 2);
+  private final JoystickButton reverseHopperButton = new JoystickButton(controller, 2);
+
+  private final JoystickButton deploySwitch = new JoystickButton(controller, 2);
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
+
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
+
   public static boolean THE_SWITCH = false;
 
 
@@ -55,15 +63,10 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Assign default commands
-    s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
-    s_Shooter.setDefaultCommand(new ShooterControl(s_Shooter, s_Vision, configuring));
-    s_Hood.setDefaultCommand(new HoodControl(s_Hood, s_Vision, configuring));
-
-    zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
+    s_Swerve.setDefaultCommand(new OpenLoopSwerve(s_Swerve));
 
     // Configure the button bindings
     configureButtonBindings();
-
 
   }
 
@@ -74,11 +77,27 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
-    aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
-    hopperbutto.whenPressed(new SwerveMotionProfiling(toTrajectory()));
-    //hopperbutto.whenPressed(new RunHopper(s_Hopper));
 
+    zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
+
+
+    intakeButton.whileHeld(new IntakeControl(0.5, s_Intake));
+    indexButton.whenPressed(new IndexBall(s_Hopper));
+    hopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
+    reverseHopperButton.whileHeld(new HopperControl(-0.5, s_Hopper));
+
+    deploySwitch.whenPressed(new DeployControl(true, s_Intake))
+      .whenReleased(new DeployControl(false, s_Intake));
+
+    aimSwitch.whenPressed(new InstantCommand(() -> activate_THE_SWITCH()))
+      .whenReleased(new InstantCommand(() -> deactivate_THE_SWITCH()))
+      .whileHeld(
+        new SequentialCommandGroup(
+          new TurretControl(s_Turret, s_Vision),
+          new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring),
+          new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring)
+        )  
+    );
   }
 
   private void activate_THE_SWITCH(){

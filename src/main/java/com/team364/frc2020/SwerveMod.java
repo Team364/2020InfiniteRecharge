@@ -44,7 +44,7 @@ public class SwerveMod implements Subsystem {
     public SupplyCurrentLimitConfiguration swerveDriveSupplyLimit = new SupplyCurrentLimitConfiguration(DRIVEENABLECURRENTLIMIT, DRIVECONTINUOUSCURRENTLIMIT, DRIVEPEAKCURRENT, DRIVEPEAKCURRENTDURATION);
 
     private final PIDController m_speedPIDController = new PIDController(1, 0, 0);
-    private final ProfiledPIDController m_anglePIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(SWERVEMAX_ANGLEVELOCITY, SWERVEMAX_ANGLEACCELERATION));
+    //private final ProfiledPIDController m_anglePIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(SWERVEMAX_ANGLEVELOCITY, SWERVEMAX_ANGLEACCELERATION));
 
     public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, CANCoder turnEncoder, TalonFX driveMotor,
             boolean invertDrive, boolean invertAngle, boolean invertAnglePhase, double offset) {
@@ -214,9 +214,9 @@ public class SwerveMod implements Subsystem {
         return mAngleMotor;
     }
     public void toFusionSwerve(SwerveModuleState state){
-        final double speedOutput = m_speedPIDController.calculate(
+        /*final double speedOutput = m_speedPIDController.calculate(
             getDriveSpeed(), state.speedMetersPerSecond
-        );
+        );*/
 
         setAngle(state.angle.getDegrees());
         setSpeed(state.speedMetersPerSecond);

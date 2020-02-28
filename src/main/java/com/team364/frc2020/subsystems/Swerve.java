@@ -27,7 +27,6 @@ import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.SwerveMod;
 
 public class Swerve extends SubsystemBase {
-
     private static Swerve Instance = null;
     public PigeonIMU pigeon;
 
@@ -94,7 +93,7 @@ public class Swerve extends SubsystemBase {
             Vector2 newTranslation = null;
             newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
             // newTranslation = translation;
-            velocity = mod.getModulePosition().normal().scale(deadband(rotation)).add(newTranslation);
+            velocity = mod.getModulePosition().normal().scale(deadband(rotation, STICKDEADBAND)).add(newTranslation);
             mod.setVectorVelocity(velocity, speed);
         });
     }
@@ -105,13 +104,6 @@ public class Swerve extends SubsystemBase {
             mod.setSpeed(mod.periodicIO.velocitySpeed);
         });
         openLoopOutputs();
-    }
-
-    @Override
-    public void periodic() {
-
-        updateOdometry();
-        SmartDashboard.putString("state of mod", modules.get(1).getState().toString());
     }
 
     public Rotation2d getAngle() {

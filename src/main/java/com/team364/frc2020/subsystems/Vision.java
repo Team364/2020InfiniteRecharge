@@ -9,6 +9,7 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
 import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.Conversions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +69,14 @@ public class Vision implements Subsystem {
     }
 
     public double targetLogic(int whichSystem){
-        findClosestTargets(limeY(), whichSystem);
-        double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, limeY());
-        SmartDashboard.putNumber("output", hold);
-        return hold;
+        if(hasTarget()){
+            findClosestTargets(limeY(), whichSystem);
+            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, limeY());
+            SmartDashboard.putNumber("output", hold);
+            return hold;            
+        }else{
+            return whichSystem == 0 ? SIMPLEVELOCITY : SIMPLEANGLE;
+        }
     }
 
     public double limeX() {
@@ -82,17 +87,18 @@ public class Vision implements Subsystem {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     }
 
-    public int hasTarget(){
-        return (int)NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    public boolean hasTarget(){
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 0 ? false : true;
     }
+
     public double getDistance(){
-        return TARGETHEIGHTDIFFERENCE / Math.tan(limeY() + LIMELIGHTANGLE);
+        return TARGETHEIGHTDIFFERENCE / Math.tan(Math.toRadians(limeY() + LIMELIGHTANGLE));
     }
 
 
     @Override
     public void periodic(){
-        
+        SmartDashboard.putNumber("distance", getDistance());
     }
 
 

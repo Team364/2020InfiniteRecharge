@@ -23,9 +23,20 @@ public class Conversions {
         }
         return degrees;
     }
+    public static double to360Boundaries(double degrees){
+        if(degrees > 360){
+            degrees -= 360;
+        }else if(degrees < 0){
+            degrees += 360;
+        }
+        return degrees;
+    }
 
     public static double toDegrees(double units) {
         return units * (360 / ENCODERTICKS);
+    }
+    public static double toDegreesFromRadians(double radians){
+        return radians * (180 / Math.PI);
     }
 
     public static double modulate360(double units) {
@@ -44,10 +55,13 @@ public class Conversions {
         return units / 360 * WHEELBASE * ENCODERTICKS / WHEELDIAMETER;
     }
 
-    public static double deadband(double input) {
-        if (Math.abs(input) < STICKDEADBAND)
+    public static double deadband(double input, double deadband) {
+        if (Math.abs(input) < deadband)
             return 0;
         return input;
+    }
+    public static boolean withinDeadband(double input, double deadband){
+        return deadband(input, deadband) == 0 ? true : false;
     }
 
     // For the shooter
