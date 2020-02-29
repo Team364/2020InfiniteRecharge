@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.ColorSensorV3;
+import com.team364.frc2020.commands.HangControl;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 
@@ -41,6 +43,11 @@ public class Robot extends TimedRobot {
   public static double colorBlue;
   private RobotContainer m_robotContainer;
 
+  public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
+    public static ShuffleboardLayout Hang = RunningTab.getLayout("Hang", BuiltInLayouts.kList).withSize(2, 5).withPosition(12, 0);
+      public static NetworkTableEntry HangControl;
+
+
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -50,7 +57,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     m_robotContainer.nothing();
-
+    HangControl = Robot.Hang.add("HoodControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
   /**

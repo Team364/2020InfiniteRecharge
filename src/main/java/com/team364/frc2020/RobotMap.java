@@ -152,4 +152,7 @@ public class RobotMap {
     public static final double MOTORCOLORBLUE = -1;
     public static final double MOTORCOLORYELLO = -0.5;
 
+    //constants for Climber
+    public static final int CLIMBER = 1;
+
 }

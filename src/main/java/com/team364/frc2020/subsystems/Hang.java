@@ -9,6 +9,11 @@ package com.team364.frc2020.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import static com.team364.frc2020.RobotMap.*;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -17,10 +22,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * project.
  */
 public class Hang extends SubsystemBase {
-
+  public TalonFX mClimberMotor;
   public Hang() {
-
-
+    mClimberMotor = new TalonFX(CLIMBER);
   }
-
+  public void climb(double motorPower) {
+    mClimberMotor.set(ControlMode.PercentOutput, motorPower);
+  }
 }
