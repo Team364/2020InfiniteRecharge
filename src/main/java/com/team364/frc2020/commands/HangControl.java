@@ -10,9 +10,9 @@ import com.team364.frc2020.subsystems.*;
 
 public class HangControl extends CommandBase {
     private Hang s_Hang;
-    private int power;
+    private double power;
 
-    public HangControl(Hang s_Hang, int power) {
+    public HangControl(Hang s_Hang, double power) {
         this.s_Hang = s_Hang;
         this.power = power;
     }
@@ -35,6 +35,6 @@ public class HangControl extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         Robot.HangControl.setValue(false);
-        s_Hang.climb(power);
+        s_Hang.climb(0);
     }
 }

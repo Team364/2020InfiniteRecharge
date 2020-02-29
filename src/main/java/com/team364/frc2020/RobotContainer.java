@@ -33,6 +33,7 @@ public class RobotContainer {
   private final Vision s_Vision = new Vision();
  // private final Swerve s_Swerve = new Swerve();
   private final WheelOfFortune s_WoF = new WheelOfFortune();
+  private final Hang s_Hang = new Hang();
 
 
   public final static Joystick controller = new Joystick(0);
@@ -44,7 +45,7 @@ public class RobotContainer {
   private final JoystickButton colorButto = new JoystickButton(controller, 2);
   private final JoystickButton climberUpButto = new JoystickButton(controller, 3);
   private final JoystickButton climberDownButto = new JoystickButton(controller, 4);
-  private final JoystickButton colorButto2 = new JoystickButton(controller, 4);
+  private final JoystickButton colorButto2 = new JoystickButton(controller, 5); 
 
 
 
@@ -78,8 +79,8 @@ public class RobotContainer {
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
-    climberUpButto.whenPressed(new HangControl(s_Hang, 1));
-    climberDownButto.whenPressed(new HangControl(s_Hang, 0));
+    climberUpButto.whileHeld(new HangControl(s_Hang, 1));
+    climberDownButto.whileHeld(new HangControl(s_Hang, -1));
   }
 
   private void activate_THE_SWITCH(){
@@ -97,7 +98,7 @@ public class RobotContainer {
     SwerveControls.put("rotation", controller.getRawAxis(4));
 
     return SwerveControls;
-  }
+  }*/
   /**
    * Literally nothing...
    * Rohit doesn't like the yellow that visual studio 
