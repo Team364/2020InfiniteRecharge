@@ -33,6 +33,7 @@ public class RobotContainer {
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
   private final WheelOfFortune s_WoF = new WheelOfFortune();
+  private final Hang s_Hang = new Hang();
 
 
 
@@ -43,6 +44,7 @@ public class RobotContainer {
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   private final JoystickButton colorButto = new JoystickButton(controller, 2);
+  private final JoystickButton climberButto = new JoystickButton(controller, 3);
 
 
   public static boolean THE_SWITCH = false;
@@ -74,6 +76,8 @@ public class RobotContainer {
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
+    climberButto.whileHeld(new RunCommand(() -> s_Hang.climb(1)));
+    climberButto.whenReleased(new RunCommand(() -> s_Hang.climb(-1)));
   }
 
   private void activate_THE_SWITCH(){
