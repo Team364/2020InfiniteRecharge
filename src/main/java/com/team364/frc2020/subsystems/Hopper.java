@@ -31,4 +31,9 @@ public class Hopper extends SubsystemBase {
 	public boolean getInfrared(){
 		return !infrared.get();
 	}
+
+	@Override
+	public void periodic() {
+		SmartDashboard.putBoolean("infrared", infrared.get());
+	}
 }

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Configuration {
     private Swerve s_Swerve;
@@ -64,8 +63,6 @@ public class Configuration {
             //TODO: check getDistance()
             TargetJson.writeElement(s_Vision.getDistance(), value);
         }
-        SmartDashboard.putNumber("Cycle test", cycles);
-        cycles++;
     }
 
     private void configTargetJson(){

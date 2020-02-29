@@ -7,7 +7,13 @@
 
 package com.team364.frc2020;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -26,6 +32,22 @@ public class Robot extends TimedRobot {
   public static boolean auto_enabled;
   public static boolean teleop_enabled;
 
+  public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
+      public static ShuffleboardLayout Hood = RunningTab.getLayout("Hood", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0);
+          public static NetworkTableEntry HoodControl;
+      public static ShuffleboardLayout Hopper = RunningTab.getLayout("Hopper", BuiltInLayouts.kList).withSize(2, 5).withPosition(2, 0);
+          public static NetworkTableEntry IndexBall;
+          public static NetworkTableEntry HopperControl;
+      public static ShuffleboardLayout Intake = RunningTab.getLayout("Intake", BuiltInLayouts.kList).withSize(2, 5).withPosition(4, 0);
+          public static NetworkTableEntry DeployControl;
+          public static NetworkTableEntry IntakeControl;
+      public static ShuffleboardLayout Shooter = RunningTab.getLayout("Shooter", BuiltInLayouts.kList).withSize(2, 5).withPosition(6, 0);
+          public static NetworkTableEntry ShooterControl;
+      public static ShuffleboardLayout Swerve = RunningTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 5).withPosition(8, 0);
+          public static NetworkTableEntry OpenLoopSwerve;
+      public static ShuffleboardLayout Turret = RunningTab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 5).withPosition(10, 0);
+          public static NetworkTableEntry TurretControl;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -36,6 +58,14 @@ public class Robot extends TimedRobot {
     auto_enabled = false;
     teleop_enabled = false;
     m_robotContainer = new RobotContainer();
+    HoodControl = Robot.Hood.add("HoodContol", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    IndexBall = Robot.Hopper.add("IndexBall", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    HopperControl = Robot.Hopper.add("HopperControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    DeployControl = Robot.Intake.add("DeployControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    IntakeControl = Robot.Intake.add("IntakeControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    ShooterControl = Robot.Shooter.add("ShooterControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    OpenLoopSwerve = Robot.Swerve.add("OpenLoopSwerve", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    TurretControl = Robot.Turret.add("TurretControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
   /**

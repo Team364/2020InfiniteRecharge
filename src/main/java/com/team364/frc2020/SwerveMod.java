@@ -15,12 +15,9 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.team364.frc2020.misc.math.Vector2;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class SwerveMod implements Subsystem {
@@ -43,7 +40,7 @@ public class SwerveMod implements Subsystem {
     public SupplyCurrentLimitConfiguration swerveAngleSupplyLimit = new SupplyCurrentLimitConfiguration(ANGLEENABLECURRENTLIMIT, ANGLECONTINUOUSCURRENTLIMIT, ANGLEPEAKCURRENT, ANGLEPEAKCURRENTDURATION);
     public SupplyCurrentLimitConfiguration swerveDriveSupplyLimit = new SupplyCurrentLimitConfiguration(DRIVEENABLECURRENTLIMIT, DRIVECONTINUOUSCURRENTLIMIT, DRIVEPEAKCURRENT, DRIVEPEAKCURRENTDURATION);
 
-    private final PIDController m_speedPIDController = new PIDController(1, 0, 0);
+    //private final PIDController m_speedPIDController = new PIDController(1, 0, 0);
     //private final ProfiledPIDController m_anglePIDController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(SWERVEMAX_ANGLEVELOCITY, SWERVEMAX_ANGLEACCELERATION));
 
     public SwerveMod(int moduleNumber, Vector2 modulePosition, TalonFX angleMotor, CANCoder turnEncoder, TalonFX driveMotor,
@@ -103,8 +100,8 @@ public class SwerveMod implements Subsystem {
             mDriveMotor.set(ControlMode.PercentOutput, periodicIO.speedDemand);
             mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
         }else if(profiling){
-            SmartDashboard.putNumber("speed Demand", periodicIO.speedDemand);
-            SmartDashboard.putNumber("angle Demand", periodicIO.positionDemand);
+            //SmartDashboard.putNumber("speed Demand", periodicIO.speedDemand);
+            //SmartDashboard.putNumber("angle Demand", periodicIO.positionDemand);
             mDriveMotor.set(ControlMode.Velocity, periodicIO.speedDemand);
             mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
         }

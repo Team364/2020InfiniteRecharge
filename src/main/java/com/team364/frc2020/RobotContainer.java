@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static com.team364.frc2020.Conversions.toTrajectory;
@@ -45,13 +44,16 @@ public class RobotContainer {
   private final static Joystick controller = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
   private final Hopper s_Hopper = new Hopper();
-  private final JoystickButton hopperButton = new JoystickButton(controller, 1);
-  private final JoystickButton indexButton = new JoystickButton(controller, 2);
-  private final JoystickButton intakeButton = new JoystickButton(controller, 2);
-  private final JoystickButton reverseHopperButton = new JoystickButton(controller, 2);
+  private final JoystickButton hopperButton = new JoystickButton(operator, 2);
+  private final JoystickButton indexButton = new JoystickButton(operator, 1);
+  private final JoystickButton intakeButton = new JoystickButton(operator, 4);
+  private final JoystickButton outtakeButton = new JoystickButton(operator, 5);
+  private final JoystickButton reverseHopperButton = new JoystickButton(operator, 3);
 
-  private final JoystickButton deploySwitch = new JoystickButton(controller, 2);
-  private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
+  private final JoystickButton deploySwitch = new JoystickButton(operator, 6);
+  private final JoystickButton retractSwitch = new JoystickButton(operator, 7);
+
+  private final JoystickButton aimSwitch = new JoystickButton(operator, 8);
 
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
 
@@ -82,12 +84,13 @@ public class RobotContainer {
 
 
     intakeButton.whileHeld(new IntakeControl(0.5, s_Intake));
+    outtakeButton.whileHeld(new IntakeControl(-0.5, s_Intake));
     indexButton.whenPressed(new IndexBall(s_Hopper));
     hopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
     reverseHopperButton.whileHeld(new HopperControl(-0.5, s_Hopper));
 
-    deploySwitch.whenPressed(new DeployControl(true, s_Intake))
-      .whenReleased(new DeployControl(false, s_Intake));
+    deploySwitch.whenPressed(new DeployControl(true, s_Intake));
+    retractSwitch.whenPressed(new DeployControl(false, s_Intake));
 
     aimSwitch.whenPressed(new InstantCommand(() -> activate_THE_SWITCH()))
       .whenReleased(new InstantCommand(() -> deactivate_THE_SWITCH()))

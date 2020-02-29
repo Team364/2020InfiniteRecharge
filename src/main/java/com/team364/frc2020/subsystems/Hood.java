@@ -1,17 +1,12 @@
 package com.team364.frc2020.subsystems;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static com.team364.frc2020.RobotMap.*;
 
-import com.team254.lib.util.MA3AnalogEncoder;
 import com.team254.lib.util.SynchronousPID;
 
 public class Hood extends SubsystemBase {
@@ -43,7 +38,7 @@ public class Hood extends SubsystemBase {
         pid.calculate(getPosition());
         //hoodServo.setSpeed(pid.get());
         //slaveServo.setSpeed(-pid.get());
-        SmartDashboard.putNumber("output", pid.get());
-        SmartDashboard.putNumber("input", hoodEncoder.getValue());
+        //SmartDashboard.putNumber("output", pid.get());
+        //SmartDashboard.putNumber("input", hoodEncoder.getValue());
     }
 }

@@ -98,7 +98,7 @@ public class Vision implements Subsystem {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("distance", getDistance());
+        //SmartDashboard.putNumber("distance", getDistance());
     }
 
 

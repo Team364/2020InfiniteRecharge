@@ -3,9 +3,12 @@ package com.team364.frc2020.commands;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import static com.team364.frc2020.RobotMap.*;
 
+import com.team364.frc2020.Robot;
 import com.team364.frc2020.RobotContainer;
 
 public class OpenLoopSwerve extends CommandBase {
@@ -21,6 +24,7 @@ public class OpenLoopSwerve extends CommandBase {
     private Swerve s_Swerve;
 
 
+
     /**
      * Driver control
      */
@@ -32,6 +36,7 @@ public class OpenLoopSwerve extends CommandBase {
 
     @Override
     public void initialize() {
+        Robot.OpenLoopSwerve.setValue(true);
         addRequirements(s_Swerve);
         cycles = 0;
     }
@@ -64,4 +69,10 @@ public class OpenLoopSwerve extends CommandBase {
             s_Swerve.updateKinematics();
         }
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        Robot.OpenLoopSwerve.setValue(false);
+    }
+
 }

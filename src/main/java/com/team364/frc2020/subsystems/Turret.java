@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.team364.frc2020.Robot;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static com.team364.frc2020.Conversions.*;

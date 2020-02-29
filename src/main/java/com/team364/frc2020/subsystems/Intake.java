@@ -29,4 +29,5 @@ public class Intake extends SubsystemBase {
 			piston.set(Boolean.class.cast(activate) ? Value.kForward : Value.kReverse);
 		}
 	}
+
 }

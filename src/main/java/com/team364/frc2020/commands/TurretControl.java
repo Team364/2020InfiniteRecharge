@@ -2,10 +2,14 @@ package com.team364.frc2020.commands;
 
 import com.team364.frc2020.subsystems.*;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
+
+import com.team364.frc2020.Robot;
 
 public class TurretControl extends CommandBase {
     private Turret s_Turret;
@@ -23,7 +27,7 @@ public class TurretControl extends CommandBase {
 
     @Override
     public void initialize() {
-
+        Robot.TurretControl.setValue(true);
     }
 
     @Override
@@ -44,6 +48,11 @@ public class TurretControl extends CommandBase {
             }
         }
         s_Turret.setPosition(toCounts(target));
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        Robot.TurretControl.setValue(false);
     }
 
 }
