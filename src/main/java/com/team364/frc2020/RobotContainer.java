@@ -31,7 +31,7 @@ public class RobotContainer {
   public Configuration configuring;
   private final Shooter s_Shooter = new Shooter();
   private final Vision s_Vision = new Vision();
-  private final Swerve s_Swerve = new Swerve();
+ // private final Swerve s_Swerve = new Swerve();
   private final WheelOfFortune s_WoF = new WheelOfFortune();
 
 
@@ -43,6 +43,8 @@ public class RobotContainer {
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   private final JoystickButton colorButto = new JoystickButton(controller, 2);
+  private final JoystickButton colorButto2 = new JoystickButton(controller, 4);
+
 
 
   public static boolean THE_SWITCH = false;
@@ -52,13 +54,13 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Assign default commands
-    s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
-    s_Shooter.setDefaultCommand(new ShooterControl(s_Shooter, s_Vision, configuring));
-    zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
+    //s_Swerve.setDefaultCommand(new OpenLoopSwerve(-controller.getRawAxis(1), controller.getRawAxis(0), controller.getRawAxis(4), s_Swerve));
+    //s_Shooter.setDefaultCommand(new ShooterControl(s_Shooter, s_Vision, configuring));
+    //zeroGyro.whenPressed(new RunCommand(() -> s_Swerve.zeroGyro()));
 
     // Configure the button bindings
     configureButtonBindings();
-    configuring = new Configuration(s_Vision, s_Swerve);
+    //configuring = new Configuration(s_Vision, s_Swerve);
 
   }
 
@@ -69,8 +71,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    colorButto.whileHeld(new RunCommand(() -> s_WoF.detectColor()));
+    colorButto.whenPressed(new RunCommand(() -> s_WoF.detectColor()));
     colorButto.whenReleased(new RunCommand(() -> s_WoF.stopColorDetecting()));
+    colorButto2.whenPressed(new RunCommand(() -> s_WoF.moveMotorPlease()));
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
@@ -84,7 +87,7 @@ public class RobotContainer {
   }
 
 
-  public static HashMap<String, Double> SwerveConfig(){
+  /**public static HashMap<String, Double> SwerveConfig(){
     HashMap<String, Double> SwerveControls = new HashMap<>();
     SwerveControls.put("forward", -controller.getRawAxis(1));
     SwerveControls.put("strafe", controller.getRawAxis(0));

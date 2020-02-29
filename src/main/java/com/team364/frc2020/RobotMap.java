@@ -15,7 +15,7 @@ public class RobotMap {
     public static final int WHEELBASE = 26;
     public static final int WHEELDIAMETER = 3;
 
-    public static final int FLDRIVE = 1;    
+    public static final int FLDRIVE = 9;    
     public static final int FLANGLE = 2;
     public static final int FRDRIVE = 3;
     public static final int FRANGLE = 4;
@@ -25,7 +25,7 @@ public class RobotMap {
     public static final int BRANGLE = 8;
 
     //CANCoder Swerve Angle
-    public static final int FLCAN = 1;
+    public static final int FLCAN = 9;
     public static final int FRCAN = 2;
     public static final int BLCAN = 3;
     public static final int BRCAN = 4;

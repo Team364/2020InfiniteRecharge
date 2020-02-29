@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
 
-    m_robotContainer.configuring.doTheConfigurationShuffle();
+    //m_robotContainer.configuring.doTheConfigurationShuffle();
     CommandScheduler.getInstance().run();
 
     Color detectedColor = m_colorSensor.getColor();
@@ -127,9 +127,9 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    //if (m_autonomousCommand != null) {
+      //m_autonomousCommand.cancel();
+    //}
   }
 
   /**
