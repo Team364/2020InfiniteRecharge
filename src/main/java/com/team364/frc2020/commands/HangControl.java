@@ -10,21 +10,22 @@ import com.team364.frc2020.subsystems.*;
 
 public class HangControl extends CommandBase {
     private Hang s_Hang;
-    private Configuration config;
+    private int power;
 
-    public HangControl(Hang s_Hang, Configuration config) {
-        addRequirements(s_Hang);
-        this.config = config;
+    public HangControl(Hang s_Hang, int power) {
         this.s_Hang = s_Hang;
+        this.power = power;
     }
 
     @Override
     public void initialize() {
         Robot.HangControl.setValue(true);
+        addRequirements(s_Hang);
     }
 
     @Override
     public void execute() {
+        s_Hang.climb(power);
     }
 
     public boolean isFinished() {
@@ -34,5 +35,6 @@ public class HangControl extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         Robot.HangControl.setValue(false);
+        s_Hang.climb(power);
     }
 }

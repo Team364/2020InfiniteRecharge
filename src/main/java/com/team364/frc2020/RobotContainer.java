@@ -36,7 +36,6 @@ public class RobotContainer {
   private final Hang s_Hang = new Hang();
 
 
-
   public final static Joystick controller = new Joystick(0);
   public final static Joystick operator = new Joystick(1);
   private final Hopper s_Hopper = new Hopper();
@@ -44,7 +43,8 @@ public class RobotContainer {
   private final JoystickButton aimSwitch = new JoystickButton(operator, 1);
   private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
   private final JoystickButton colorButto = new JoystickButton(controller, 2);
-  private final JoystickButton climberButto = new JoystickButton(controller, 3);
+  private final JoystickButton climberUpButto = new JoystickButton(controller, 3);
+  private final JoystickButton climberDownButto = new JoystickButton(controller, 4);
 
 
   public static boolean THE_SWITCH = false;
@@ -76,8 +76,8 @@ public class RobotContainer {
     aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
     aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
     hopperbutto.whenPressed(new RunHopper(s_Hopper));
-    climberButto.whileHeld(new RunCommand(() -> s_Hang.climb(1)));
-    climberButto.whenReleased(new RunCommand(() -> s_Hang.climb(-1)));
+    climberUpButto.whenPressed(new HangControl(s_Hang, 1));
+    climberDownButto.whenPressed(new HangControl(s_Hang, 0));
   }
 
   private void activate_THE_SWITCH(){
