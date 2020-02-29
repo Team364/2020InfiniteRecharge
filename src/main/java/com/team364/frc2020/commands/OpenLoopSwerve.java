@@ -40,9 +40,9 @@ public class OpenLoopSwerve extends CommandBase {
 
     @Override
     public void execute() {
-        forward = RobotContainer.SwerveConfig().get("forward");
-        strafe = RobotContainer.SwerveConfig().get("strafe");
-        rotation = RobotContainer.SwerveConfig().get("rotation");
+        //forward = RobotContainer.SwerveConfig().get("forward");
+        //strafe = RobotContainer.SwerveConfig().get("strafe");
+        //rotation = RobotContainer.SwerveConfig().get("rotation");
 
         boolean zeroPoint = false;
         if(zeroPoint){
