@@ -32,9 +32,9 @@ public class HoodControl extends CommandBase {
     @Override
     public void execute() {
         Function exe = new Function((configState == ConfigStates.TARGET) ? 
-            () -> {s_Hood.setAngle(angle);} 
+            () -> {s_Hood.setAngle(config.HoodAngle);} 
                 : 
-            () -> {s_Hood.setAngle(config.HoodAngle);}
+            () -> {s_Hood.setAngle(angle);}
         );
         exe.run();
     }

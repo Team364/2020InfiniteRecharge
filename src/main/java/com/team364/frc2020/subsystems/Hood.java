@@ -3,6 +3,7 @@ package com.team364.frc2020.subsystems;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static com.team364.frc2020.RobotMap.*;
@@ -27,6 +28,7 @@ public class Hood extends SubsystemBase {
     }
     public void setAngle(double angle){
         pid.setSetpoint(angle);
+        SmartDashboard.putNumber("wow", angle);
     }
 
     public int getPosition(){

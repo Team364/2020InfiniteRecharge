@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import static com.team364.frc2020.Conversions.toTrajectory;
@@ -95,7 +96,7 @@ public class RobotContainer {
     aimSwitch.whenPressed(new InstantCommand(() -> activate_THE_SWITCH()))
       .whenReleased(new InstantCommand(() -> deactivate_THE_SWITCH()))
       .whileHeld(
-        new SequentialCommandGroup(
+        new ParallelCommandGroup(
           new TurretControl(s_Turret, s_Vision),
           new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring),
           new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring)

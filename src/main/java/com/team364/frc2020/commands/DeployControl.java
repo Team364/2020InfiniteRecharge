@@ -26,7 +26,7 @@ public class DeployControl extends CommandBase {
     @Override
 	public void execute() {
 		s_Intake.setPiston(activate);
-		end(true);
+		//end(true);
 	}
 
 	@Override

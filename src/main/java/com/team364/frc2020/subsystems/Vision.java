@@ -69,9 +69,10 @@ public class Vision implements Subsystem {
     }
 
     public double targetLogic(int whichSystem){
+        SmartDashboard.putNumber("distance", getDistance());
         if(hasTarget()){
-            findClosestTargets(limeY(), whichSystem);
-            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, limeY());
+            findClosestTargets(getDistance(), whichSystem);
+            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, getDistance());
             SmartDashboard.putNumber("output", hold);
             return hold;            
         }else{
