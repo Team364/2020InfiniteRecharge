@@ -7,7 +7,12 @@
 
 package com.team364.frc2020;
 
+import java.io.FileWriter;
+
+import org.json.JSONObject;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -17,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import static com.team364.frc2020.RobotMap.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -83,7 +89,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     for (SwerveMod mod : m_robotContainer.swerveModules()) {
       SmartDashboard.putNumber("CANCoder Mod " + mod.moduleNumber + " ", mod.getCANCoderAngle());
-  }
+    }
   
     m_robotContainer.configuring.doTheConfigurationShuffle();
     CommandScheduler.getInstance().run();
@@ -98,6 +104,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    teleop_enabled = false;
+    auto_enabled = false;
   }
 
   /**

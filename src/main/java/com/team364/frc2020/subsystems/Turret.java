@@ -18,9 +18,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.*;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.Robot.*;
+import static com.team364.frc2020.RobotMap.*;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -30,64 +33,79 @@ import static com.team364.frc2020.Robot.*;
  */
 public class Turret implements Subsystem {
     public TalonFX turretFx;
-    private CANCoderConfiguration turretCANConfig = new CANCoderConfiguration();
-    private CANCoder turretCAN = new CANCoder(11);
+    public boolean controlled;
 
     public SupplyCurrentLimitConfiguration turretSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
 
     public Turret() {
         register();
+        controlled = false;
         turretFx = new TalonFX(TURRET);
-        turretCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        turretCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-
-        // Configure CANCoder
-        turretCAN.configAllSettings(turretCANConfig, 30);
 
         // Configure turret Motor
         turretFx.configFactoryDefault();
-        turretFx.configRemoteFeedbackFilter(turretCAN, 0, 20);
-        turretFx.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, 0, 20);
-        turretFx.selectProfileSlot(0, 0);
+        turretFx.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 20);
+        turretFx.selectProfileSlot(SLOTIDX, PIDLoopIdx);
         // turretFx.setSensorPhase(invertSensorPhase);
-        turretFx.config_kF(0, 0);
-        turretFx.config_kP(0, 3);
+        turretFx.config_kP(0, 0.1);
         turretFx.config_kI(0, 0);
         turretFx.config_kD(0, 0);
-        turretFx.setNeutralMode(NeutralMode.Brake);
+        turretFx.setNeutralMode(NeutralMode.Coast);
         turretFx.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
 
         // Setup Current Limiting
         turretFx.configSupplyCurrentLimit(turretSupplyLimit, 20);
-
+        turretFx.setInverted(true);
+        turretFx.configReverseSoftLimitThreshold(TURRETMINSOFT);
+        turretFx.configForwardSoftLimitThreshold(TURRETMAXSOFT);
     }
 
     public void setPosition(double pos){
-        turretFx.set(ControlMode.Position, pos);
+        double additiveSoft = 1000;
+        if(pos < TURRETMINSOFT + additiveSoft){
+            turretFx.set(ControlMode.Position, TURRETMINSOFT + additiveSoft);
+        } else if(pos > TURRETMAXSOFT - additiveSoft){
+            turretFx.set(ControlMode.Position, TURRETMAXSOFT - additiveSoft);
+        }else{
+            turretFx.set(ControlMode.Position, pos);
+        }
     }
+
     public double getPosition(){
         return turretFx.getSelectedSensorPosition();
     }
 
     @Override
     public void periodic() {
-        if(!THE_TURRET_ZERO && auto_enabled || teleop_enabled){
-            zeroTurret();
+        if(!THE_TURRET_ZERO && (auto_enabled || teleop_enabled)){
+            resetTurret();
+        } else if(!controlled && THE_TURRET_ZERO && teleop_enabled){
+            setPosition(toTurretCounts(52));
+        } else if(!controlled){
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
         }
     }
 
-    public double getProperPosition(){
-        return to360Boundaries(getDegreePosition());
-    }
     public double getDegreePosition(){
-        return toDegrees(getPosition());
+        return toTurretDegrees(getPosition());
     }
 
-    public void zeroTurret(){
-        if(turretFx.getSupplyCurrent() < 20){
+    public double toTurretDegrees(double counts){
+        return counts * (1.0 / 50.560) * (360.0 / 2048.0);
+    }
+    public double toTurretCounts(double degrees){
+        return degrees * (50.560) * (2048.0 / 360.0);
+    }
+
+
+    public void resetTurret(){
+        if(turretFx.getSupplyCurrent() < 1.5){
             turretFx.set(ControlMode.PercentOutput, -0.1);
         } else{
+            turretFx.set(ControlMode.PercentOutput, 0);
             turretFx.setSelectedSensorPosition(0);
+            turretFx.configForwardSoftLimitEnable(true);
+            turretFx.configReverseSoftLimitEnable(true);
             THE_TURRET_ZERO = true;
         }
     }

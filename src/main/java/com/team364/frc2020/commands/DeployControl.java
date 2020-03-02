@@ -6,8 +6,9 @@ import com.team364.frc2020.subsystems.Intake;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class DeployControl extends CommandBase {
+public class DeployControl extends InstantCommand {
 	private boolean activate;
 	private Intake s_Intake;
 
@@ -26,7 +27,6 @@ public class DeployControl extends CommandBase {
     @Override
 	public void execute() {
 		s_Intake.setPiston(activate);
-		//end(true);
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic(){
-        pid.calculate(getPosition());
+        //pid.calculate(getPosition());
         //hoodServo.setSpeed(pid.get());
         //slaveServo.setSpeed(-pid.get());
         //SmartDashboard.putNumber("output", pid.get());

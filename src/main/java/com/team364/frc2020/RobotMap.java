@@ -8,11 +8,11 @@ public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
-    public static final double TARGETHEIGHTDIFFERENCE = 73;//inches
-    public static final double LIMELIGHTANGLE = 29;//degrees
+    public static final double TARGETHEIGHTDIFFERENCE = 68;//inches
+    public static final double LIMELIGHTANGLE = 35;//degrees
 
-    public static final double LEFTTURRETRANGE = 0;
-    public static final double RIGHTTURRETRANGE = 0;
+    public static final double LEFTTURRETRANGE = -10;
+    public static final double RIGHTTURRETRANGE = 90;
 
 
     public static final double SIMPLEVELOCITY = 5000;
@@ -23,25 +23,11 @@ public class RobotMap {
     public static final double SWERVEMAX_ANGLEACCELERATION = 15000;
 
     public static final double HEIGHTDEADBAND = 1.0;
+    
+    
     //Robot
-    public static final int primaryPCM = 0;
-    public static final int INTAKE = 20;
-    public static final int MAINROLLERS = 20;
-    public static final int LEFTROLLERS = 20;
-    public static final int RIGHTROLLERS = 20;
-    public static final int HOOD = 0;
-    public static final int HOODSLAVE = 1;
-    public static final int HOODENCODER = 1;
-    public static final int SHOOTER = 20;
-    public static final int SHOOTERSLAVE = 20;
-    public static final int TURRET = 11;
 
-
-    //Swerve
-    public static final int TRACKWIDTH = 21;
-    public static final int WHEELBASE = 26;
-    public static final int WHEELDIAMETER = 3;
-
+    //Motors
     public static final int FLDRIVE = 1;    
     public static final int FLANGLE = 2;
     public static final int FRDRIVE = 3;
@@ -50,6 +36,27 @@ public class RobotMap {
     public static final int BLANGLE = 6;
     public static final int BRDRIVE = 7;
     public static final int BRANGLE = 8;
+    public static final int FLOORROLLERS = 9;
+    public static final int SIDEROLLERS = 10;    
+    public static final int TURRET = 11;
+    public static final int SHOOTER = 12;
+    public static final int SHOOTERSLAVE = 13;
+
+    
+    public static final int INTAKE = 1;
+
+
+    public static final int primaryPCM = 0;
+    public static final int HOOD = 0;
+    public static final int HOODSLAVE = 1;
+    public static final int HOODENCODER = 1;
+
+    //Swerve
+    public static final int TRACKWIDTH = 21;
+    public static final int WHEELBASE = 26;
+    public static final int WHEELDIAMETER = 3;
+
+
 
     //CANCoder Swerve Angle
     public static final int FLCAN = 1;
@@ -58,17 +65,17 @@ public class RobotMap {
     public static final int BRCAN = 4;
 
     //pigeon
-    public static final int PIGEON = 13;
+    public static final int PIGEON = 10;
     
     //DRIVE INVERT
     /**Front Left */
-    public static double MOD1OFFSET = 275.361;
+    public static double MOD1OFFSET = 0;
     /**Front Right */
-    public static double MOD2OFFSET = -13.447;
+    public static double MOD2OFFSET = 0;
     /**Back Left */
-    public static double MOD3OFFSET = -27.773;
+    public static double MOD3OFFSET = 0;
     /**Back Right */
-    public static double MOD4OFFSET = 63.897;
+    public static double MOD4OFFSET = 0;
 
     //CANCoder Config
     /**Front Left */
@@ -126,7 +133,7 @@ public class RobotMap {
     
     public static final int SWERVETIMEOUT = 20;
 
-    public static final double ANGLEP = 2.5;//20
+    public static final double ANGLEP = 2;//20
     public static final double ANGLEI = 0.0;//0.001
     public static final double ANGLED = 200;//130 //200
 
@@ -165,5 +172,11 @@ public class RobotMap {
     //constants for shooter
     public static final double SHOOTERSPEED = 0;
     public static final double FERRYSPEED = 0;
+
+    //Turret 
+    public static final int TURRETMINHARD = 0;
+    public static final int TURRETMAXHARD = 94680;
+    public static final int TURRETMINSOFT = TURRETMINHARD + 2000;
+    public static final int TURRETMAXSOFT = TURRETMAXHARD - 2000;
     
 }

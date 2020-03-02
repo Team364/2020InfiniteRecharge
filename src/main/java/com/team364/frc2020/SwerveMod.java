@@ -95,7 +95,7 @@ public class SwerveMod implements Subsystem {
         mDriveMotor.configSupplyCurrentLimit(swerveDriveSupplyLimit, 20);
     }
 
-    public void openLoopOutput(boolean profiling){
+    public void modOutput(boolean profiling){
         if(!profiling){
             mDriveMotor.set(ControlMode.PercentOutput, periodicIO.speedDemand);
             mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
@@ -117,13 +117,19 @@ public class SwerveMod implements Subsystem {
             periodicIO.setVelocitySpeed(0);
         }
     }
-    
+
+    public void setVectorVelocity(double direction, double speed) {
+        periodicIO.setVelocityPosition(direction);
+        periodicIO.setVelocitySpeed(speed);
+    }
+
 
     public synchronized void setAngle(double targetAngle) {
         SmartDashboard.putNumber("rawww", targetAngle);
+        //TODO: there was a negative in front of the targetAngle why?!?!?!
         targetAngle = modulate360(-targetAngle);
         double currentAngle = toDegrees(mAngleMotor.getSelectedSensorPosition());
-        double currentAngleMod = modulate360(currentAngle + offset);
+        double currentAngleMod = modulate360(currentAngle - offset);
         if (currentAngleMod < 0) currentAngleMod += 360;
 
         double delta = currentAngleMod - targetAngle;
@@ -207,6 +213,14 @@ public class SwerveMod implements Subsystem {
         return mDriveMotor.getSelectedSensorVelocity();
     }
 
+    public double getDriveDistance(){
+        return mDriveMotor.getSelectedSensorPosition();
+    }
+
+    public void resetDriveDistance(){
+        mDriveMotor.setSelectedSensorPosition(0);
+    }
+
     public TalonFX getAngleMotor(){
         return mAngleMotor;
     }
@@ -217,7 +231,7 @@ public class SwerveMod implements Subsystem {
 
         setAngle(state.angle.getDegrees());
         setSpeed(state.speedMetersPerSecond);
-        openLoopOutput(true);
+        modOutput(true);
     }
 
 	public void stop() {

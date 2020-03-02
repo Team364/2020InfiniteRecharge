@@ -17,7 +17,9 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         mFlyWheelMotor = new TalonFX(SHOOTER);
         mImmaSlave = new TalonFX(SHOOTERSLAVE);
-
+        mFlyWheelMotor.config_kP(0, 5);
+        mFlyWheelMotor.config_kI(0, 0);
+        mFlyWheelMotor.config_kD(0, 0);
         mImmaSlave.follow(mFlyWheelMotor);
         ShooterInput = 0;
     }
@@ -33,8 +35,8 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        ShooterStates();
-        pidShooterStates();
+        //ShooterStates();
+        //pidShooterStates();
     }
 
     private void stateChange(double[] pidControl) {

@@ -38,7 +38,7 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveKinematics m_kinematics;
 
     public Swerve() {
-        //configOffsets();
+        configOffsets();
         pigeon = new PigeonIMU(new TalonSRX(10));
         zeroGyro();
         mSwerveModules = new SwerveMod[] {
@@ -82,18 +82,29 @@ public class Swerve extends SubsystemBase {
         return mSwerveModules;
     }
 
-    public void openLoopOutputs() {
-        modules.forEach(mod -> mod.openLoopOutput(false));
+    public void swerveOutputs() {
+        modules.forEach(mod -> mod.modOutput(false));
     }
 
     public void holonomicDrive(Vector2 translation, double rotation, boolean speed) {
         modules.forEach(mod -> {
-            Vector2 velocity;
-            Vector2 newTranslation = null;
-            newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
-            // newTranslation = translation;
-            velocity = mod.getModulePosition().normal().scale(deadband(rotation, STICKDEADBAND)).add(newTranslation);
+            Vector2 newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
+            Vector2 velocity = mod.getModulePosition().normal().scale(deadband(rotation, STICKDEADBAND)).add(newTranslation);
             mod.setVectorVelocity(velocity, speed);
+        });
+    }
+    
+    public void straightAutoDrive(double direction, double speed){
+        modules.forEach(mod -> {
+            mod.setVectorVelocity(direction, speed);
+        });
+    }
+
+    public void holomonicAutoDrive(double direction, double speed, double rotation){
+        modules.forEach(mod -> {
+            Vector2 translation = Vector2.fromAngle(new Rotation2(Math.cos(Math.toRadians(direction)), Math.sin(Math.toRadians(direction)), true));
+            Vector2 velocity = mod.getModulePosition().normal().scale(rotation).add(translation);
+            mod.setVectorVelocity(velocity.getAngle().toDegrees(), speed);
         });
     }
 
@@ -102,7 +113,7 @@ public class Swerve extends SubsystemBase {
             mod.setAngle(mod.periodicIO.velocityPosition);
             mod.setSpeed(mod.periodicIO.velocitySpeed);
         });
-        openLoopOutputs();
+        swerveOutputs();
     }
 
     public Rotation2d getAngle() {
@@ -152,6 +163,21 @@ public class Swerve extends SubsystemBase {
         modules.forEach(mod -> {
             mod.stop();
         });
-	}
+    }
+
+    public void resetDriveDistance(){
+        modules.forEach(mod -> {
+            mod.resetDriveDistance();
+        });
+    }
+
+    private double additiveHold;
+    public double getDriveDistance(){
+        additiveHold = 0;
+        modules.forEach(mod -> {
+            additiveHold += mod.getDriveDistance();
+        });
+        return additiveHold / 4;
+    }
 
 }

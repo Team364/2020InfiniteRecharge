@@ -10,22 +10,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Hopper extends SubsystemBase {
-	public TalonFX mainRollers;
-	public TalonSRX leftRollers;
-	public TalonSRX rightRollers;
+	public TalonFX floorRollers;
+	public TalonSRX sideRollers;
 	public DigitalInput infrared;
 
 	public Hopper(){
-		mainRollers = new TalonFX(MAINROLLERS);
-		leftRollers = new TalonSRX(LEFTROLLERS);
-		rightRollers = new TalonSRX(RIGHTROLLERS);
+		floorRollers = new TalonFX(FLOORROLLERS);
+		sideRollers = new TalonSRX(SIDEROLLERS);
 		infrared = new DigitalInput(0);
+		floorRollers.setInverted(true);
 	}
 
 	public void setPower(double motorPower){
-		mainRollers.set(ControlMode.PercentOutput, motorPower);
-		leftRollers.set(ControlMode.PercentOutput, motorPower);
-		rightRollers.set(ControlMode.PercentOutput, -motorPower);
+		floorRollers.set(ControlMode.PercentOutput, motorPower);
+		sideRollers.set(ControlMode.PercentOutput, motorPower);
 	}
 
 	public boolean getInfrared(){

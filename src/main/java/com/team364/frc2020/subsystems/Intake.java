@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 	public TalonFX intake;
-	public DoubleSolenoid piston;
+	//public DoubleSolenoid piston;
 
 	public Intake(){
-		intake = new TalonFX(INTAKE);
-		piston = new DoubleSolenoid(1, 0);
+		intake = new TalonFX(17);
+		//piston = new DoubleSolenoid(1, 0);
 
 	}
 
@@ -24,9 +24,9 @@ public class Intake extends SubsystemBase {
 
 	public void setPiston(Object activate){
 		if(activate == null){
-			piston.set(Value.kOff);
+			//piston.set(Value.kOff);
 		}else {
-			piston.set(Boolean.class.cast(activate) ? Value.kForward : Value.kReverse);
+			//piston.set(Boolean.class.cast(activate) ? Value.kForward : Value.kReverse);
 		}
 	}
 
