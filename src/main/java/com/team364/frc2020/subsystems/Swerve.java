@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.team364.frc2020.misc.math.Rotation2;
@@ -126,9 +127,12 @@ public class Swerve extends SubsystemBase {
         return ypr[0];
     }
 
+    double loops = 0;
     public void zeroGyro() {
+        SmartDashboard.putNumber("loops", loops++);
         pigeon.setYaw(0);
     }
+
     public void resetOdometry(){
         m_odometry.resetPosition(new Pose2d(), new Rotation2d(getYaw()));
     }

@@ -45,6 +45,7 @@ public class HoodControl extends CommandBase {
     }
     @Override
     public void end(boolean interrupted){
+        s_Hood.setAngle(0);
         Robot.HoodControl.setValue(false);
     }
 

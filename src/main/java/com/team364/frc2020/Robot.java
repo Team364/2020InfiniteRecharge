@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
   public static boolean THE_TURRET_ZERO;
   public static boolean auto_enabled;
   public static boolean teleop_enabled;
+  public static DriverStation dStation;
 
   public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
       public static ShuffleboardLayout Hood = RunningTab.getLayout("Hood", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0);
@@ -60,6 +62,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    dStation = DriverStation.getInstance();
     THE_TURRET_ZERO = false;
     auto_enabled = false;
     teleop_enabled = false;

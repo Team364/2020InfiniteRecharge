@@ -79,10 +79,12 @@ public class Turret implements Subsystem {
     public void periodic() {
         if(!THE_TURRET_ZERO && (auto_enabled || teleop_enabled)){
             resetTurret();
-        } else if(!controlled && THE_TURRET_ZERO && teleop_enabled){
-            setPosition(toTurretCounts(52));
-        } else if(!controlled){
+        }
+        if(!controlled){
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+            if(THE_TURRET_ZERO && teleop_enabled){
+                setPosition(toTurretCounts(52));
+            }
         }
     }
 

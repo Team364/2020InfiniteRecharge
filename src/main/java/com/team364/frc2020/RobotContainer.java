@@ -56,7 +56,7 @@ public class RobotContainer {
 
   private final JoystickButton aimSwitch = new JoystickButton(operator, 4);
 
-  private final JoystickButton zeroGyro = new JoystickButton(controller, 1);
+  private final JoystickButton zeroGyro = new JoystickButton(controller, 4);
 
   public static boolean THE_SWITCH = false;
 
@@ -81,25 +81,29 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    zeroGyro.whileHeld(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
 
     intakeSwitch.whileHeld(new IntakeControl(0.5, s_Intake));
     outtakeSwitch.whileHeld(new IntakeControl(-0.5, s_Intake));
     indexButton.whenPressed(new IndexBall(s_Hopper));
-    hopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
+    hopperButton.whileHeld(new HopperControl(1, s_Hopper));
     reverseHopperButton.whileHeld(new HopperControl(-0.5, s_Hopper));
 
     deploySwitch.whenPressed(new DeployControl(true, s_Intake));
     retractSwitch.whenPressed(new DeployControl(false, s_Intake));
 
     aimSwitch.whenPressed(new InstantCommand(() -> activate_THE_SWITCH()))
-      .whenReleased(new InstantCommand(() -> deactivate_THE_SWITCH()))
+      .whenReleased(new ParallelCommandGroup(
+        new InstantCommand(() -> deactivate_THE_SWITCH()),
+        new InstantCommand(() -> s_Shooter.setFlyWheelOff())
+        )
+      )
       .whileHeld(
         new ParallelCommandGroup(
           new TurretControl(s_Turret, s_Vision, s_Swerve)
-          //new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring),
-          //new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring)
+          //new ShooterControl(0, s_Shooter, configuring),
+          //new HoodControl(100, s_Hood, configuring)
         )  
     );
   }

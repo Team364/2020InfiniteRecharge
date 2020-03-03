@@ -8,7 +8,7 @@ public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
-    public static final double TARGETHEIGHTDIFFERENCE = 68;//inches
+    public static final double TARGETHEIGHTDIFFERENCE = 67;//inches
     public static final double LIMELIGHTANGLE = 35;//degrees
 
     public static final double LEFTTURRETRANGE = -10;
@@ -49,7 +49,7 @@ public class RobotMap {
     public static final int primaryPCM = 0;
     public static final int HOOD = 0;
     public static final int HOODSLAVE = 1;
-    public static final int HOODENCODER = 1;
+    public static final int HOODENCODER = 0;
 
     //Swerve
     public static final int TRACKWIDTH = 21;

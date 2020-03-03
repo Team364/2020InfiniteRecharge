@@ -7,19 +7,23 @@ import static com.team364.frc2020.RobotMap.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Intake extends SubsystemBase {
-	public TalonFX intake;
+	public CANSparkMax intake;
 	//public DoubleSolenoid piston;
 
 	public Intake(){
-		intake = new TalonFX(17);
+		intake = new CANSparkMax(17, MotorType.kBrushless);
+		intake.restoreFactoryDefaults();
+		intake.setSmartCurrentLimit(40);
 		//piston = new DoubleSolenoid(1, 0);
 
 	}
 
 	public void setPower(double motorPower){
-		intake.set(ControlMode.PercentOutput, motorPower);
+		intake.set(motorPower);
 	}
 
 	public void setPiston(Object activate){
