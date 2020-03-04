@@ -67,9 +67,9 @@ public class JsonSimplifier<K, V> {
     return map;
   }
 
-  public void writeJson(boolean rewrite) {
+  public void writeJson(boolean append) {
     try {
-      FileWriter fileWriter = new FileWriter(name, rewrite);
+      FileWriter fileWriter = new FileWriter(name, append);
       JSONObject json = new JSONObject(map);
       fileWriter.write(json.toString());
       fileWriter.flush();

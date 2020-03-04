@@ -3,8 +3,6 @@ package com.team364.frc2020.commands;
 import com.team364.frc2020.Robot;
 import com.team364.frc2020.subsystems.Hopper;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class HopperControl extends CommandBase {
@@ -25,7 +23,9 @@ public class HopperControl extends CommandBase {
 
     @Override
 	public void execute() {
-		s_Hopper.setPower(power);
+		if(Robot.ShooterReady.getBoolean(false)){
+			s_Hopper.setPower(power);
+		}
 	}
 
 	@Override

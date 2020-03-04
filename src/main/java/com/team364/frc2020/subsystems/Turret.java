@@ -8,20 +8,15 @@
 package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.RobotMap.TURRET;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.*;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import static com.team364.frc2020.Conversions.*;
+
 import static com.team364.frc2020.Robot.*;
 import static com.team364.frc2020.RobotMap.*;
 /**
@@ -77,7 +72,7 @@ public class Turret implements Subsystem {
 
     @Override
     public void periodic() {
-        if(!THE_TURRET_ZERO && (auto_enabled || teleop_enabled)){
+        /*if(!THE_TURRET_ZERO && (auto_enabled || teleop_enabled)){
             resetTurret();
         }
         if(!controlled){
@@ -85,7 +80,7 @@ public class Turret implements Subsystem {
             if(THE_TURRET_ZERO && teleop_enabled){
                 setPosition(toTurretCounts(52));
             }
-        }
+        }*/
     }
 
     public double getDegreePosition(){

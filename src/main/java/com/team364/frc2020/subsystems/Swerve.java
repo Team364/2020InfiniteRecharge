@@ -2,6 +2,7 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.States.*;
 import static com.team364.frc2020.Configuration.SwerveJson;
 
 import java.util.Arrays;
@@ -13,12 +14,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -37,6 +42,13 @@ public class Swerve extends SubsystemBase {
     public List<SwerveMod> modules;
     public SwerveDriveOdometry m_odometry;
     public SwerveDriveKinematics m_kinematics;
+
+    private ShuffleboardTab swervePID = Shuffleboard.getTab("Configuration");
+        private NetworkTableEntry swervekP;
+        private NetworkTableEntry swervekI;
+        private NetworkTableEntry swervekD;
+        private NetworkTableEntry swervekF;
+
 
     public Swerve() {
         configOffsets();
@@ -62,6 +74,11 @@ public class Swerve extends SubsystemBase {
                 new Translation2d(TRACKWIDTH / 2.0, -WHEELBASE / 2.0),
                 new Translation2d(-TRACKWIDTH / 2.0, -WHEELBASE / 2.0));
         m_odometry = new SwerveDriveOdometry(m_kinematics, getAngle());
+                
+        swervekP = swervePID.add("swerve kP", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(1, 5).getEntry();
+        swervekI = swervePID.add("swerve kI", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(2, 5).getEntry();
+        swervekD = swervePID.add("swerve kD", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(3, 5).getEntry();
+        swervekF = swervePID.add("swerve kF", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 5).getEntry();
     }
 
     public synchronized static Swerve getInstance() {
@@ -182,6 +199,19 @@ public class Swerve extends SubsystemBase {
             additiveHold += mod.getDriveDistance();
         });
         return additiveHold / 4;
+    }
+
+    @Override
+    public void periodic() {
+        if(configState == ConfigStates.SWERVE){
+            modules.forEach(mod -> {
+            mod.getAngleMotor().config_kP(0, swervekP.getDouble(1.0));
+            mod.getAngleMotor().config_kI(0, swervekI.getDouble(0.0));
+            mod.getAngleMotor().config_kD(0, swervekD.getDouble(0.0));
+            mod.getAngleMotor().config_kF(0, swervekF.getDouble(0.0));
+        });  
+        }
+
     }
 
 }

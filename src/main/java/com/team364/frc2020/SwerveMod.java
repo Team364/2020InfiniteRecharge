@@ -17,7 +17,6 @@ import com.team364.frc2020.misc.math.Vector2;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class SwerveMod implements Subsystem {
@@ -125,7 +124,6 @@ public class SwerveMod implements Subsystem {
 
 
     public synchronized void setAngle(double targetAngle) {
-        SmartDashboard.putNumber("rawww", targetAngle);
         //TODO: there was a negative in front of the targetAngle why?!?!?!
         targetAngle = modulate360(-targetAngle);
         double currentAngle = toDegrees(mAngleMotor.getSelectedSensorPosition());

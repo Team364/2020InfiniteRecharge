@@ -9,7 +9,6 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
 import static com.team364.frc2020.RobotMap.*;
-import static com.team364.frc2020.Conversions.*;
 
 import java.util.ArrayList;
 import java.util.List;

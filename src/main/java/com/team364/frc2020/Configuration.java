@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 public class Configuration {
     private Swerve s_Swerve;
     private Vision s_Vision;
-    private int cycles = 0;
     private ShuffleboardTab configTab = Shuffleboard.getTab("Configuration");
         private ShuffleboardLayout config = configTab.getLayout("NewStates", BuiltInLayouts.kList).withSize(3, 3).withPosition(0, 0);
         private ShuffleboardLayout Swerve = configTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 2).withPosition(4, 0);
@@ -34,6 +33,7 @@ public class Configuration {
     private NetworkTableEntry addPoint;
     private NetworkTableEntry calibrateTarget;
     private NetworkTableEntry calibrateSwerve;
+    private NetworkTableEntry resetSwerve;
 
     public static JsonSimplifier<Object, List<Double>> TargetJson = new JsonSimplifier<>(TARGETJSON);
     public static JsonSimplifier<Object, Double> SwerveJson = new JsonSimplifier<>(SWERVEJSON);
@@ -55,6 +55,7 @@ public class Configuration {
         calibrateTarget = Target.add("Target Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
         calibrateSwerve = Swerve.add("Swerve Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+        resetSwerve = Swerve.add("Swerve Recalibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     }
 
     private void configTarget(double shooterVel, double hoodAng){
@@ -84,6 +85,16 @@ public class Configuration {
             SwerveJson.resetJson();
             for(SwerveMod mod : s_Swerve.modules){
                 SwerveJson.writeElement(mod.moduleNumber, mod.getCANCoderAngle());
+            }
+            SwerveJson.writeJson(false);
+        }
+    }
+
+    private void resetZeroSwerve(){
+        if(configState == ConfigStates.SWERVE){
+            SwerveJson.resetJson();
+            for(SwerveMod mod : s_Swerve.modules){
+                SwerveJson.writeElement(mod.moduleNumber, 0.0);
             }
             SwerveJson.writeJson(false);
         }
@@ -125,6 +136,10 @@ public class Configuration {
         if(calibrateSwerve.getBoolean(false)){
             calibrateSwerve.setValue(false);
             configSwerve();
+        }
+        if(resetSwerve.getBoolean(false)){
+            resetSwerve.setValue(false);
+            resetZeroSwerve();
         }
         setShooterVel();
         setHoodAng();

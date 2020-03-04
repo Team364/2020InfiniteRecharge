@@ -2,17 +2,15 @@ package com.team364.frc2020;
 
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-
 public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
-    public static final double TARGETHEIGHTDIFFERENCE = 67;//inches
+    public static final double TARGETHEIGHTDIFFERENCE = 62;//inches
     public static final double LIMELIGHTANGLE = 35;//degrees
 
     public static final double LEFTTURRETRANGE = -10;
-    public static final double RIGHTTURRETRANGE = 90;
+    public static final double RIGHTTURRETRANGE = 30;
 
 
     public static final double SIMPLEVELOCITY = 5000;
@@ -41,9 +39,9 @@ public class RobotMap {
     public static final int TURRET = 11;
     public static final int SHOOTER = 12;
     public static final int SHOOTERSLAVE = 13;
+    public static final int INTAKE = 14;
+    public static final int HANG = 15;
 
-    
-    public static final int INTAKE = 1;
 
 
     public static final int primaryPCM = 0;
@@ -89,13 +87,13 @@ public class RobotMap {
 
     //DRIVE INVERT
     /**Front Left */
-    public static final boolean MOD1DRIVEINVERT = false;
+    public static final boolean MOD1DRIVEINVERT = true;
     /**Front Right */
-    public static final boolean MOD2DRIVEINVERT = true;
+    public static final boolean MOD2DRIVEINVERT = false;
     /**Back Left */
-    public static final boolean MOD3DRIVEINVERT = false;
+    public static final boolean MOD3DRIVEINVERT = true;
     /**Back Right */
-    public static final boolean MOD4DRIVEINVERT = true;
+    public static final boolean MOD4DRIVEINVERT = false;
     
     //ANGLE INVERT
     /**Front Left */

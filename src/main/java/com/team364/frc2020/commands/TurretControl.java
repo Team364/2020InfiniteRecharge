@@ -1,18 +1,14 @@
 package com.team364.frc2020.commands;
 
-import com.team364.frc2020.subsystems.*;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import com.team364.frc2020.subsystems.*;
+import com.team364.frc2020.Robot;
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
-
 import static com.team364.frc2020.Robot.*;
-import com.team364.frc2020.Robot;
 
 public class TurretControl extends CommandBase {
     private Turret s_Turret;
@@ -57,7 +53,6 @@ public class TurretControl extends CommandBase {
             }else if(!s_Vision.hasTarget() && !flipping){
                 double switchTarget = (letterSide == 'L') ? LEFTTURRETRANGE : RIGHTTURRETRANGE;
                 target = to360Boundaries(52 + switchTarget + to180Boundaries(s_Swerve.getYaw()));
-
                 if(withinDeadband(s_Turret.getDegreePosition() - target, 8)){
                     letterSide = (letterSide == 'L') ? 'R' : 'L';
                 }
@@ -68,6 +63,7 @@ public class TurretControl extends CommandBase {
                 target = maxSoft;
             }
             s_Turret.setPosition(s_Turret.toTurretCounts(target));
+            Robot.TurretReady.setBoolean(withinDeadband(s_Turret.getDegreePosition() - s_Vision.limeX(), 5) ? true : false);
         }
     }
 

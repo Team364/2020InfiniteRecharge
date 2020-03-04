@@ -2,7 +2,6 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.RobotMap.*;
 import static com.team364.frc2020.States.*;
-import static com.team364.frc2020.RobotContainer.THE_SWITCH;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -11,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -21,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-    private double ShooterInput;
     public TalonFX mFlyWheelMotor;
     public TalonFX mSlaveFlyWheelMotor;
     
@@ -46,28 +43,26 @@ public class Shooter extends SubsystemBase {
         mFlyWheelMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
         
         mFlyWheelMotor.selectProfileSlot(0, 20);
-        mFlyWheelMotor.config_kP(0, 5);
+        mFlyWheelMotor.config_kP(0, 2);
         mFlyWheelMotor.config_kI(0, 0);
         mFlyWheelMotor.config_kD(0, 0);
-        mFlyWheelMotor.config_kF(0, 0);
+        mFlyWheelMotor.config_kF(0, 0.046976);
 
         mFlyWheelMotor.setInverted(true);
         mSlaveFlyWheelMotor.follow(mFlyWheelMotor);
         mSlaveFlyWheelMotor.setInverted(InvertType.OpposeMaster);
-        ShooterInput = 0;
  
         mFlyWheelMotor.configSupplyCurrentLimit(shootSupplyLimit, 20);
         mSlaveFlyWheelMotor.configSupplyCurrentLimit(shootSupplyLimit, 20);
 
-        shooterkP = shooterPID.add("Shooter kP", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 1).getEntry();
-        shooterkI = shooterPID.add("Shooter kI", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 2).getEntry();
-        shooterkD = shooterPID.add("Shooter kD", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 3).getEntry();
+        shooterkP = shooterPID.add("Shooter kP", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(1, 4).getEntry();
+        shooterkI = shooterPID.add("Shooter kI", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(2, 4).getEntry();
+        shooterkD = shooterPID.add("Shooter kD", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(3, 4).getEntry();
         shooterkF = shooterPID.add("Shooter kF", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 4).getEntry();
 
     }
 
     public void setFlyWheelVel(double velocity) {
-        ShooterInput = velocity;
         mFlyWheelMotor.set(ControlMode.Velocity, toSensorCounts(velocity));
     }
 
@@ -77,16 +72,18 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        mFlyWheelMotor.config_kP(0, shooterkP.getDouble(1.0));
-        mFlyWheelMotor.config_kI(0, shooterkI.getDouble(0.0));
-        mFlyWheelMotor.config_kD(0, shooterkD.getDouble(0.0));
-        mFlyWheelMotor.config_kF(0, shooterkF.getDouble(0.0));
+        if(configState == ConfigStates.TARGET){
+            mFlyWheelMotor.config_kP(0, shooterkP.getDouble(2.0));
+            mFlyWheelMotor.config_kI(0, shooterkI.getDouble(0.0));
+            mFlyWheelMotor.config_kD(0, shooterkD.getDouble(0.0));
+            mFlyWheelMotor.config_kF(0, shooterkF.getDouble(0.046976));
+        }
         SmartDashboard.putNumber("Shooter velocity", fromSensorCounts(getFlyWheelVel()));
+
     }
 
     public void setFlyWheelOff(){
         mFlyWheelMotor.set(ControlMode.PercentOutput, 0);
-
     }
 
     public double toSensorCounts(double shooterRpm){

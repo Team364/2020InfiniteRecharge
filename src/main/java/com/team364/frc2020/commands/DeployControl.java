@@ -3,9 +3,6 @@ package com.team364.frc2020.commands;
 import com.team364.frc2020.Robot;
 import com.team364.frc2020.subsystems.Intake;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class DeployControl extends InstantCommand {

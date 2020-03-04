@@ -5,12 +5,10 @@ import com.team364.frc2020.Robot;
 import com.team364.frc2020.States.ConfigStates;
 import com.team364.frc2020.subsystems.*;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.States.*;
-
+import static com.team364.frc2020.Conversions.*;
 import com.team364.frc2020.misc.util.Function;
 
 public class ShooterControl extends CommandBase {
@@ -37,6 +35,7 @@ public class ShooterControl extends CommandBase {
     public void execute() {
         Function exe = new Function((configState == ConfigStates.TARGET) ? configuration() : standard());
         exe.run();
+        Robot.ShooterReady.setBoolean(withinDeadband(s_Shooter.getFlyWheelVel() - velocity, 100) ? true : false);
     }
 
 

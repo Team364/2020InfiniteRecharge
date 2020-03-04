@@ -7,12 +7,7 @@
 
 package com.team364.frc2020;
 
-import java.io.FileWriter;
-
-import org.json.JSONObject;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -23,7 +18,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import static com.team364.frc2020.RobotMap.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,27 +28,34 @@ import static com.team364.frc2020.RobotMap.*;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
+  public RobotContainer m_robotContainer;
   public static boolean THE_TURRET_ZERO;
-  public static boolean auto_enabled;
-  public static boolean teleop_enabled;
   public static DriverStation dStation;
 
   public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
-      public static ShuffleboardLayout Hood = RunningTab.getLayout("Hood", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0);
+      public static ShuffleboardLayout Hood = RunningTab.getLayout("Hood", BuiltInLayouts.kList).withSize(2, 5).withPosition(2, 0);
           public static NetworkTableEntry HoodControl;
-      public static ShuffleboardLayout Hopper = RunningTab.getLayout("Hopper", BuiltInLayouts.kList).withSize(2, 5).withPosition(2, 0);
+      public static ShuffleboardLayout Hopper = RunningTab.getLayout("Hopper", BuiltInLayouts.kList).withSize(2, 5).withPosition(4, 0);
           public static NetworkTableEntry IndexBall;
           public static NetworkTableEntry HopperControl;
-      public static ShuffleboardLayout Intake = RunningTab.getLayout("Intake", BuiltInLayouts.kList).withSize(2, 5).withPosition(4, 0);
+      public static ShuffleboardLayout Intake = RunningTab.getLayout("Intake", BuiltInLayouts.kList).withSize(2, 5).withPosition(6, 0);
           public static NetworkTableEntry DeployControl;
           public static NetworkTableEntry IntakeControl;
-      public static ShuffleboardLayout Shooter = RunningTab.getLayout("Shooter", BuiltInLayouts.kList).withSize(2, 5).withPosition(6, 0);
+      public static ShuffleboardLayout Shooter = RunningTab.getLayout("Shooter", BuiltInLayouts.kList).withSize(2, 5).withPosition(8, 0);
           public static NetworkTableEntry ShooterControl;
-      public static ShuffleboardLayout Swerve = RunningTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 5).withPosition(8, 0);
+      public static ShuffleboardLayout Swerve = RunningTab.getLayout("Swerve", BuiltInLayouts.kList).withSize(2, 5).withPosition(10, 0);
           public static NetworkTableEntry OpenLoopSwerve;
-      public static ShuffleboardLayout Turret = RunningTab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 5).withPosition(10, 0);
+      public static ShuffleboardLayout Turret = RunningTab.getLayout("Turret", BuiltInLayouts.kList).withSize(2, 5).withPosition(12, 0);
           public static NetworkTableEntry TurretControl;
+
+      public static ShuffleboardTab LukeIsStupidTab = Shuffleboard.getTab("Luke Is Stupid");
+        public static ShuffleboardLayout Shooting = RunningTab.getLayout("Shooting", BuiltInLayouts.kList).withSize(2, 5).withPosition(8, 0);
+          public static NetworkTableEntry ShooterReady;
+          public static NetworkTableEntry HoodReady;
+          public static NetworkTableEntry TurretReady;
+        public static ShuffleboardLayout Infrared = RunningTab.getLayout("Index", BuiltInLayouts.kList).withSize(2, 5).withPosition(8, 0);
+          public static NetworkTableEntry InfraredReady;
+
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -64,17 +65,22 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     dStation = DriverStation.getInstance();
     THE_TURRET_ZERO = false;
-    auto_enabled = false;
-    teleop_enabled = false;
     m_robotContainer = new RobotContainer();
-    HoodControl = Robot.Hood.add("HoodContol", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    IndexBall = Robot.Hopper.add("IndexBall", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    HopperControl = Robot.Hopper.add("HopperControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    DeployControl = Robot.Intake.add("DeployControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    IntakeControl = Robot.Intake.add("IntakeControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    ShooterControl = Robot.Shooter.add("ShooterControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    OpenLoopSwerve = Robot.Swerve.add("OpenLoopSwerve", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
-    TurretControl = Robot.Turret.add("TurretControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
+    HoodControl = Hood.add("HoodContol", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    IndexBall = Hopper.add("IndexBall", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    HopperControl = Hopper.add("HopperControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    DeployControl = Intake.add("DeployControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    IntakeControl = Intake.add("IntakeControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    ShooterControl = Shooter.add("ShooterControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    OpenLoopSwerve = Swerve.add("OpenLoopSwerve", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    TurretControl = Turret.add("TurretControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
+    ShooterReady = Shooting.add("Shooter Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    HoodReady = Shooting.add("Hood Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+    TurretReady = Shooting.add("Turret Ready", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
+
+    InfraredReady = Infrared.add("Index Ready", true).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
   }
 
   /**
@@ -107,8 +113,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    teleop_enabled = false;
-    auto_enabled = false;
   }
 
   /**
@@ -129,7 +133,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    auto_enabled = true;
   }
 
   @Override
@@ -148,7 +151,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    teleop_enabled = true;
   }
 
   @Override

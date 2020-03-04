@@ -5,11 +5,10 @@ import com.team364.frc2020.Robot;
 import com.team364.frc2020.misc.util.Function;
 import com.team364.frc2020.subsystems.*;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.States.*;
+import static com.team364.frc2020.Conversions.*;
 
 public class HoodControl extends CommandBase {
     private double angle;
@@ -32,11 +31,18 @@ public class HoodControl extends CommandBase {
     @Override
     public void execute() {
         Function exe = new Function((configState == ConfigStates.TARGET) ? 
-            () -> {s_Hood.setAngle(config.HoodAngle);} 
+            () -> {
+                s_Hood.setAngle(config.HoodAngle);
+                Robot.HoodReady.setBoolean(withinDeadband(s_Hood.getPosition() - angle, 5) ? true : false);
+            } 
                 : 
-            () -> {s_Hood.setAngle(angle);}
+            () -> {
+                s_Hood.setAngle(angle);
+                Robot.HoodReady.setBoolean(withinDeadband(s_Hood.getPosition() - angle, 5) ? true : false);
+            }
         );
         exe.run();
+
     }
 
     @Override
