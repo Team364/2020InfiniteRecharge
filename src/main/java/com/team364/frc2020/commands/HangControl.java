@@ -1,6 +1,5 @@
 package com.team364.frc2020.commands;
 
-import com.team364.frc2020.Robot;
 import com.team364.frc2020.subsystems.Hang;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;

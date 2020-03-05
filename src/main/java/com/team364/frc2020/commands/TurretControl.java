@@ -50,7 +50,7 @@ public class TurretControl extends CommandBase {
                 }else if(target > 0 && s_Turret.getDegreePosition() > 285 && target < 180){
                     flipping = true;
                 }
-            }else if(!s_Vision.hasTarget() && !flipping){
+            }else if(!s_Vision.hasTarget() && !flipping && !Robot.HopperControl.getBoolean(false)){
                 double switchTarget = (letterSide == 'L') ? LEFTTURRETRANGE : RIGHTTURRETRANGE;
                 target = to360Boundaries(52 + switchTarget + to180Boundaries(s_Swerve.getYaw()));
                 if(withinDeadband(s_Turret.getDegreePosition() - target, 8)){
