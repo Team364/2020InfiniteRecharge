@@ -23,25 +23,39 @@ public class BasicForward extends SequentialCommandGroup {
 
     public BasicForward(Swerve s_Swerve, Turret s_Turret, Shooter s_Shooter, Hood s_Hood, Vision s_Vision, Configuration config, Hopper s_Hopper) {
         addCommands(
-            new ParallelDeadlineGroup(new WaitCommand(2), new DriveToDistance(0.1, s_Swerve)),
-            new ParallelDeadlineGroup(
-              new WaitCommand(5),  
-              new ParallelCommandGroup(
-                new TurretControl(s_Turret, s_Vision, s_Swerve),
-                new HoodControl(300, s_Hood, config),
-                new ShooterControl(4500, s_Shooter, config),
-                new SequentialCommandGroup(
-                  new WaitCommand(1),
-                  new HopperControl(-0.6, s_Hopper)
-                )
+          new WaitCommand(1),
+          new ParallelDeadlineGroup(
+            new WaitCommand(10),  
+            new ParallelCommandGroup(
+              new TurretControl(s_Turret, s_Vision, s_Swerve),
+              new HoodControl(300, s_Hood, config),
+              new ShooterControl(4500, s_Shooter, config),
+              new SequentialCommandGroup(
+                new WaitCommand(4),
+                new HopperControl(-0.4, s_Hopper)
               )
-            ),
-            new InstantCommand(() -> {
-              new TurretControl(s_Turret, s_Vision, s_Swerve).end(true);
-              new HoodControl(0, s_Hood, config).end(true);
-              new ShooterControl(0, s_Shooter, config).end(true);
-              new HopperControl(0, s_Hopper).end(true);
-            })       
+            )
+          ),
+          // new InstantCommand(() -> {
+          //   new TurretControl(s_Turret, s_Vision, s_Swerve).end(true);
+          //   new HoodControl(0, s_Hood, config).end(true);
+          //   new ShooterControl(0, s_Shooter, config).end(true);
+          //   new HopperControl(0, s_Hopper).end(true);
+          // }),
+          new ParallelDeadlineGroup(new WaitCommand(2), new DriveToDistance(0.25, s_Swerve))
+          /*
+          new ParallelDeadlineGroup(new WaitCommand(2), new DriveToDistance(0.25, s_Swerve)),
+            new ParallelCommandGroup(
+              new TurretControl(s_Turret, s_Vision, s_Swerve),
+              new HoodControl(300, s_Hood, config),
+              new ShooterControl(4500, s_Shooter, config),
+              new SequentialCommandGroup(
+                new WaitCommand(4),
+                new HopperControl(-0.4, s_Hopper)
+              )
+            )
+          )
+          */
         );
       }
 
