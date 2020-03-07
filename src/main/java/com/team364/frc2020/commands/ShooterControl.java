@@ -5,6 +5,7 @@ import com.team364.frc2020.Robot;
 import com.team364.frc2020.States.ConfigStates;
 import com.team364.frc2020.subsystems.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.States.*;
@@ -30,12 +31,23 @@ public class ShooterControl extends CommandBase {
     public void initialize() {
         Robot.ShooterControl.setValue(true);
     }
-
+//configState == ConfigStates.TARGET
     @Override
     public void execute() {
         Function exe = new Function((configState == ConfigStates.TARGET) ? configuration() : standard());
         exe.run();
-        Robot.ShooterReady.setBoolean(withinDeadband(s_Shooter.getFlyWheelVel() - velocity, 100) ? true : false);
+        boolean inRange;
+        if(Math.abs(s_Shooter.fromSensorCounts(s_Shooter.getFlyWheelVel()) - velocity) < 300){
+            inRange = true;
+
+        }else{
+            inRange = false;
+        }
+        SmartDashboard.putBoolean("shooter error", inRange);
+
+        Robot.ShooterReady.setBoolean(inRange);
+        //withinDeadband(s_Shooter.getFlyWheelVel() - velocity, 300)
+        Robot.ShooterReady.setBoolean(withinDeadband(s_Shooter.getFlyWheelVel() - velocity, 300));
     }
 
 
@@ -48,7 +60,9 @@ public class ShooterControl extends CommandBase {
     private Runnable configuration(){
         return new Runnable(){
             @Override
-            public void run(){s_Shooter.setFlyWheelVel(config.ShooterVelocity);}
+            public void run(){s_Shooter.setFlyWheelVel(config.ShooterVelocity);
+            velocity = config.ShooterVelocity;}
+
         };  
     }
 

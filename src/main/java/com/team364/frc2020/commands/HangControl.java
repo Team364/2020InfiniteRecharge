@@ -21,7 +21,7 @@ public class HangControl extends CommandBase {
 
     @Override
 	public void execute() {
-		s_Hang.setPower(power);
+			s_Hang.setPower(power);
 	}
 
 	@Override

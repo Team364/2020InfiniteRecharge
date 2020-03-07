@@ -5,6 +5,7 @@ import com.team364.frc2020.Robot;
 import com.team364.frc2020.misc.util.Function;
 import com.team364.frc2020.subsystems.*;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import static com.team364.frc2020.States.*;
@@ -33,16 +34,25 @@ public class HoodControl extends CommandBase {
         Function exe = new Function((configState == ConfigStates.TARGET) ? 
             () -> {
                 s_Hood.setAngle(config.HoodAngle);
-                Robot.HoodReady.setBoolean(withinDeadband(s_Hood.getPosition() - angle, 5) ? true : false);
+                angle = config.HoodAngle;
             } 
                 : 
             () -> {
                 s_Hood.setAngle(angle);
-                Robot.HoodReady.setBoolean(withinDeadband(s_Hood.getPosition() - angle, 5) ? true : false);
             }
         );
         exe.run();
+        boolean inRange;
+        if(Math.abs(s_Hood.getPosition() - angle) < 20){
+            inRange = true;
+        }else{
+            inRange = false;
+        }
+        SmartDashboard.putBoolean("Hood range", inRange);
+        Robot.HoodReady.setBoolean(inRange);
+        SmartDashboard.putNumber("Hood error", Math.abs(s_Hood.getPosition() - angle));
 
+        //withinDeadband(s_Hood.getPosition() - angle, 20)
     }
 
     @Override

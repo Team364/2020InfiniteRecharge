@@ -23,9 +23,8 @@ public class HopperControl extends CommandBase {
 
     @Override
 	public void execute() {
-		if(Robot.ShooterReady.getBoolean(false)){
 			s_Hopper.setPower(power);
-		}
+
 	}
 
 	@Override

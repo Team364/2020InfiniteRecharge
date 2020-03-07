@@ -47,8 +47,6 @@ public class Swerve extends SubsystemBase {
         private NetworkTableEntry swervekP;
         private NetworkTableEntry swervekI;
         private NetworkTableEntry swervekD;
-        private NetworkTableEntry swervekF;
-
 
     public Swerve() {
         configOffsets();
@@ -78,7 +76,6 @@ public class Swerve extends SubsystemBase {
         swervekP = swervePID.add("swerve kP", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(1, 5).getEntry();
         swervekI = swervePID.add("swerve kI", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(2, 5).getEntry();
         swervekD = swervePID.add("swerve kD", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(3, 5).getEntry();
-        swervekF = swervePID.add("swerve kF", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(4, 5).getEntry();
     }
 
     public synchronized static Swerve getInstance() {
@@ -205,10 +202,9 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         if(configState == ConfigStates.SWERVE){
             modules.forEach(mod -> {
-            mod.getAngleMotor().config_kP(0, swervekP.getDouble(1.0));
+            mod.getAngleMotor().config_kP(0, swervekP.getDouble(2.0));
             mod.getAngleMotor().config_kI(0, swervekI.getDouble(0.0));
-            mod.getAngleMotor().config_kD(0, swervekD.getDouble(0.0));
-            mod.getAngleMotor().config_kF(0, swervekF.getDouble(0.0));
+            mod.getAngleMotor().config_kD(0, swervekD.getDouble(200.0));
         });  
         }
 

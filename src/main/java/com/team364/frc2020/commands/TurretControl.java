@@ -1,7 +1,7 @@
 package com.team364.frc2020.commands;
 
-
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.team364.frc2020.subsystems.*;
@@ -63,7 +63,17 @@ public class TurretControl extends CommandBase {
                 target = maxSoft;
             }
             s_Turret.setPosition(s_Turret.toTurretCounts(target));
-            Robot.TurretReady.setBoolean(withinDeadband(s_Turret.getDegreePosition() - s_Vision.limeX(), 5) ? true : false);
+            boolean inRange;
+            if(Math.abs(s_Turret.getDegreePosition() - target) < 30){
+                inRange = true;
+            }else{
+                inRange = false;
+            }
+            SmartDashboard.putBoolean("Turret range", inRange);
+            Robot.TurretReady.setBoolean(inRange);        
+            SmartDashboard.putNumber("Turret error", Math.abs(s_Turret.getDegreePosition() - target));
+
+            //withinDeadband(s_Turret.getDegreePosition() - target, 30)
         }
     }
 

@@ -13,6 +13,8 @@ import static com.team364.frc2020.RobotMap.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.team364.frc2020.Robot;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -35,14 +37,14 @@ public class Vision implements Subsystem {
         cycles = 0;
     }
 
-    public void findClosestTargets(double height, int whichSystem) {
+    public void findClosestTargets(double distance, int whichSystem) {
         try{
             TargetJson.getMap().keySet().forEach((ObjectKey) -> {
                 double key = Double.valueOf(ObjectKey.toString());
                 // difference between actual and the iteration
-                double mathHold = Math.abs(height - key);
+                double mathHold = Math.abs(distance - key);
                 // closest target logic
-                if (mathHold < Math.abs(closestTarget.get(0) - height) || mathHold < Math.abs(closestTarget.get(1) - height)) {
+                if (mathHold < Math.abs(closestTarget.get(0) - distance) || mathHold < Math.abs(closestTarget.get(1) - distance)) {
                     if (Math.abs(mathHold - closestTarget.get(0)) < Math.abs(mathHold - closestTarget.get(1))) {
                         if(key != closestTarget.get(0)){
                             closestTarget.set(1, key);
@@ -69,9 +71,9 @@ public class Vision implements Subsystem {
 
     public double targetLogic(int whichSystem){
         SmartDashboard.putNumber("distance", getDistance());
-        if(hasTarget()){
-            findClosestTargets(getDistance(), whichSystem);
-            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, getDistance());
+        if(true){
+            findClosestTargets(20.0, whichSystem);
+            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, 20.0);
             SmartDashboard.putNumber("output", hold);
             return hold;            
         }else{
@@ -99,6 +101,7 @@ public class Vision implements Subsystem {
     @Override
     public void periodic(){
         SmartDashboard.putNumber("distance", getDistance());
+        Robot.Distance.setString(String.valueOf(getDistance()));
     }
 
 

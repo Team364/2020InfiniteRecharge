@@ -21,7 +21,7 @@ public class IndexBall extends CommandBase {
 
     @Override
 	public void execute() {
-		s_Hopper.setPower(1);
+		s_Hopper.setPower(-0.6);
 	}
 
 	@Override

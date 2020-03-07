@@ -10,7 +10,9 @@ package com.team364.frc2020;
 import java.util.HashMap;
 import java.util.List;
 
+import com.team364.frc2020.commandGroups.autos.BasicForward;
 import com.team364.frc2020.commands.*;
+import com.team364.frc2020.commands.autos.DriveToDistance;
 import com.team364.frc2020.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -19,8 +21,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
-import static com.team364.frc2020.Conversions.toTrajectory;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -37,12 +37,13 @@ public class RobotContainer {
   private final Hood s_Hood = new Hood();
   private final Turret s_Turret = new Turret();
   private final Intake s_Intake = new Intake();
+  private final Hopper s_Hopper = new Hopper();
+
   public Configuration configuring = new Configuration(s_Vision, s_Swerve);
-  private SwerveMotionProfiling m_autoCommand;
+  private Command m_autoCommand = new BasicForward(s_Swerve, s_Turret, s_Shooter, s_Hood, s_Vision, configuring, s_Hopper);
 
   private final static Joystick controller = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
-  private final Hopper s_Hopper = new Hopper();
   private final JoystickButton hopperButton = new JoystickButton(operator, 8);
   private final JoystickButton indexButton = new JoystickButton(operator, 7);
   private final JoystickButton intakeSwitch = new JoystickButton(operator, 3);
@@ -54,11 +55,13 @@ public class RobotContainer {
 
   private final JoystickButton aimSwitch = new JoystickButton(operator, 4);
 
-  private final JoystickButton zeroGyro = new JoystickButton(controller, 4);
-  private final JoystickButton climbDrive = new JoystickButton(controller, 1);
-  private final JoystickButton upClimb = new JoystickButton(controller, 2);
-  private final JoystickButton downClimb = new JoystickButton(controller, 3);
-  private final JoystickButton lockingClimb = new JoystickButton(controller, 5);
+  private final JoystickButton zeroGyro = new JoystickButton(controller, 2);
+ // private final JoystickButton climbDrive = new JoystickButton(controller, 1);  
+
+  private final JoystickButton upClimb = new JoystickButton(controller, 4);
+  private final JoystickButton downClimb = new JoystickButton(controller, 1);
+
+  private final JoystickButton lockingClimb = new JoystickButton(controller, 8);
 
 
 
@@ -73,7 +76,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-
   }
 
   /**
@@ -84,18 +86,18 @@ public class RobotContainer {
    */
   private void configureButtonBindings(){
 
-    climbDrive.whileHeld(new LockTurnSwerve(s_Swerve));
+    //climbDrive.whileHeld(new LockTurnSwerve(s_Swerve));
     upClimb.whileHeld(new HangControl(1, s_Hang));
     downClimb.whileHeld(new HangControl(-1, s_Hang));
     lockingClimb.whenPressed(new InstantCommand(() -> {s_Hang.setPiston();}));
 
     zeroGyro.whileHeld(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-    intakeSwitch.whileHeld(new IntakeControl(0.5, s_Intake));
-    outtakeSwitch.whileHeld(new IntakeControl(-0.5, s_Intake));
+    intakeSwitch.whileHeld(new IntakeControl(-0.8, s_Intake));
+    outtakeSwitch.whileHeld(new IntakeControl(0.8, s_Intake));
     indexButton.whenPressed(new IndexBall(s_Hopper));
-    hopperButton.whileHeld(new HopperControl(1, s_Hopper));
-    reverseHopperButton.whileHeld(new HopperControl(-0.5, s_Hopper));
+    hopperButton.whileHeld(new HopperControl(-0.6, s_Hopper));
+    reverseHopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
 
     deploySwitch.whenPressed(new DeployControl(true, s_Intake));
     retractSwitch.whenPressed(new DeployControl(false, s_Intake));
@@ -110,8 +112,8 @@ public class RobotContainer {
       .whileHeld(
         new ParallelCommandGroup(
           new TurretControl(s_Turret, s_Vision, s_Swerve),
-          new ShooterControl(0, s_Shooter, configuring),
-          new HoodControl(100, s_Hood, configuring)
+          new HoodControl(300, s_Hood, configuring),
+          new ShooterControl(4000, s_Shooter, configuring)
         )
       );
   }
@@ -142,10 +144,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //String autoString = "/home/lvuser/deploy/paths/ColtonFirstPath.path";
-    try{
-      m_autoCommand = new SwerveMotionProfiling(toTrajectory());
-    }catch(Exception e){SmartDashboard.putString("big error", e.toString());}
+    // An ExampleCommand will run in autonomous
     return m_autoCommand;
   }
   

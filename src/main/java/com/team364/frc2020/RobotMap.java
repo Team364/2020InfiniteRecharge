@@ -6,15 +6,15 @@ public class RobotMap {
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
     public static final String SWERVEJSON = "/home/lvuser/SwerveOffsets.json";
 
-    public static final double TARGETHEIGHTDIFFERENCE = 62;//inches
-    public static final double LIMELIGHTANGLE = 35;//degrees
+    public static final double TARGETHEIGHTDIFFERENCE = 62.0;//inches
+    public static final double LIMELIGHTANGLE = 35.0;//degrees
 
     public static final double LEFTTURRETRANGE = -10;
     public static final double RIGHTTURRETRANGE = 30;
 
 
-    public static final double SIMPLEVELOCITY = 5000;
-    public static final double SIMPLEANGLE = 50;
+    public static final double SIMPLEVELOCITY = 4000;
+    public static final double SIMPLEANGLE = 0;
 
     public static final double SWERVEMAXSPEED = 22500;
     public static final double SWERVEMAX_ANGLEVELOCITY = 26000;
@@ -34,12 +34,12 @@ public class RobotMap {
     public static final int BLANGLE = 6;
     public static final int BRDRIVE = 7;
     public static final int BRANGLE = 8;
-    public static final int FLOORROLLERS = 9;
+    public static final int FLOORROLLERS = 2;
     public static final int SIDEROLLERS = 10;    
     public static final int TURRET = 11;
     public static final int SHOOTER = 12;
     public static final int SHOOTERSLAVE = 13;
-    public static final int INTAKE = 14;
+    public static final int INTAKE = 9;
     public static final int HANG = 15;
 
 
@@ -87,13 +87,13 @@ public class RobotMap {
 
     //DRIVE INVERT
     /**Front Left */
-    public static final boolean MOD1DRIVEINVERT = true;
+    public static final boolean MOD1DRIVEINVERT = false;
     /**Front Right */
-    public static final boolean MOD2DRIVEINVERT = false;
+    public static final boolean MOD2DRIVEINVERT = true;
     /**Back Left */
-    public static final boolean MOD3DRIVEINVERT = true;
+    public static final boolean MOD3DRIVEINVERT = false;
     /**Back Right */
-    public static final boolean MOD4DRIVEINVERT = false;
+    public static final boolean MOD4DRIVEINVERT = true;
     
     //ANGLE INVERT
     /**Front Left */

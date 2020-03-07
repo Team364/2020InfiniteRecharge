@@ -43,7 +43,7 @@ public class Shooter extends SubsystemBase {
         mFlyWheelMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
         
         mFlyWheelMotor.selectProfileSlot(0, 20);
-        mFlyWheelMotor.config_kP(0, 2);
+        mFlyWheelMotor.config_kP(0, 0.75);
         mFlyWheelMotor.config_kI(0, 0);
         mFlyWheelMotor.config_kD(0, 0);
         mFlyWheelMotor.config_kF(0, 0.046976);
@@ -73,7 +73,7 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         if(configState == ConfigStates.TARGET){
-            mFlyWheelMotor.config_kP(0, shooterkP.getDouble(2.0));
+            mFlyWheelMotor.config_kP(0, shooterkP.getDouble(0.75));
             mFlyWheelMotor.config_kI(0, shooterkI.getDouble(0.0));
             mFlyWheelMotor.config_kD(0, shooterkD.getDouble(0.0));
             mFlyWheelMotor.config_kF(0, shooterkF.getDouble(0.046976));

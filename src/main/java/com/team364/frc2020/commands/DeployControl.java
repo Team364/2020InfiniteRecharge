@@ -29,8 +29,6 @@ public class DeployControl extends InstantCommand {
 	@Override
 	public void end(boolean interrupted){
 		Robot.DeployControl.setValue(false);
-		s_Intake.setPiston(null);
 	}
-
 
 }

@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import static com.team364.frc2020.Robot.*;
@@ -72,15 +73,15 @@ public class Turret implements Subsystem {
 
     @Override
     public void periodic() {
-        /*if(!THE_TURRET_ZERO && (auto_enabled || teleop_enabled)){
+        if(!THE_TURRET_ZERO && dStation.isEnabled()){
             resetTurret();
         }
         if(!controlled){
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-            if(THE_TURRET_ZERO && teleop_enabled){
+            if(THE_TURRET_ZERO && dStation.isOperatorControl()){
                 setPosition(toTurretCounts(52));
             }
-        }*/
+        }
     }
 
     public double getDegreePosition(){
@@ -106,7 +107,4 @@ public class Turret implements Subsystem {
             THE_TURRET_ZERO = true;
         }
     }
-
-
-
 }
