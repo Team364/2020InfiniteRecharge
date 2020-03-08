@@ -29,17 +29,20 @@ public class Hang extends SubsystemBase {
 		hangFx.configSupplyCurrentLimit(hangSupplyLimit, 20);
 		piston = new DoubleSolenoid(6, 7);
 		hangFx.setSelectedSensorPosition(0);
-		hangFx.configForwardSoftLimitThreshold(0);
-		//hangFx.configReverseSoftLimitThreshold(100);
+
+		hangFx.configForwardSoftLimitThreshold(568873);
 		hangFx.configForwardSoftLimitEnable(true);
+
+		hangFx.configReverseSoftLimitThreshold(0);
+		hangFx.configReverseSoftLimitEnable(true);
+
+		hangFx.setInverted(true);
 		hangFx.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void setPower(double motorPower){
 		SmartDashboard.putBoolean("islocked", isLocked);
-		if(!isLocked){
-			hangFx.set(ControlMode.PercentOutput, -motorPower);
-		}
+		hangFx.set(ControlMode.PercentOutput, motorPower);
 		SmartDashboard.putNumber("hanging", motorPower);
 	}
 	
@@ -61,6 +64,7 @@ public class Hang extends SubsystemBase {
 			used = true;
 			isLocked = true;
 		}
+		SmartDashboard.putNumber("hang counts", hangFx.getSelectedSensorPosition());
 	}
 
 }

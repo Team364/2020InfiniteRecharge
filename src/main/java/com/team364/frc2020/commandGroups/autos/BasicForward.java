@@ -29,33 +29,14 @@ public class BasicForward extends SequentialCommandGroup {
             new ParallelCommandGroup(
               new TurretControl(s_Turret, s_Vision, s_Swerve),
               new HoodControl(300, s_Hood, config),
-              new ShooterControl(4500, s_Shooter, config),
+              new ShooterControl(4250, s_Shooter, config),
               new SequentialCommandGroup(
                 new WaitCommand(4),
                 new HopperControl(-0.4, s_Hopper)
               )
             )
           ),
-          // new InstantCommand(() -> {
-          //   new TurretControl(s_Turret, s_Vision, s_Swerve).end(true);
-          //   new HoodControl(0, s_Hood, config).end(true);
-          //   new ShooterControl(0, s_Shooter, config).end(true);
-          //   new HopperControl(0, s_Hopper).end(true);
-          // }),
           new ParallelDeadlineGroup(new WaitCommand(2), new DriveToDistance(0.25, s_Swerve))
-          /*
-          new ParallelDeadlineGroup(new WaitCommand(2), new DriveToDistance(0.25, s_Swerve)),
-            new ParallelCommandGroup(
-              new TurretControl(s_Turret, s_Vision, s_Swerve),
-              new HoodControl(300, s_Hood, config),
-              new ShooterControl(4500, s_Shooter, config),
-              new SequentialCommandGroup(
-                new WaitCommand(4),
-                new HopperControl(-0.4, s_Hopper)
-              )
-            )
-          )
-          */
         );
       }
 

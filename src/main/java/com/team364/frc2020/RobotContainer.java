@@ -93,8 +93,8 @@ public class RobotContainer {
 
     zeroGyro.whileHeld(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-    intakeSwitch.whileHeld(new IntakeControl(-0.8, s_Intake));
-    outtakeSwitch.whileHeld(new IntakeControl(0.8, s_Intake));
+    intakeSwitch.whileHeld(new IntakeControl(-0.6, s_Intake));
+    outtakeSwitch.whileHeld(new IntakeControl(0.6, s_Intake));
     indexButton.whenPressed(new IndexBall(s_Hopper));
     hopperButton.whileHeld(new HopperControl(-0.6, s_Hopper));
     reverseHopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
