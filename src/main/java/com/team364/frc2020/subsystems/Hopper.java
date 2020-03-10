@@ -1,6 +1,7 @@
 package com.team364.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team364.frc2020.Robot;
@@ -17,14 +18,15 @@ public class Hopper extends SubsystemBase {
 	public TalonSRX sideRollers;
 	public DigitalInput infrared;
 
-    private SupplyCurrentLimitConfiguration sideSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
+    private SupplyCurrentLimitConfiguration sideSupplyLimit = new SupplyCurrentLimitConfiguration(HOPPERENABLECURRENTLIMIT, HOPPERCONTINUOUSCURRENTLIMIT, HOPPERPEAKCURRENTDURATION, HOPPERPEAKCURRENTDURATION);
 
 	public Hopper(){
 		floorRollers = new PWM(FLOORROLLERS);
 		sideRollers = new TalonSRX(SIDEROLLERS);
-		infrared = new DigitalInput(0);
+		infrared = new DigitalInput(HOPPERIR);
 		sideRollers.configFactoryDefault();
-        sideRollers.configSupplyCurrentLimit(sideSupplyLimit, 20);
+		sideRollers.configSupplyCurrentLimit(sideSupplyLimit, 20);
+		sideRollers.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
 
 	}
 

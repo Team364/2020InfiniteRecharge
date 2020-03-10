@@ -13,7 +13,7 @@ import static com.team364.frc2020.RobotMap.*;
 public class Hood extends SubsystemBase {
     private int num_rotations_ = 0;
     private double last_angle_;
-    private double offset = 295.5;
+    private double offset = HOODOFFSET;
     private double setpoint = 0;
 
     public PWM hoodServo;
@@ -27,8 +27,8 @@ public class Hood extends SubsystemBase {
         slaveServo = new PWM(HOODSLAVE);
         hoodEncoder = new AnalogInput(HOODENCODER);
         last_angle_ = getRawAngle();
-        pidController = new PIDController(0.01, 0, 0);
-        pidController.setTolerance(5);
+        pidController = new PIDController(HOODKP, HOODKI, HOODKD);
+        pidController.setTolerance(HOODTOLERANCE);
         setAngle(0);
     }
 

@@ -52,7 +52,6 @@ public class SwerveMod implements Subsystem {
         localTurn = turnEncoder;
         localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         localCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        //localCANConfig.magnetOffsetDegrees = offset;
         this.offset = offset;
 
         //Configure CANCoder
@@ -71,19 +70,19 @@ public class SwerveMod implements Subsystem {
         mAngleMotor.config_kD(SLOTIDX, ANGLED, SWERVETIMEOUT);
        
         mAngleMotor.setNeutralMode(NeutralMode.Coast);
-        mAngleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
+        mAngleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
         
 
         // Configure Drive Motor
         mDriveMotor.configFactoryDefault();
         mDriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
         mDriveMotor.selectProfileSlot(SLOTIDX, PIDLoopIdx);
+        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+
                 
         mDriveMotor.config_kP(SLOTIDX, 1, SWERVETIMEOUT);
         mDriveMotor.config_kI(SLOTIDX, 0, SWERVETIMEOUT);
         mDriveMotor.config_kD(SLOTIDX, 0, SWERVETIMEOUT);
-       
-        mDriveMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
 
         mDriveMotor.setNeutralMode(NeutralMode.Brake);
         mDriveMotor.setInverted(invertDrive);

@@ -10,10 +10,10 @@ package com.team364.frc2020.subsystems;
 import static com.team364.frc2020.RobotMap.TURRET;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -30,38 +30,47 @@ import static com.team364.frc2020.RobotMap.*;
 public class Turret implements Subsystem {
     public TalonFX turretFx;
     public boolean controlled;
-
-    public SupplyCurrentLimitConfiguration turretSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
+       
+    
 
     public Turret() {
         register();
         controlled = false;
-        turretFx = new TalonFX(TURRET);
+
+        turretFx = new TalonFX(TURRET);       
 
         // Configure turret Motor
         turretFx.configFactoryDefault();
-        turretFx.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 20);
-        turretFx.selectProfileSlot(SLOTIDX, PIDLoopIdx);
-        // turretFx.setSensorPhase(invertSensorPhase);
-        turretFx.config_kP(0, 0.1);
-        turretFx.config_kI(0, 0);
-        turretFx.config_kD(0, 0);
-        turretFx.setNeutralMode(NeutralMode.Coast);
-        turretFx.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 10, 10);
+        TalonFXConfiguration turretFxConfiguration = new TalonFXConfiguration();
+        
+        // Configure Turret PID
+        turretFxConfiguration.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        turretFxConfiguration.slot0.kP = TURRETKP;
+        turretFxConfiguration.slot0.kI = TURRETKI;
+        turretFxConfiguration.slot0.kD = TURRETKD;
 
+        // Configure Turret Min and Max Limits
+        turretFxConfiguration.reverseSoftLimitThreshold = TURRETMINSOFT;
+        turretFxConfiguration.forwardSoftLimitThreshold = TURRETMAXSOFT;
+        
         // Setup Current Limiting
-        turretFx.configSupplyCurrentLimit(turretSupplyLimit, 20);
-        turretFx.setInverted(true);
-        turretFx.configReverseSoftLimitThreshold(TURRETMINSOFT);
-        turretFx.configForwardSoftLimitThreshold(TURRETMAXSOFT);
+        SupplyCurrentLimitConfiguration turretSupplyLimit = new SupplyCurrentLimitConfiguration(TURRETENABLECURRENTLIMIT, TURRETCONTINUOUSCURRENTLIMIT, TURRETPEAKCURRENT, TURRETPEAKCURRENTDURATION);
+        turretFxConfiguration.supplyCurrLimit = turretSupplyLimit;
+        
+
+        //Write Settings to Turret Motor
+        turretFx.configAllSettings(turretFxConfiguration);
+        turretFx.setNeutralMode(TURRETNEUTRALMODE);
+        turretFx.setInverted(TURRETINVERT);
+        turretFx.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+
     }
 
     public void setPosition(double pos){
-        double additiveSoft = 1000;
-        if(pos < TURRETMINSOFT + additiveSoft){
-            turretFx.set(ControlMode.Position, TURRETMINSOFT + additiveSoft);
-        } else if(pos > TURRETMAXSOFT - additiveSoft){
-            turretFx.set(ControlMode.Position, TURRETMAXSOFT - additiveSoft);
+        if(pos < TURRETMINSOFT + ADDITIVESOFT){
+            turretFx.set(ControlMode.Position, TURRETMINSOFT + ADDITIVESOFT);
+        } else if(pos > TURRETMAXSOFT - ADDITIVESOFT){
+            turretFx.set(ControlMode.Position, TURRETMAXSOFT - ADDITIVESOFT);
         }else{
             turretFx.set(ControlMode.Position, pos);
         }

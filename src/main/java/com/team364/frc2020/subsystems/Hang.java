@@ -2,8 +2,10 @@ package com.team364.frc2020.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.team364.frc2020.Robot;
 
 import static com.team364.frc2020.RobotMap.*;
@@ -20,24 +22,31 @@ public class Hang extends SubsystemBase {
 	public boolean isLocked = false;
 	public boolean used = false;
 
-
-    private SupplyCurrentLimitConfiguration hangSupplyLimit = new SupplyCurrentLimitConfiguration(true, 35, 40, 0.1);
-
 	public Hang(){
-        hangFx = new TalonFX(HANG);
-        hangFx.configFactoryDefault();
-		hangFx.configSupplyCurrentLimit(hangSupplyLimit, 20);
+		hangFx = new TalonFX(HANG);
+		
+		//Configure Hang Motor
+		hangFx.configFactoryDefault();
+		TalonFXConfiguration hangFxConfiguration = new TalonFXConfiguration();
+
+		//Configure Hang Min and Max Limits
+		hangFxConfiguration.reverseSoftLimitThreshold = HANGMINSOFT;
+		hangFxConfiguration.reverseSoftLimitEnable = true;
+		hangFxConfiguration.forwardSoftLimitThreshold = HANGMAXSOFT;
+		hangFxConfiguration.forwardSoftLimitEnable = true;
+
+		//Setup Hang Current Limiting
+		SupplyCurrentLimitConfiguration hangSupplyLimit = new SupplyCurrentLimitConfiguration(HANGENABLECURRENTLIMIT, HANGCONTINUOUSCURRENTLIMIT, HANGPEAKCURRENTDURATION, HANGPEAKCURRENTDURATION);
+		hangFxConfiguration.supplyCurrLimit = hangSupplyLimit;
+
+		//Writing Settings to Hang Motor
+		hangFx.configAllSettings(hangFxConfiguration);
+		hangFx.setInverted(HANGINVERT);
+		hangFx.setNeutralMode(HANGNEUTRALMODE);
+
+		hangFx.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+
 		piston = new DoubleSolenoid(6, 7);
-		hangFx.setSelectedSensorPosition(0);
-
-		hangFx.configForwardSoftLimitThreshold(568873);
-		hangFx.configForwardSoftLimitEnable(true);
-
-		hangFx.configReverseSoftLimitThreshold(0);
-		hangFx.configReverseSoftLimitEnable(true);
-
-		hangFx.setInverted(true);
-		hangFx.setNeutralMode(NeutralMode.Brake);
 	}
 
 	public void setPower(double motorPower){
