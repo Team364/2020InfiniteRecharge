@@ -112,8 +112,8 @@ public class RobotContainer {
       .whileHeld(
         new ParallelCommandGroup(
           new TurretControl(s_Turret, s_Vision, s_Swerve),
-          new HoodControl(300, s_Hood, configuring),
-          new ShooterControl(4000, s_Shooter, configuring)
+          new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring),
+          new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring)
         )
       );
   }
