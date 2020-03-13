@@ -3,6 +3,9 @@ package com.team364.frc2020;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+
 public class RobotMap {
     //JSON Configuration Files
     public static final String TARGETJSON = "/home/lvuser/TargetValues.json";
@@ -38,6 +41,17 @@ public class RobotMap {
     public static final int TRACKWIDTH = 21;
     public static final int WHEELBASE = 26;
     public static final int WHEELDIAMETER = 3;
+    public static final double kMaxSpeedMetersPerSecond = 4.572;
+    public static final double kMaxSwerveDriveVelocity = 22700.0;
+    
+    //Distance between front and back wheels on robot
+    public static final SwerveDriveKinematics SWERVEKINEMATICS =
+    new SwerveDriveKinematics(
+    new Translation2d(WHEELBASE * 0.0254 / 2, TRACKWIDTH * 0.0254 / 2),
+    new Translation2d(WHEELBASE * 0.0254 / 2, -TRACKWIDTH * 0.0254 / 2),
+    new Translation2d(-WHEELBASE * 0.0254 / 2, TRACKWIDTH * 0.0254 / 2),
+    new Translation2d(-WHEELBASE * 0.0254 / 2, -TRACKWIDTH * 0.0254 / 2));
+
 
     //Swerve CANCoder ID's
     public static final int FLCAN = 1;
@@ -56,7 +70,7 @@ public class RobotMap {
 
     //DRIVE MOTOR INVERT
     public static final boolean MOD1DRIVEINVERT = false; //Front Left
-    public static final boolean MOD2DRIVEINVERT = true; //Front Right
+    public static final boolean MOD2DRIVEINVERT = false; //Front Right
     public static final boolean MOD3DRIVEINVERT = false; //Back Left
     public static final boolean MOD4DRIVEINVERT = true; //Back Right
     

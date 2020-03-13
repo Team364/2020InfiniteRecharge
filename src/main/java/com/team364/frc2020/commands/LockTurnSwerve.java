@@ -57,7 +57,7 @@ public class LockTurnSwerve extends CommandBase {
             }
         }	
         if(cycles != 0){
-            s_Swerve.updateKinematics();
+            s_Swerve.updateKinematics(false);
         }
     }
 

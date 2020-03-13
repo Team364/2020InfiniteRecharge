@@ -11,14 +11,26 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.team364.frc2020.commandGroups.autos.BasicForward;
+import com.team364.frc2020.commandGroups.autos.SwerveProfilingTest;
 import com.team364.frc2020.commands.*;
 import com.team364.frc2020.commands.autos.DriveToDistance;
+import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.*;
+import static com.team364.frc2020.RobotMap.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -40,7 +52,7 @@ public class RobotContainer {
   private final Hopper s_Hopper = new Hopper();
 
   public Configuration configuring = new Configuration(s_Vision, s_Swerve);
-  private Command m_autoCommand = new BasicForward(s_Swerve, s_Turret, s_Shooter, s_Hood, s_Vision, configuring, s_Hopper);
+  private Command m_autoCommand = new SwerveProfilingTest(this);
 
   private final static Joystick controller = new Joystick(0);
   private final static Joystick operator = new Joystick(1);
@@ -138,6 +150,50 @@ public class RobotContainer {
   public List<SwerveMod> swerveModules() {
     return s_Swerve.modules;
   }
+
+  public Command SwerveProfiling(){
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(kMaxSpeedMetersPerSecond,
+                             4.0)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(SWERVEKINEMATICS);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(
+            new Translation2d(1, 1),
+            new Translation2d(2, -1)
+        ),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 0, new Rotation2d(0)),
+        config
+    );
+
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        exampleTrajectory,
+        s_Swerve::getPose, //Functional interface to feed supplier
+        SWERVEKINEMATICS,
+
+        //Position controllers
+        new PIDController(1, 0, 0),
+        new PIDController(1, 0, 0),
+        new ProfiledPIDController(1, 0, 0,
+          new TrapezoidProfile.Constraints(Math.PI, Math.PI)),
+
+        s_Swerve::setModuleStates,
+
+        s_Swerve
+
+    );
+
+    // Run path following command, then stop at the end.
+    return swerveControllerCommand.andThen(() -> s_Swerve.holonomicDrive(new Vector2(0, 0), 0, false));
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

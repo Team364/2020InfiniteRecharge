@@ -43,7 +43,7 @@ public class DriveToDistance extends CommandBase {
         double rotation = snapController.calculate(s_Swerve.getYaw());
         SmartDashboard.putNumber("checking driving auto", cycles);*/
         s_Swerve.holonomicDrive(new Vector2(speed, 0.0), 0.0, true);
-        s_Swerve.updateKinematics();
+        s_Swerve.updateKinematics(false);
 
     }
 
@@ -52,6 +52,6 @@ public class DriveToDistance extends CommandBase {
         @Override
     public void end(boolean interrupted) {
         s_Swerve.holonomicDrive(new Vector2(0.0, 0.0), 0.0, true);
-        s_Swerve.updateKinematics();
+        s_Swerve.updateKinematics(false);
     }
 }

@@ -76,6 +76,7 @@ public class Swerve extends SubsystemBase {
         swervekP = swervePID.add("swerve kP", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(1, 5).getEntry();
         swervekI = swervePID.add("swerve kI", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(2, 5).getEntry();
         swervekD = swervePID.add("swerve kD", 0.0).withWidget(BuiltInWidgets.kTextView).withPosition(3, 5).getEntry();
+        resetOdometry();
     }
 
     public synchronized static Swerve getInstance() {
@@ -97,10 +98,6 @@ public class Swerve extends SubsystemBase {
         return mSwerveModules;
     }
 
-    public void swerveOutputs() {
-        modules.forEach(mod -> mod.modOutput(false));
-    }
-
     public void holonomicDrive(Vector2 translation, double rotation, boolean speed) {
         modules.forEach(mod -> {
             Vector2 newTranslation = translation.rotateBy(Rotation2.fromDegrees(getYaw()));
@@ -108,31 +105,15 @@ public class Swerve extends SubsystemBase {
             mod.setVectorVelocity(velocity, speed);
         });
     }
-    
-    public void straightAutoDrive(double direction, double speed){
-        modules.forEach(mod -> {
-            mod.setVectorVelocity(direction, speed);
-        });
-    }
 
-    public void holomonicAutoDrive(double direction, double speed, double rotation){
+    public void updateKinematics(boolean profiling) {
         modules.forEach(mod -> {
-            Vector2 translation = Vector2.fromAngle(new Rotation2(Math.cos(Math.toRadians(direction)), Math.sin(Math.toRadians(direction)), true));
-            Vector2 velocity = mod.getModulePosition().normal().scale(rotation).add(translation);
-            mod.setVectorVelocity(velocity.getAngle().toDegrees(), speed);
+            mod.runOutputs(profiling);
         });
-    }
-
-    public void updateKinematics() {
-        modules.forEach(mod -> {
-            mod.setAngle(mod.periodicIO.velocityPosition);
-            mod.setSpeed(mod.periodicIO.velocitySpeed);
-        });
-        swerveOutputs();
     }
 
     public Rotation2d getAngle() {
-        return new Rotation2d(getYaw());
+        return Rotation2d.fromDegrees(getYaw());
     }
 
     public double getYaw() {
@@ -150,6 +131,7 @@ public class Swerve extends SubsystemBase {
     public void resetOdometry(){
         m_odometry.resetPosition(new Pose2d(), new Rotation2d(getYaw()));
     }
+
     /**
      * Returns the currently-estimated pose of the robot.
      *
@@ -159,10 +141,25 @@ public class Swerve extends SubsystemBase {
         return m_odometry.getPoseMeters();
     }
 
+    /**
+     * Sets the swerve ModuleStates.
+     *
+     * @param desiredStates The desired SwerveMod states.
+     */
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.normalizeWheelSpeeds(desiredStates,
+                                                kMaxSpeedMetersPerSecond);
+        modules.forEach(mod -> {
+            mod.toFusionSwerve(desiredStates[mod.moduleNumber - 1]);
+        });
+        updateKinematics(true);
+    }
+
     public void updateOdometry() {
         m_odometry.update(getAngle(), mSwerveModules[0].getState(), mSwerveModules[1].getState(),
                 mSwerveModules[2].getState(), mSwerveModules[3].getState());
     }
+
     public SwerveDriveKinematics getKinematics() {
         return m_kinematics;
     }
@@ -207,6 +204,10 @@ public class Swerve extends SubsystemBase {
             mod.getAngleMotor().config_kD(0, swervekD.getDouble(200.0));
         });  
         }
+        updateOdometry();
+        SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
+        SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
+
 
     }
 
