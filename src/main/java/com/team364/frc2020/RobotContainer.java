@@ -10,6 +10,7 @@ package com.team364.frc2020;
 import java.util.HashMap;
 import java.util.List;
 
+import com.team364.frc2020.States.TurretStates;
 import com.team364.frc2020.commandGroups.autos.BasicForward;
 import com.team364.frc2020.commandGroups.autos.SwerveProfilingTest;
 import com.team364.frc2020.commands.*;
@@ -17,6 +18,7 @@ import com.team364.frc2020.commands.autos.DriveToDistance;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.*;
 import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.States.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -75,10 +77,6 @@ public class RobotContainer {
 
   private final JoystickButton lockingClimb = new JoystickButton(controller, 8);
 
-
-
-  public static boolean THE_SWITCH = false;
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -114,28 +112,27 @@ public class RobotContainer {
     deploySwitch.whenPressed(new DeployControl(true, s_Intake));
     retractSwitch.whenPressed(new DeployControl(false, s_Intake));
 
-    aimSwitch.whenPressed(new InstantCommand(() -> activate_THE_SWITCH()))
+    aimSwitch.whenPressed(new InstantCommand(() -> activate_Turret()))
       .whenReleased(
         new ParallelCommandGroup(
-          new InstantCommand(() -> deactivate_THE_SWITCH()),
+          new InstantCommand(() -> deactivate_Turret()),
           new InstantCommand(() -> s_Shooter.setFlyWheelOff())
         )
       )
       .whileHeld(
         new ParallelCommandGroup(
-          new TurretControl(s_Turret, s_Vision, s_Swerve),
           new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring),
           new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring)
         )
       );
   }
 
-  private void activate_THE_SWITCH() {
-    THE_SWITCH = true;
+  private void activate_Turret() {
+    turretState = TurretStates.GYRO;
   }
 
-  private void deactivate_THE_SWITCH() {
-    THE_SWITCH = false;
+  private void deactivate_Turret() {
+    turretState = TurretStates.NO_TRACK;
   }
 
   public static HashMap<String, Double> SwerveConfig() {

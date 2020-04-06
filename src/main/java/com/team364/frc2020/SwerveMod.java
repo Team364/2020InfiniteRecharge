@@ -125,7 +125,6 @@ public class SwerveMod implements Subsystem {
     }
 
     public synchronized void setAngle(double targetAngle) {
-        //TODO: there was a negative in front of the targetAngle why?!?!?!
         targetAngle = modulate360(-targetAngle);
         double currentAngle = toDegrees(mAngleMotor.getSelectedSensorPosition());
         double currentAngleMod = modulate360(currentAngle - offset);

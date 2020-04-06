@@ -61,7 +61,6 @@ public class Configuration {
     private void configTarget(double shooterVel, double hoodAng){
         if(configState == ConfigStates.TARGET){
             List<Double> value = new ArrayList<>(Arrays.asList(shooterVel, hoodAng));
-            //TODO: check getDistance()
             TargetJson.writeElement(s_Vision.getDistance(), value);
         }
     }
