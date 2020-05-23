@@ -6,6 +6,7 @@ import static com.team364.frc2020.RobotMap.*;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -52,15 +53,12 @@ public class SwerveMod implements Subsystem {
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
-        localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        localCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         this.offset = offset;
 
-        //Configure CANCoder
-        localTurn.configAllSettings(localCANConfig, 30);
     //Configure CANCoder
     localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
     localCANConfig.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+
     //Configure CANCoder
     localTurn.configAllSettings(localCANConfig, 30);
 
@@ -93,14 +91,14 @@ public class SwerveMod implements Subsystem {
     angleConfig.supplyCurrLimit = swerveAngleSupplyLimit;
 
     // Configure Angle PID
-    angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+    angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
     angleConfig.slot0.kP = ANGLEP;
     angleConfig.slot0.kI = ANGLEI;
     angleConfig.slot0.kD = ANGLED;
 
     // Configure rest of Angle Motor
     mAngleMotor.configAllSettings(angleConfig);
-    mAngleMotor.configRemoteFeedbackFilter(localTurn, 0, SWERVETIMEOUT);
+    mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
     mAngleMotor.setInverted(invertAngle);
     mAngleMotor.setSensorPhase(invertAnglePhase);
     mAngleMotor.setNeutralMode(NeutralMode.Coast);
@@ -126,7 +124,7 @@ public class SwerveMod implements Subsystem {
 
     public synchronized void setAngle(double targetAngle) {
         targetAngle = modulate360(-targetAngle);
-        double currentAngle = toDegrees(mAngleMotor.getSelectedSensorPosition());
+        double currentAngle = getIntegratedAngle();
         double currentAngleMod = modulate360(currentAngle - offset);
         if (currentAngleMod < 0) currentAngleMod += 360;
 
@@ -197,7 +195,13 @@ public class SwerveMod implements Subsystem {
     }
 
     public double getCANCoderAngle(){
-        double convert = modulate360(toDegrees(mAngleMotor.getSelectedSensorPosition()));
+        double convert = modulate360(toDegreesFromCANCoder(localTurn.getAbsolutePosition()));
+        if(convert < 0) convert += 360;
+        return convert;
+    }
+    
+    public double getIntegratedAngle(){
+        double convert = modulate360(swerveGearRatio(toDegrees(mAngleMotor.getSelectedSensorPosition())) + offset);
         if(convert < 0) convert += 360;
         return convert;
     }
@@ -223,7 +227,8 @@ public class SwerveMod implements Subsystem {
     }
 
 	public void stop() {
-        mAngleMotor.set(ControlMode.Position, getCANCoderAngle());
+        mAngleMotor.set(ControlMode.Position, getIntegratedAngle());
         mDriveMotor.set(ControlMode.PercentOutput, 0);
-	}
+    }
+    
 }

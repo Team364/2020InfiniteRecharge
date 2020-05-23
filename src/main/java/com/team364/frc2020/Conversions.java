@@ -35,6 +35,15 @@ public class Conversions {
     public static double toDegrees(double units) {
         return units * (360 / ENCODERTICKS);
     }
+
+    public static double toDegreesFromCANCoder(double units) {
+        return units * (360 / CANCODERTICKS);
+    }
+
+    public static double swerveGearRatio(double integrated){
+        return integrated / 18.0;
+    }
+
     public static double toDegreesFromRadians(double radians){
         return radians * (180 / Math.PI);
     }

@@ -88,8 +88,9 @@ public class RobotMap {
     
     //SWERVE CONSTANTS
     public static final double STICKDEADBAND = 0.2;
-    public static final double ENCODERTICKS = 4096.0; // CANCoder Encoder Ticks
+    public static final double ENCODERTICKS = 2048.0; // Integrated Falcon Sensor Encoder Ticks
     public static final double OFFSETTOSTRAIGHT = 180;    
+    public static final double CANCODERTICKS = 4096.0; //CANCoder Sensor Ticks
 
     //SWERVE PID CONSTANTS
     public static final int PIDLoopIdx = 0;
