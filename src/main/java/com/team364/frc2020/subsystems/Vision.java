@@ -9,6 +9,7 @@ package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
 import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.States.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Vision implements Subsystem {
 
     public double targetLogic(int whichSystem){
         SmartDashboard.putNumber("distance", getDistance());
-        if(true){
+        if(turretState == TurretStates.VISION){
             findClosestTargets(20.0, whichSystem);
             double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, 20.0);
             SmartDashboard.putNumber("output", hold);

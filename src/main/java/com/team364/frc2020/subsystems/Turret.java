@@ -119,6 +119,9 @@ public class Turret implements Subsystem {
                 break;
                 case VISION:
                     target = to360Boundaries(getDegreePosition() + s_Vision.limeX());
+                    if(!s_Vision.hasTarget()){
+                        turretState = TurretStates.GYRO;
+                    }
                     if((target <= 350 && getDegreePosition() < 45 && target > 180) || (target > 0 && getDegreePosition() > 285 && target < 180)){
                         turretState = TurretStates.FLIPPING;
                     }

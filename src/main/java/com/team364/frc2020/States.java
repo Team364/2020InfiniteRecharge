@@ -2,7 +2,6 @@ package com.team364.frc2020;
 
 public class States {
 
-
     /**
      * Target states of turret:
      * Gyro for basic tracking while moving, 

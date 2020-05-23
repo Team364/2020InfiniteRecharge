@@ -208,7 +208,6 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
         SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
 
-
     }
 
 }
