@@ -97,7 +97,7 @@ public class Turret implements Subsystem {
 
     @Override
     public void periodic() {
-        if(dStation.isEnabled()){
+        /*if(dStation.isEnabled()){
             switch(turretState){
                 case NOT_CALIBRATED:
                     limelightOff();
@@ -156,7 +156,7 @@ public class Turret implements Subsystem {
         }
         else{
             limelightOff();
-        }
+        }*/
     }
 
     public void limelightOff(){

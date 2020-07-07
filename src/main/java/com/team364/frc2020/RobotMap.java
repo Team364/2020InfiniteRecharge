@@ -25,12 +25,12 @@ public class RobotMap {
     public static final int BLANGLE = 6;
     public static final int BRDRIVE = 7;
     public static final int BRANGLE = 8;
-    public static final int FLOORROLLERS = 2;
+    public static final int FLOORROLLERS = 9;
     public static final int SIDEROLLERS = 10;    
     public static final int TURRET = 11;
     public static final int SHOOTER = 12;
     public static final int SHOOTERSLAVE = 13;
-    public static final int INTAKE = 9;
+    public static final int INTAKE = 14;
     public static final int HANG = 15;
 
     
