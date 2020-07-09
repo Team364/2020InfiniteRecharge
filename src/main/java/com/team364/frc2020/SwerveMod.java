@@ -53,7 +53,7 @@ public class SwerveMod implements Subsystem {
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
-        this.offset = offset;
+        this.offset = getCANCoderAngle() - offset;
 
     //Configure CANCoder
     localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
@@ -108,6 +108,8 @@ public class SwerveMod implements Subsystem {
 
     public void runOutputs(boolean profiling){
       mDriveMotor.set(ControlMode.PercentOutput, (profiling) ? periodicIO.velocityDemand : periodicIO.speedDemand);
+      SmartDashboard.putNumber("actual" + moduleNumber, mAngleMotor.getSelectedSensorPosition());
+      SmartDashboard.putNumber("demand" + moduleNumber, periodicIO.positionDemand);
       mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
       SmartDashboard.putBoolean("velocity", profiling);
 
@@ -123,9 +125,9 @@ public class SwerveMod implements Subsystem {
     }
 
     public synchronized void setAngle(double targetAngle) {
-        targetAngle = modulate360(-targetAngle);
+        targetAngle = modulate360(targetAngle + offset);
         double currentAngle = getIntegratedAngle();
-        double currentAngleMod = modulate360(currentAngle - offset);
+        double currentAngleMod = modulate360(currentAngle);
         if (currentAngleMod < 0) currentAngleMod += 360;
 
         double delta = currentAngleMod - targetAngle;
@@ -148,12 +150,10 @@ public class SwerveMod implements Subsystem {
             driveInvert = false;
         }
 
-        
         targetAngle += currentAngle - currentAngleMod;        
         targetAngle = toCounts(targetAngle);
         periodicIO.setDemandPosition(targetAngle);
     }
-
 
     public synchronized void setSpeed(double fSpeed) {
         if(driveInvert) fSpeed *= -1;
@@ -195,13 +195,14 @@ public class SwerveMod implements Subsystem {
     }
 
     public double getCANCoderAngle(){
-        double convert = modulate360(toDegreesFromCANCoder(localTurn.getAbsolutePosition()));
-        if(convert < 0) convert += 360;
-        return convert;
+        return localTurn.getAbsolutePosition();
+    }
+    public double getRaw(){
+        return mAngleMotor.getSelectedSensorPosition();
     }
     
     public double getIntegratedAngle(){
-        double convert = modulate360(swerveGearRatio(toDegrees(mAngleMotor.getSelectedSensorPosition())) + offset);
+        double convert = modulate360(swerveGearRatio(toDegrees(mAngleMotor.getSelectedSensorPosition())));
         if(convert < 0) convert += 360;
         return convert;
     }

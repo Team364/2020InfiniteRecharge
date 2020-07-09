@@ -90,7 +90,7 @@ public class Swerve extends SubsystemBase {
         Map<Object, Double> offsetsMap = SwerveJson.getMap();
         MOD1OFFSET = offsetsMap.get("1");
         MOD2OFFSET = offsetsMap.get("2");
-        MOD3OFFSET = offsetsMap.get("3");
+        MOD3OFFSET = 23.0;
         MOD4OFFSET = offsetsMap.get("4");
     }
 

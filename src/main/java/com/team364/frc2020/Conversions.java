@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 public class Conversions {
 
     public static double toCounts(double units) {
-        return units * ENCODERTICKS / 360.0;
+        return units * (ENCODERTICKS / 360.0) * 18.0;
     }
     public static double to180Boundaries(double degrees){
         if(degrees > 180){

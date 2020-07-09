@@ -45,7 +45,7 @@ public class OpenLoopSwerve extends CommandBase {
         strafe = RobotContainer.SwerveConfig().get("strafe");
         rotation = RobotContainer.SwerveConfig().get("rotation");
         
-        boolean zeroPoint = true;
+        boolean zeroPoint = false;
         if(zeroPoint){
             translation = new Vector2(-1, 0);
         }
@@ -53,7 +53,9 @@ public class OpenLoopSwerve extends CommandBase {
             translation = new Vector2(forward, strafe);
         }
         if (Math.abs(forward) > STICKDEADBAND || Math.abs(strafe) > STICKDEADBAND || Math.abs(rotation) > STICKDEADBAND) {
-            s_Swerve.holonomicDrive(translation, rotation, !zeroPoint);
+            //s_Swerve.holonomicDrive(translation, rotation, !zeroPoint);
+            s_Swerve.holonomicDrive(translation, rotation, false);
+
             lastTranslation = translation;
             lastRotation = rotation;
             cycles++;

@@ -97,9 +97,9 @@ public class RobotMap {
     public static final int SLOTIDX = 0;   
     public static final int SWERVETIMEOUT = 20;
 
-    public static final double ANGLEP = 2;//20
+    public static final double ANGLEP = 2.0;//20
     public static final double ANGLEI = 0.0;//0.001
-    public static final double ANGLED = 200;//130 //200
+    public static final double ANGLED = 200.0;//130 //200
 
     //SWERVE MOTORS CURRENT LIMITING
     public static final int ANGLECONTINUOUSCURRENTLIMIT = 25;
