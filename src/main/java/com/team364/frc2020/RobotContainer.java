@@ -44,14 +44,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final Hang s_Hang = new Hang();
-  private final Shooter s_Shooter = new Shooter();
+  /*private final Hang s_Hang = new Hang();
+  private final Shooter s_Shooter = new Shooter();*/
   private final Vision s_Vision = new Vision();
   private final Swerve s_Swerve = new Swerve();
-  private final Hood s_Hood = new Hood();
+ /* private final Hood s_Hood = new Hood();
   private final Turret s_Turret = new Turret();
   private final Intake s_Intake = new Intake();
-  private final Hopper s_Hopper = new Hopper();
+  private final Hopper s_Hopper = new Hopper();*/
 
   public Configuration configuring = new Configuration(s_Vision, s_Swerve);
   private Command m_autoCommand = new SwerveProfilingTest(this);
@@ -96,35 +96,35 @@ public class RobotContainer {
    */
   private void configureButtonBindings(){
 
-    //climbDrive.whileHeld(new LockTurnSwerve(s_Swerve));
-    upClimb.whileHeld(new HangControl(1, s_Hang));
-    downClimb.whileHeld(new HangControl(-1, s_Hang));
-    lockingClimb.whenPressed(new InstantCommand(() -> {s_Hang.setPiston();}));
+    // //climbDrive.whileHeld(new LockTurnSwerve(s_Swerve));
+    // upClimb.whileHeld(new HangControl(1, s_Hang));
+    // downClimb.whileHeld(new HangControl(-1, s_Hang));
+    // lockingClimb.whenPressed(new InstantCommand(() -> {s_Hang.setPiston();}));
 
-    zeroGyro.whileHeld(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    // zeroGyro.whileHeld(new InstantCommand(() -> s_Swerve.zeroGyro()));
 
-    intakeSwitch.whileHeld(new IntakeControl(-0.6, s_Intake));
-    outtakeSwitch.whileHeld(new IntakeControl(0.6, s_Intake));
-    indexButton.whenPressed(new IndexBall(s_Hopper));
-    hopperButton.whileHeld(new HopperControl(-0.6, s_Hopper));
-    reverseHopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
+    // intakeSwitch.whileHeld(new IntakeControl(-0.6, s_Intake));
+    // outtakeSwitch.whileHeld(new IntakeControl(0.6, s_Intake));
+    // indexButton.whenPressed(new IndexBall(s_Hopper));
+    // hopperButton.whileHeld(new HopperControl(-0.6, s_Hopper));
+    // reverseHopperButton.whileHeld(new HopperControl(0.5, s_Hopper));
 
-    deploySwitch.whenPressed(new DeployControl(true, s_Intake));
-    retractSwitch.whenPressed(new DeployControl(false, s_Intake));
+    // deploySwitch.whenPressed(new DeployControl(true, s_Intake));
+    // retractSwitch.whenPressed(new DeployControl(false, s_Intake));
 
-    aimSwitch.whenPressed(new InstantCommand(() -> activate_Turret()))
-      .whenReleased(
-        new ParallelCommandGroup(
-          new InstantCommand(() -> deactivate_Turret()),
-          new InstantCommand(() -> s_Shooter.setFlyWheelOff())
-        )
-      )
-      .whileHeld(
-        new ParallelCommandGroup(
-          new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring),
-          new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring)
-        )
-      );
+    // aimSwitch.whenPressed(new InstantCommand(() -> activate_Turret()))
+    //   .whenReleased(
+    //     new ParallelCommandGroup(
+    //       new InstantCommand(() -> deactivate_Turret()),
+    //       new InstantCommand(() -> s_Shooter.setFlyWheelOff())
+    //     )
+    //   )
+    //   .whileHeld(
+    //     new ParallelCommandGroup(
+    //       new HoodControl(s_Vision.targetLogic(1), s_Hood, configuring),
+    //       new ShooterControl(s_Vision.targetLogic(0), s_Shooter, configuring)
+    //     )
+    //   );
   }
 
   private void activate_Turret() {

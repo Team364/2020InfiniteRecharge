@@ -25,12 +25,12 @@ public class RobotMap {
     public static final int BLANGLE = 6;
     public static final int BRDRIVE = 7;
     public static final int BRANGLE = 8;
-    public static final int FLOORROLLERS = 2;
+    public static final int FLOORROLLERS = 9;
     public static final int SIDEROLLERS = 10;    
     public static final int TURRET = 11;
     public static final int SHOOTER = 12;
     public static final int SHOOTERSLAVE = 13;
-    public static final int INTAKE = 9;
+    public static final int INTAKE = 14;
     public static final int HANG = 15;
 
     
@@ -69,10 +69,10 @@ public class RobotMap {
     public static double MOD4OFFSET = 0; //Back Right
 
     //DRIVE MOTOR INVERT
-    public static final boolean MOD1DRIVEINVERT = false; //Front Left
-    public static final boolean MOD2DRIVEINVERT = false; //Front Right
-    public static final boolean MOD3DRIVEINVERT = false; //Back Left
-    public static final boolean MOD4DRIVEINVERT = true; //Back Right
+    public static final boolean MOD1DRIVEINVERT = true; //Front Left
+    public static final boolean MOD2DRIVEINVERT = true; //Front Right
+    public static final boolean MOD3DRIVEINVERT = true; //Back Left
+    public static final boolean MOD4DRIVEINVERT = false; //Back Right
     
     //ANGLE MOTOR INVERT
     public static final boolean MOD1ANGLEINVERT = false; //Front Left
