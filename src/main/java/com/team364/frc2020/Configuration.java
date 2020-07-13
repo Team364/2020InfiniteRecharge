@@ -55,7 +55,7 @@ public class Configuration {
         calibrateTarget = Target.add("Target Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
 
         calibrateSwerve = Swerve.add("Swerve Calibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
-        resetSwerve = Swerve.add("Swerve Recalibrate", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+        resetSwerve = Swerve.add("Swerve Reset", false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     }
 
     private void configTarget(double shooterVel, double hoodAng){
@@ -83,7 +83,7 @@ public class Configuration {
         if(configState == ConfigStates.SWERVE){
             SwerveJson.resetJson();
             for(SwerveMod mod : s_Swerve.modules){
-                SwerveJson.writeElement(mod.moduleNumber, mod.getCANCoderAngle());
+                SwerveJson.writeElement(mod.moduleNumber, mod.getCANCoderAngle() - mod.getZeroCANCoder());
             }
             SwerveJson.writeJson(false);
         }
@@ -93,7 +93,8 @@ public class Configuration {
         if(configState == ConfigStates.SWERVE){
             SwerveJson.resetJson();
             for(SwerveMod mod : s_Swerve.modules){
-                SwerveJson.writeElement(mod.moduleNumber, 0.0);
+                SwerveJson.writeElement(mod.moduleNumber, mod.getCANCoderAngle());
+                mod.setZeroCANCoder(mod.getCANCoderAngle());
             }
             SwerveJson.writeJson(false);
         }

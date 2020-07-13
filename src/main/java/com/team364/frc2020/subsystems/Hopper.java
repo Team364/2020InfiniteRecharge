@@ -41,7 +41,7 @@ public class Hopper extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putBoolean("infrared", getInfrared());
+		//SmartDashboard.putBoolean("infrared", getInfrared());
 		Robot.HoodReady.setBoolean(getInfrared());
 	}
 }

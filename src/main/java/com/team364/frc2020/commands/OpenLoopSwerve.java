@@ -53,8 +53,7 @@ public class OpenLoopSwerve extends CommandBase {
             translation = new Vector2(forward, strafe);
         }
         if (Math.abs(forward) > STICKDEADBAND || Math.abs(strafe) > STICKDEADBAND || Math.abs(rotation) > STICKDEADBAND) {
-            //s_Swerve.holonomicDrive(translation, rotation, !zeroPoint);
-            s_Swerve.holonomicDrive(translation, rotation, false);
+            s_Swerve.holonomicDrive(translation, rotation, !zeroPoint);
 
             lastTranslation = translation;
             lastRotation = rotation;

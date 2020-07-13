@@ -73,7 +73,7 @@ public class Hang extends SubsystemBase {
 			used = true;
 			isLocked = true;
 		}
-		SmartDashboard.putNumber("hang counts", hangFx.getSelectedSensorPosition());
+		//SmartDashboard.putNumber("hang counts", hangFx.getSelectedSensorPosition());
 	}
 
 }

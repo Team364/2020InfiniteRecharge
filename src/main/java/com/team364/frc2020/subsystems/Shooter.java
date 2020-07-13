@@ -87,7 +87,7 @@ public class Shooter extends SubsystemBase {
             mFlyWheelMotor.config_kD(0, shooterkD.getDouble(SHOOTERKD));
             mFlyWheelMotor.config_kF(0, shooterkF.getDouble(SHOOTERKF));
         }
-        SmartDashboard.putNumber("Shooter velocity", fromSensorCounts(getFlyWheelVel()));
+        //SmartDashboard.putNumber("Shooter velocity", fromSensorCounts(getFlyWheelVel()));
 
     }
 

@@ -71,7 +71,7 @@ public class RobotMap {
     //DRIVE MOTOR INVERT
     public static final boolean MOD1DRIVEINVERT = false; //Front Left
     public static final boolean MOD2DRIVEINVERT = false; //Front Right
-    public static final boolean MOD3DRIVEINVERT = false; //Back Left
+    public static final boolean MOD3DRIVEINVERT = true; //Back Left
     public static final boolean MOD4DRIVEINVERT = true; //Back Right
     
     //ANGLE MOTOR INVERT

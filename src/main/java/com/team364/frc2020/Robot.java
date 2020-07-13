@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     for (SwerveMod mod : m_robotContainer.swerveModules()) {
-      SmartDashboard.putNumber("CANCoder Mod " + mod.moduleNumber + " ", mod.getCANCoderAngle());
+      //SmartDashboard.putNumber("CANCoder Mod " + mod.moduleNumber + " ", mod.getRaw());
     }
   
     m_robotContainer.configuring.doTheConfigurationShuffle();

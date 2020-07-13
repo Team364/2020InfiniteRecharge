@@ -63,7 +63,7 @@ public class Hood extends SubsystemBase {
             --num_rotations_;
         }        
         last_angle_ = getRawAngle();
-        SmartDashboard.putNumber("position", getPosition());
+        //SmartDashboard.putNumber("position", getPosition());
         
         setPower();
     }

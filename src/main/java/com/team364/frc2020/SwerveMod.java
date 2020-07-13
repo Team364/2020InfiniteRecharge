@@ -1,5 +1,7 @@
 package com.team364.frc2020;
 
+//import org.junit.*;
+
 import static com.team364.frc2020.Conversions.*;
 import static com.team364.frc2020.RobotMap.*;
 
@@ -53,7 +55,7 @@ public class SwerveMod implements Subsystem {
         mDriveMotor = driveMotor;
         currentAngle = 0;
         localTurn = turnEncoder;
-        this.offset = getCANCoderAngle() - offset;
+        this.offset = offset;
 
     //Configure CANCoder
     localCANConfig.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
@@ -108,8 +110,6 @@ public class SwerveMod implements Subsystem {
 
     public void runOutputs(boolean profiling){
       mDriveMotor.set(ControlMode.PercentOutput, (profiling) ? periodicIO.velocityDemand : periodicIO.speedDemand);
-      SmartDashboard.putNumber("actual" + moduleNumber, mAngleMotor.getSelectedSensorPosition());
-      SmartDashboard.putNumber("demand" + moduleNumber, periodicIO.positionDemand);
       mAngleMotor.set(ControlMode.Position, periodicIO.positionDemand);    
       SmartDashboard.putBoolean("velocity", profiling);
 
@@ -123,9 +123,24 @@ public class SwerveMod implements Subsystem {
           setSpeed(0);
       }
     }
+/*
+problem break down:
 
+    first possibility:
+The problem could be that the target angle passed is negative, canceling out the negative when determining delta. 
+This leads to the possiblity that everything over 90 is added 360.
+At the same time, this condition does make the sense of the range because the second delta would then add 180 therefore making it do a full rotation
+Confusion arises because 90-180 range is fine, but past 180 starts a negative target angle balanced by doing a full rotation.
+
+    second possibility:
+the second delta is only the problem, under a strange circumstance where target angle past 180 becomes negative there fore causing it to 
+or
+when target angle is above 180 it subtracts 180
+
+*/  
+    //@Test
     public synchronized void setAngle(double targetAngle) {
-        targetAngle = modulate360(targetAngle + offset);
+        targetAngle = -modulate360(targetAngle + offset);
         double currentAngle = getIntegratedAngle();
         double currentAngleMod = modulate360(currentAngle);
         if (currentAngleMod < 0) currentAngleMod += 360;
@@ -136,10 +151,10 @@ public class SwerveMod implements Subsystem {
         } else if (delta < -180) {
             targetAngle -= 360;
         }
-
+        
         delta = currentAngleMod - targetAngle;
         if (delta > 90 || delta < -90) {
-            if(delta > 90){
+            if(delta > 90){            
                 targetAngle += 180;
             }
             else if(delta < -90){
@@ -149,7 +164,6 @@ public class SwerveMod implements Subsystem {
         } else{
             driveInvert = false;
         }
-
         targetAngle += currentAngle - currentAngleMod;        
         targetAngle = toCounts(targetAngle);
         periodicIO.setDemandPosition(targetAngle);
@@ -202,8 +216,7 @@ public class SwerveMod implements Subsystem {
     }
     
     public double getIntegratedAngle(){
-        double convert = modulate360(swerveGearRatio(toDegrees(mAngleMotor.getSelectedSensorPosition())));
-        if(convert < 0) convert += 360;
+        double convert = swerveGearRatio(toDegrees(mAngleMotor.getSelectedSensorPosition()));
         return convert;
     }
     
@@ -225,6 +238,14 @@ public class SwerveMod implements Subsystem {
     public void toFusionSwerve(SwerveModuleState state){
         setAngle(state.angle.getDegrees());
         setVelocity(state.speedMetersPerSecond);
+    }
+
+    public double RESETCANCODER;
+    public void setZeroCANCoder(double canCoder){
+        RESETCANCODER = canCoder;
+    }
+    public double getZeroCANCoder(){
+        return RESETCANCODER;
     }
 
 	public void stop() {

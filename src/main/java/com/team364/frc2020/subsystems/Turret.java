@@ -157,6 +157,25 @@ public class Turret implements Subsystem {
         else{
             limelightOff();
         }*/
+
+        /*
+                case FUSED:
+                    if(Vision.hasTarget){
+                        targetToCamera = pose
+                        fieldToCamera = fieldToTarget.translateBy(targetToCamera);
+
+                        fieldToTurret = fieldtoCamera.translateBy(cameraToTurret);
+
+                        fieldToRobot = fieldToTurret.rotateBy(getTurretAngle())
+
+                        SwerveDrivePoseEstimator.addVisionMeasurement(fieldToRobot, latency);
+                    }
+                    target = getTargetAngle();
+                    break;
+
+                    
+
+        */
     }
 
     public void limelightOff(){

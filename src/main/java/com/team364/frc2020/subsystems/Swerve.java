@@ -90,7 +90,7 @@ public class Swerve extends SubsystemBase {
         Map<Object, Double> offsetsMap = SwerveJson.getMap();
         MOD1OFFSET = offsetsMap.get("1");
         MOD2OFFSET = offsetsMap.get("2");
-        MOD3OFFSET = 23.0;
+        MOD3OFFSET = offsetsMap.get("3");
         MOD4OFFSET = offsetsMap.get("4");
     }
 
@@ -204,9 +204,9 @@ public class Swerve extends SubsystemBase {
             mod.getAngleMotor().config_kD(0, swervekD.getDouble(200.0));
         });  
         }
-        updateOdometry();
-        SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
-        SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
+        //updateOdometry();
+        //SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
+        //SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
 
     }
 
