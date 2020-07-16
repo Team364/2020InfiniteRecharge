@@ -21,9 +21,9 @@ import org.json.simple.JSONObject;
 public class JsonSimplifier<K, V> {
   /**
    * *PROGRAMMERS NOTE*(Colton) Wow pretty generic class right? get it, haha yea
-   * im funny Anyway, the point of this class is to make it easy to write, store,
+   * im funny. Anyway, the point of this class is to make it easy to write, store,
    * and read jsons. As an added bonus this class also converts to maps so logic
-   * can be more effient.
+   * can be more efficient.
    */
 
   String name;

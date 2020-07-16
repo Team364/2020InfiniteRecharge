@@ -97,7 +97,7 @@ public class SwerveMod implements Subsystem {
     angleConfig.slot0.kP = ANGLEP;
     angleConfig.slot0.kI = ANGLEI;
     angleConfig.slot0.kD = ANGLED;
-
+    //mAngleMotor.setSelectedSensorPosition(0);
     // Configure rest of Angle Motor
     mAngleMotor.configAllSettings(angleConfig);
     mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, SLOTIDX, SWERVETIMEOUT);
@@ -138,7 +138,6 @@ or
 when target angle is above 180 it subtracts 180
 
 */  
-    //@Test
     public synchronized void setAngle(double targetAngle) {
         targetAngle = -modulate360(targetAngle + offset);
         double currentAngle = getIntegratedAngle();

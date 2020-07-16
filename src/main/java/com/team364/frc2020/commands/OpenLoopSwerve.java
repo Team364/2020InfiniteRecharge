@@ -45,7 +45,7 @@ public class OpenLoopSwerve extends CommandBase {
         strafe = RobotContainer.SwerveConfig().get("strafe");
         rotation = RobotContainer.SwerveConfig().get("rotation");
         
-        boolean zeroPoint = false;
+        boolean zeroPoint = true;
         if(zeroPoint){
             translation = new Vector2(-1, 0);
         }
