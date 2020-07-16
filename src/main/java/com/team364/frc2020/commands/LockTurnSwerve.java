@@ -1,15 +1,16 @@
 package com.team364.frc2020.commands;
 
+import com.team364.frc2020.RobotContainer;
 import com.team364.frc2020.misc.math.Vector2;
 import com.team364.frc2020.subsystems.Swerve;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import static com.team364.frc2020.RobotMap.*;
 
-import com.team364.frc2020.Robot;
-import com.team364.frc2020.RobotContainer;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
-public class OpenLoopSwerve extends CommandBase {
+
+public class LockTurnSwerve extends CommandBase {
 
     public int cycles;
     private double forward;
@@ -19,41 +20,33 @@ public class OpenLoopSwerve extends CommandBase {
     
     private Vector2 lastTranslation;
     private double lastRotation;
+
     private Swerve s_Swerve;
+    private PIDController snapController;
 
-
-
-    /**
-     * Driver control
-     */
-    public OpenLoopSwerve(Swerve swerve) {
-        s_Swerve = swerve;
-        addRequirements(s_Swerve);
-        //withTimeout(0.01);
+    public LockTurnSwerve(Swerve s_Swerve) {
+        this.s_Swerve = s_Swerve;
+        snapController = new PIDController(0.01, 0, 0);
+        snapController.setTolerance(5);
     }
 
     @Override
     public void initialize() {
-        Robot.OpenLoopSwerve.setValue(true);
         addRequirements(s_Swerve);
         cycles = 0;
+        snapController.setSetpoint(135);
     }
 
     @Override
     public void execute() {
         forward = RobotContainer.SwerveConfig().get("forward");
         strafe = RobotContainer.SwerveConfig().get("strafe");
-        rotation = RobotContainer.SwerveConfig().get("rotation");
-        
-        boolean zeroPoint = false;
-        if(zeroPoint){
-            translation = new Vector2(-1, 0);
-        }
-        else{
-            translation = new Vector2(forward, strafe);
-        }
+        rotation = MathUtil.clamp(snapController.calculate(s_Swerve.getYaw()), -1, 1); 
+
+        translation = new Vector2(forward, strafe);
+
         if (Math.abs(forward) > STICKDEADBAND || Math.abs(strafe) > STICKDEADBAND || Math.abs(rotation) > STICKDEADBAND) {
-            s_Swerve.holonomicDrive(translation, rotation, !zeroPoint);
+            s_Swerve.holonomicDrive(translation, rotation, true);
             lastTranslation = translation;
             lastRotation = rotation;
             cycles++;
@@ -66,11 +59,6 @@ public class OpenLoopSwerve extends CommandBase {
         if(cycles != 0){
             s_Swerve.updateKinematics(false);
         }
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        Robot.OpenLoopSwerve.setValue(false);
     }
 
 }

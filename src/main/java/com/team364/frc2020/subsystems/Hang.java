@@ -1,32 +1,79 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package com.team364.frc2020.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.team364.frc2020.Robot;
 
 import static com.team364.frc2020.RobotMap.*;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Hang extends SubsystemBase {
-  public TalonFX mClimberMotor;
-  public Hang() {
-    mClimberMotor = new TalonFX(CLIMBER);
-  }
-  public void climb(double motorPower) {
-    mClimberMotor.set(ControlMode.PercentOutput, motorPower);
-  }
+	public TalonFX hangFx;
+	public DoubleSolenoid piston;
+	public boolean isLocked = false;
+	public boolean used = false;
+
+	public Hang(){
+		hangFx = new TalonFX(HANG);
+		
+		//Configure Hang Motor
+		hangFx.configFactoryDefault();
+		TalonFXConfiguration hangFxConfiguration = new TalonFXConfiguration();
+
+		//Configure Hang Min and Max Limits
+		hangFxConfiguration.reverseSoftLimitThreshold = HANGMINSOFT;
+		hangFxConfiguration.reverseSoftLimitEnable = true;
+		hangFxConfiguration.forwardSoftLimitThreshold = HANGMAXSOFT;
+		hangFxConfiguration.forwardSoftLimitEnable = true;
+
+		//Setup Hang Current Limiting
+		SupplyCurrentLimitConfiguration hangSupplyLimit = new SupplyCurrentLimitConfiguration(HANGENABLECURRENTLIMIT, HANGCONTINUOUSCURRENTLIMIT, HANGPEAKCURRENTDURATION, HANGPEAKCURRENTDURATION);
+		hangFxConfiguration.supplyCurrLimit = hangSupplyLimit;
+
+		//Writing Settings to Hang Motor
+		hangFx.configAllSettings(hangFxConfiguration);
+		hangFx.setInverted(HANGINVERT);
+		hangFx.setNeutralMode(HANGNEUTRALMODE);
+
+		hangFx.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 20);
+
+		piston = new DoubleSolenoid(6, 7);
+	}
+
+	public void setPower(double motorPower){
+		SmartDashboard.putBoolean("islocked", isLocked);
+		hangFx.set(ControlMode.PercentOutput, motorPower);
+		SmartDashboard.putNumber("hanging", motorPower);
+	}
+	
+	public void init(){
+		piston.set(kForward);
+	}
+
+	public void setPiston(){
+		isLocked = !isLocked;
+		piston.set(isLocked ? kForward : kReverse);
+		SmartDashboard.putBoolean("Piston", isLocked);
+		Robot.Piston.setBoolean(isLocked);
+	}
+
+	@Override
+	public void periodic() {
+		if(!used){
+			init();
+			used = true;
+			isLocked = true;
+		}
+		SmartDashboard.putNumber("hang counts", hangFx.getSelectedSensorPosition());
+	}
+
 }

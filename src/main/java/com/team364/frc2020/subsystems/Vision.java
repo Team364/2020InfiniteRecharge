@@ -8,9 +8,16 @@
 package com.team364.frc2020.subsystems;
 
 import static com.team364.frc2020.Configuration.*;
+import static com.team364.frc2020.RobotMap.*;
+import static com.team364.frc2020.States.*;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.team364.frc2020.Robot;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
@@ -21,55 +28,81 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  * project.
  */
 public class Vision implements Subsystem {
-    public double[] closestTarget = new double[2];
+    public List<Double> closestTarget = new ArrayList<Double>();
     public int cycles;
-    private Map<Double, Double[]> targetMap = TargetJson.getMap();
-    
+
     public Vision() {
         register();
-        closestTarget[0] = 0;
-        closestTarget[1] = 0;
+        closestTarget.add(100000.0);
+        closestTarget.add(100000.0);
         cycles = 0;
     }
 
-    public void findClosestTargets(double height, int whichSystem) {
-        targetMap.keySet().forEach((key) -> {
-            // difference between actual and the iteration
-            double mathHold = Math.abs(height - key);
-            // closest logic
-            if (mathHold < Math.abs(closestTarget[0] - key) || mathHold < Math.abs(closestTarget[1] - key)) {
-                if (Math.abs(mathHold - closestTarget[0]) < Math.abs(mathHold - closestTarget[1])) {
-                    closestTarget[1] = key;
-                } else {
-                    closestTarget[0] = key;
+    public void findClosestTargets(double distance, int whichSystem) {
+        try{
+            TargetJson.getMap().keySet().forEach((ObjectKey) -> {
+                double key = Double.valueOf(ObjectKey.toString());
+                // difference between actual and the iteration
+                double mathHold = Math.abs(distance - key);
+                // closest target logic
+                if (mathHold < Math.abs(closestTarget.get(0) - distance) || mathHold < Math.abs(closestTarget.get(1) - distance)) {
+                    if (Math.abs(mathHold - closestTarget.get(0)) < Math.abs(mathHold - closestTarget.get(1))) {
+                        if(key != closestTarget.get(0)){
+                            closestTarget.set(1, key);
+                        }
+                    } else {
+                        if(key != closestTarget.get(1)){
+                            closestTarget.set(0, key);
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }catch(Exception e){SmartDashboard.putString("error", e.toString());}
     }
 
-    public double linearInterpolate(double first, double second, int whichSystem, double actual) {
-        double holdOne = targetMap.get(first)[whichSystem];
-        double holdTwo = targetMap.get(second)[whichSystem];
+    public double linearInterpolate(Double first, Double second, int whichSystem, double actual) {
+        double holdOne = TargetJson.getMap().get(first.toString()).get(whichSystem);
+        double holdTwo = TargetJson.getMap().get(second.toString()).get(whichSystem);
         double slope = (holdOne - holdTwo) / (first - second);
-        double intercept = holdOne - (slope * holdOne);
+        SmartDashboard.putNumber("slope", slope);
+        double intercept = holdOne - (slope * first);
+        SmartDashboard.putNumber("intercept", intercept);
         return (actual * slope) + intercept;
     }
 
     public double targetLogic(int whichSystem){
-        findClosestTargets(limeY(), whichSystem);
-        return linearInterpolate(closestTarget[0], closestTarget[1], whichSystem, limeY());
+        SmartDashboard.putNumber("distance", getDistance());
+        if(turretState == TurretStates.VISION){
+            findClosestTargets(20.0, whichSystem);
+            double hold = linearInterpolate(closestTarget.get(0), closestTarget.get(1), whichSystem, 20.0);
+            SmartDashboard.putNumber("output", hold);
+            return hold;            
+        }else{
+            return whichSystem == 0 ? SIMPLEVELOCITY : SIMPLEANGLE;
+        }
     }
 
     public double limeX() {
-        return 1.0;
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     }
 
     public double limeY() {
-        return 1.0;
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
     }
+
+    public boolean hasTarget(){
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 0 ? false : true;
+    }
+
+    public double getDistance(){
+        return TARGETHEIGHTDIFFERENCE / Math.tan(Math.toRadians(limeY() + LIMELIGHTANGLE));
+    }
+
+
     @Override
     public void periodic(){
-        
+        SmartDashboard.putNumber("distance", getDistance());
+        Robot.Distance.setString(String.valueOf(getDistance()));
     }
 
 

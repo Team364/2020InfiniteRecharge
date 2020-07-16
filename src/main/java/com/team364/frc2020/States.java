@@ -14,11 +14,11 @@ public class States {
      * Gyro for basic tracking while moving, 
      * Vision for accurate tracking to shoot
      */
-    public static enum TargetStates {
-        GYRO, VISION, NO_TRACK
+    public static enum TurretStates {
+        GYRO, VISION, FLIPPING, NO_TRACK, NOT_CALIBRATED
     }
     public static enum ConfigStates {
-        TARGET, SWERVE, MATCH
+        TARGET, SWERVE, MATCH, INIT
     }
 
 
@@ -30,14 +30,10 @@ public class States {
         OPEN_LOOP, VISION, AUTO
     }
 
-    public static enum ShooterStates {
-        SHOOTING, FERRY, RAMP_UP, RAMP_DOWN;
-    }
 
     public static ColorStates colorState = ColorStates.NONE;
-    public static ConfigStates configState = ConfigStates.MATCH;
-    public static TargetStates targetState = TargetStates.NO_TRACK;
+    public static ConfigStates configState = ConfigStates.INIT;
+    public static TurretStates turretState = TurretStates.NOT_CALIBRATED;
     public static DriveStates driveState = DriveStates.OPEN_LOOP;
-    public static ShooterStates shooterState = ShooterStates.FERRY;
 
 }

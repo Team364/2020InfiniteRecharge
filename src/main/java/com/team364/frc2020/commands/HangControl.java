@@ -1,40 +1,33 @@
 package com.team364.frc2020.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import com.team364.frc2020.subsystems.Hang;
 
-import com.team364.frc2020.Configuration;
-import com.team364.frc2020.Robot;
-import com.team364.frc2020.subsystems.*;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class HangControl extends CommandBase {
-    private Hang s_Hang;
-    private double power;
+	private double power;
+	private Hang s_Hang;
 
-    public HangControl(Hang s_Hang, double power) {
-        this.s_Hang = s_Hang;
-        this.power = power;
-    }
+
+	public HangControl(double power, Hang s_Hang){
+		this.power = power;
+		this.s_Hang = s_Hang;
+	}
+	
+    @Override
+	public void initialize() {
+		addRequirements(s_Hang);
+	}
 
     @Override
-    public void initialize() {
-        Robot.HangControl.setValue(true);
-        addRequirements(s_Hang);
-    }
+	public void execute() {
+			s_Hang.setPower(power);
+	}
 
-    @Override
-    public void execute() {
-        s_Hang.climb(power);
-    }
+	@Override
+	public void end(boolean interrupted){
+		s_Hang.setPower(0);
+	}
 
-    public boolean isFinished() {
-        return false;
-    }
 
-    @Override
-    public void end(boolean interrupted) {
-        Robot.HangControl.setValue(false);
-        s_Hang.climb(0);
-    }
 }
