@@ -107,15 +107,13 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    colorButto.whenPressed(new RunCommand(() -> s_WoF.detectColor()));
-    colorButto.whenReleased(new RunCommand(() -> s_WoF.stopColorDetecting()));
+    colorButto.whileHeld(new RunCommand(() -> s_WoF.detectColor()));
     colorButto2.whenPressed(new RunCommand(() -> s_WoF.moveMotorPlease()));
-    aimSwitch.whenPressed(new RunCommand(() -> activate_THE_SWITCH()));
-    aimSwitch.whenReleased(new RunCommand(() -> deactivate_THE_SWITCH()));
-    hopperbutto.whenPressed(new RunHopper(s_Hopper));
-    climberUpButto.whileHeld(new HangControl(s_Hang, 1));
-    climberDownButto.whileHeld(new HangControl(s_Hang, -1));
-  private void configureButtonBindings(){
+    aimSwitch.whenPressed(new RunCommand(() -> activate_Turret()));
+    aimSwitch.whenReleased(new RunCommand(() -> deactivate_Turret()));
+    //hopperbutto.whenPressed(new RunHopper(s_Hopper));
+    //climberUpButto.whileHeld(new HangControl(s_Hang, 1));
+    //climberDownButto.whileHeld(new HangControl(s_Hang, -1));
 
     // //climbDrive.whileHeld(new LockTurnSwerve(s_Swerve));
     // upClimb.whileHeld(new HangControl(1, s_Hang));

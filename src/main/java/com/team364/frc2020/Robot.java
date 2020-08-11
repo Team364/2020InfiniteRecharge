@@ -45,10 +45,9 @@ public class Robot extends TimedRobot {
   public static double colorRed;
   public static double colorGreen;
   public static double colorBlue;
-  private RobotContainer m_robotContainer;
 
   public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
-    public static ShuffleboardLayout Hang = RunningTab.getLayout("Hang", BuiltInLayouts.kList).withSize(2, 5).withPosition(12, 0);
+    public static ShuffleboardLayout Hang1 = RunningTab.getLayout("Hang", BuiltInLayouts.kList).withSize(2, 5).withPosition(12, 0);
       public static NetworkTableEntry HangControl;
 
 
@@ -56,7 +55,6 @@ public class Robot extends TimedRobot {
   public static boolean THE_TURRET_ZERO;
   public static DriverStation dStation;
 
-  public static ShuffleboardTab RunningTab = Shuffleboard.getTab("Running Systems");
       public static ShuffleboardLayout Hood = RunningTab.getLayout("Hood", BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0);
           public static NetworkTableEntry HoodControl;
       public static ShuffleboardLayout Hopper = RunningTab.getLayout("Hopper", BuiltInLayouts.kList).withSize(2, 5).withPosition(2, 0);
@@ -92,7 +90,6 @@ public class Robot extends TimedRobot {
     dStation = DriverStation.getInstance();
     THE_TURRET_ZERO = false;
     m_robotContainer = new RobotContainer();
-    m_robotContainer.nothing();
     HangControl = Robot.Hang.add("HoodControl", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();
 
     HoodControl = Hood.add("HoodContol", false).withWidget(BuiltInWidgets.kBooleanBox).getEntry();

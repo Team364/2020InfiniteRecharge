@@ -184,8 +184,8 @@ public class RobotMap {
 
     //constats for WoF
     public static final int MOTORCOLORNONE = 0;
-    public static final double MOTORCOLORRED = 0.5;
-    public static final double MOTORCOLORGREEN = 1;
+    public static final double MOTORCOLORRED = 0.1;
+    public static final double MOTORCOLORGREEN = 10;
     public static final double MOTORCOLORBLUE = -1;
     public static final double MOTORCOLORYELLO = -0.5;
 
